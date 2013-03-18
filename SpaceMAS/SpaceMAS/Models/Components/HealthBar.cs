@@ -1,0 +1,51 @@
+﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Utils;
+
+namespace SpaceMAS.Models.Components {
+    public class HealthBar : GameObject {
+
+        private KillableGameObject Parent { get; set; }
+        private float Percent { get; set; }
+
+        public HealthBar(KillableGameObject parent) {
+            Parent = parent;
+            Percent = 1;
+            Texture = new Texture2D(GameServices.GetService<GraphicsDevice>(), 1, 1, false, SurfaceFormat.Color);
+            Texture.SetData(new[] { Color.LightGreen });
+        }
+
+        public override void Update(GameTime gameTime) {
+
+            if(Parent.Dead) {
+                //remove object
+                return;
+            }
+
+            float percent = (Parent.HealthPoints / Parent.MaxHealthPoints);
+
+            if (percent > 0.7f) {
+                if (Percent <= 0.7f)
+                    Texture.SetData(new[] {Color.ForestGreen});
+            }
+            else if(percent >= 0.4 && percent < 0.7) {
+                if(Percent >= 0.7 || Percent < 0.4)
+                    Texture.SetData(new[] { Color.OrangeRed });
+            }
+            else if(percent < 0.4)
+                if(Percent > 0.4)
+                    Texture.SetData(new[] { Color.Red });
+
+            Percent = percent;
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch) {
+            Vector2 anchor = Parent.UpperLeftCorner();
+            double healthBarWidth = Parent.Width * Percent;
+
+            spriteBatch.Draw(Texture, new Rectangle((int)anchor.X, (int)anchor.Y - 10, (int)healthBarWidth, 3), Color.White);
+        }
+    }
+}
