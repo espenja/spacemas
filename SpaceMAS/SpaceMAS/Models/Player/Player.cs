@@ -10,7 +10,7 @@ namespace SpaceMAS.Models.Player {
 
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
-        private Controls PlayerControls { get; set; }
+        public Controls PlayerControls { get; set; }
 
         public Player(string name, Vector2 position) {
             Name = name;

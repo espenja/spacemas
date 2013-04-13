@@ -110,8 +110,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Menu\Button.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Components\HealthBar.cs" />
+    <Compile Include="Models\GameState.cs" />
     <Compile Include="Models\KillableGameObject.cs" />
     <Compile Include="Models\Player\Classes\DPSPlayer.cs" />
     <Compile Include="Models\Player\Classes\HealerPlayer.cs" />

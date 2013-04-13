@@ -15,6 +15,9 @@ namespace SpaceMAS.Settings {
         public Keys Shoot;
         public Keys Shield;
         public Keys Pause;
+        public Keys MenuSelect;
+        public Keys MenuUp;
+        public Keys MenuDown;
 
         public Controls(string player) {
             LoadPlayerControls(player);
@@ -28,6 +31,9 @@ namespace SpaceMAS.Settings {
             Shoot = Keys.Space;
             Shield = Keys.LeftShift;
             Pause = Keys.P;
+            MenuSelect = Keys.Enter;
+            MenuDown = Keys.Down;
+            MenuUp = Keys.Up;
         }
 
         //Converts all fields in this class to a List of Keys.
