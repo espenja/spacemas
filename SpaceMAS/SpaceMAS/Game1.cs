@@ -21,6 +21,9 @@ namespace SpaceMAS {
         private SpriteBatch spriteBatch;
 
         private List<Player> players = new List<Player>();
+        private bool gamePaused = false;
+        private Player pausingPlayer;
+        private float timeSinceLastPauseAction = 0f;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -74,16 +77,44 @@ namespace SpaceMAS {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-
-            foreach (Player player in players) {
-                player.Update(gameTime);
+            if (!gamePaused)
+            {
+                foreach (Player player in players)
+                {
+                    player.Update(gameTime);
+                }
             }
-
-            // TODO: Add your update logic here
-
+            if (timeSinceLastPauseAction > 1)
+            {
+                foreach (Player player in players)
+                {
+                    if (player.ClickedPauseKey() && !gamePaused)
+                    {
+                        PauseGame(player);
+                    }
+                    else if (gamePaused && player.ClickedPauseKey() && player == pausingPlayer)
+                    {
+                        UnPause();
+                    }
+                }
+            }
+            timeSinceLastPauseAction += (float)gameTime.ElapsedGameTime.TotalSeconds;
             base.Update(gameTime);
         }
 
+        public void PauseGame(Player pausingPlayer)
+        {
+            gamePaused = true;
+            this.pausingPlayer = pausingPlayer;
+            timeSinceLastPauseAction = 0f;
+        }
+
+        public void UnPause()
+        {
+            gamePaused = false;
+            pausingPlayer = null;
+            timeSinceLastPauseAction = 0f;
+        }
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>

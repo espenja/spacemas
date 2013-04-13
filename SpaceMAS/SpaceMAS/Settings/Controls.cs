@@ -10,10 +10,11 @@ namespace SpaceMAS.Settings {
 
         public Keys TurnLeft;
         public Keys TurnRight;
-        public Keys Accellerate;
-        public Keys Decellerate;
+        public Keys Accelerate;
+        public Keys Decelerate;
         public Keys Shoot;
         public Keys Shield;
+        public Keys Pause;
 
         public Controls(string player) {
             LoadPlayerControls(player);
@@ -22,10 +23,11 @@ namespace SpaceMAS.Settings {
         public void LoadDefaults() {
             TurnLeft = Keys.Left;
             TurnRight = Keys.Right;
-            Accellerate = Keys.Up;
-            Decellerate = Keys.Down;
+            Accelerate = Keys.Up;
+            Decelerate = Keys.Down;
             Shoot = Keys.Space;
             Shield = Keys.LeftShift;
+            Pause = Keys.P;
         }
 
         //Converts all fields in this class to a List of Keys.
