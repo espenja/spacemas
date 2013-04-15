@@ -1,16 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 using SpaceMAS.Level;
+using SpaceMAS.Models.Enemy;
 using SpaceMAS.Models.Player;
-using SpaceMAS.Settings;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
 using SpaceMAS.Models;
@@ -30,6 +25,8 @@ namespace SpaceMAS {
         private bool gamePaused = false;
         private Player pausingPlayer;
 
+        private List<Enemy> enemies = new List<Enemy>(); 
+
         //Needed for not letting actions get spammed every update (eg if you click Up in the main menu the up
         //action should not be done 182734 times(every update)
         private float timeSinceLastAction = 0f;
@@ -40,6 +37,9 @@ namespace SpaceMAS {
         private int highlightedButtonIndex = 3;
 
         private Player thisPlayer;
+
+        private Enemy enemy1;
+        private Enemy enemy2;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -55,8 +55,10 @@ namespace SpaceMAS {
         protected override void Initialize() {
             GameServices.AddService(GraphicsDevice);
             GameServices.AddService(Content);
+            GameServices.AddService(players);
+            GameServices.AddService(enemies);
 
-            LevelController levelController = new LevelController();
+            //LevelController levelController = new LevelController();
 
             base.Initialize();
         }
@@ -77,6 +79,11 @@ namespace SpaceMAS {
             Random random = new Random();
             thisPlayer = new Player("fictive", new Vector2(300, 300)) { Texture = Content.Load<Texture2D>("helicopter") };
             players.Add(thisPlayer);
+
+            enemy1 = new Enemy(new Vector2(150, 150)) { Texture = Content.Load<Texture2D>("helicopter") };
+            enemy2 = new Enemy(new Vector2(225, 225)) { Texture = Content.Load<Texture2D>("helicopter") };
+            enemies.Add(enemy1);
+            enemies.Add(enemy2);
 
             //Menu
             mainMenuButtons.Add(playBtn = new MenuButton(Content.Load<Texture2D>("PlayButton"), 
@@ -208,18 +215,22 @@ namespace SpaceMAS {
             {
                 case GameState.HighScore:
                     break;
+
                 case GameState.MainMenu:
-                    foreach (MenuButton button in mainMenuButtons)
-                    {
+                    foreach (MenuButton button in mainMenuButtons) {
                         button.Draw(spriteBatch);
                     }
                     break;
+
                 case GameState.Options:
                     break;
+
                 case GameState.Playing:
-                    foreach (Player player in players)
-                    {
+                    foreach (Player player in players) {
                         player.Draw(spriteBatch);
+                    }
+                    foreach (var enemy in enemies) {
+                        enemy.Draw(spriteBatch);
                     }
                     break;
             }
