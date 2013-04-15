@@ -24,6 +24,6 @@ amount:10
 
 %enemy
 id:test1
-health:tohundre
+health:200
 spawner_id:1
 amount:20

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace SpaceMAS.Models.Player {
     public class Player : KillableGameObject {
@@ -29,8 +28,12 @@ namespace SpaceMAS.Models.Player {
 
         public override void Update(GameTime gameTime) {
 
-            Move(gameTime);
-            HealthBar.Update(gameTime);
+            //If the player is dead, then movement should not occur
+            if (!Dead) {
+                Move(gameTime);
+                HealthBar.Update(gameTime);
+            }
+
             base.Update(gameTime);
 
         }
@@ -82,6 +85,23 @@ namespace SpaceMAS.Models.Player {
 
         public bool ClickedPauseKey() {
             return Keyboard.GetState().IsKeyDown(PlayerControls.Pause);
+        }
+
+        public override void Die() {
+            //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
+            DisablePlayer();
+        }
+
+        //Disables the player so that he cannot move and bring the spaceship to a halt quickly
+        private void DisablePlayer() {
+            AccelerationRate = 0f;
+            NaturalDecelerationRate = 800f;
+        }
+
+        //Enables the player to move again
+        private void EnablePlayer() {
+            AccelerationRate = 800f;
+            NaturalDecelerationRate = 100f;
         }
     }
 }
