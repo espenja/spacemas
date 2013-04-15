@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
-using SpaceMAS.Settings;
-using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace SpaceMAS.Models.Enemy
 {

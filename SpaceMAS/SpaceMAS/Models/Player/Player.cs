@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 namespace SpaceMAS.Models.Player {
     public class Player : KillableGameObject {
@@ -49,48 +48,48 @@ namespace SpaceMAS.Models.Player {
 
         private void Move(GameTime gameTime)
         {         
-            float ElapsedGameTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Vector2 NewVelocity = new Vector2(Velocity.X, Velocity.Y);
+            var elapsedGameTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var newVelocity = new Vector2(Velocity.X, Velocity.Y);
 
             //Add userinput
             if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnRight))
             {
-                Rotation += RotationRate * ElapsedGameTime;
+                Rotation += RotationRate * elapsedGameTime;
             }
             if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnLeft))
             {
-                Rotation -= RotationRate * ElapsedGameTime;
+                Rotation -= RotationRate * elapsedGameTime;
             }
             //TODO: Accelerate the direction the player is facing(need to consider rotation), not just X and Y axis as it is now
             if (Keyboard.GetState().IsKeyDown(PlayerControls.Decelerate))
             {
-                NewVelocity.X -= AccelerationRate * ElapsedGameTime;
+                newVelocity.X -= AccelerationRate * elapsedGameTime;
             }
             if (Keyboard.GetState().IsKeyDown(PlayerControls.Accelerate))
             {
-                NewVelocity.X += AccelerationRate * ElapsedGameTime;
+                newVelocity.X += AccelerationRate * elapsedGameTime;
             }
 
             //Add natural deceleration
             if (Velocity.X > 0)
             {
-                NewVelocity.X -= NaturalDecelerationRate * ElapsedGameTime;
+                newVelocity.X -= NaturalDecelerationRate * elapsedGameTime;
             }
             else if (Velocity.X < 0)
             {
-                NewVelocity.X += NaturalDecelerationRate * ElapsedGameTime;
+                newVelocity.X += NaturalDecelerationRate * elapsedGameTime;
             }
 
             if (Velocity.Y > 0)
             {
-                NewVelocity.Y -= NaturalDecelerationRate * ElapsedGameTime;
+                newVelocity.Y -= NaturalDecelerationRate * elapsedGameTime;
             }
             else if (Velocity.Y < 0)
             {
-                NewVelocity.Y += NaturalDecelerationRate * ElapsedGameTime;
+                newVelocity.Y += NaturalDecelerationRate * elapsedGameTime;
             }
             
-            Velocity = NewVelocity;
+            Velocity = newVelocity;
             Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds; 
         }
 
