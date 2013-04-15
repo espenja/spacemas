@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using SpaceMAS.Level;
 using SpaceMAS.Models.Player;
 using SpaceMAS.Settings;
 using SpaceMAS.Utils;
@@ -55,6 +56,8 @@ namespace SpaceMAS {
             GameServices.AddService(GraphicsDevice);
             GameServices.AddService(Content);
 
+            LevelController levelController = new LevelController();
+
             base.Initialize();
         }
 
@@ -99,7 +102,7 @@ namespace SpaceMAS {
         /// Allows the game to run logic such as updating the world,
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param Name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || currentGameState == GameState.Quit)
@@ -195,7 +198,7 @@ namespace SpaceMAS {
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        /// <param Name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 

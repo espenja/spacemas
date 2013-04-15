@@ -19,7 +19,7 @@ namespace SpaceMAS.Models.Player {
             AccelerationRate = 800f;
             NaturalDecelerationRate = 100f;
             RotationRate = 3f;
-            
+
             MaxHealthPoints = 100;
             HealthPoints = 100;
 
@@ -32,7 +32,7 @@ namespace SpaceMAS.Models.Player {
             Move(gameTime);
             HealthBar.Update(gameTime);
             base.Update(gameTime);
-            
+
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
@@ -42,55 +42,45 @@ namespace SpaceMAS.Models.Player {
             base.Draw(spriteBatch);
         }
 
-        private void Move(GameTime gameTime)
-        {         
-            float ElapsedGameTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        private void Move(GameTime gameTime) {
+            float ElapsedGameTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 NewVelocity = new Vector2(Velocity.X, Velocity.Y);
 
             //Add userinput
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnRight))
-            {
+            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnRight)) {
                 Rotation += RotationRate * ElapsedGameTime;
             }
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnLeft))
-            {
+            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnLeft)) {
                 Rotation -= RotationRate * ElapsedGameTime;
             }
             //TODO: Accelerate the direction the player is facing(need to consider rotation), not just X and Y axis as it is now
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.Decelerate))
-            {
+            if (Keyboard.GetState().IsKeyDown(PlayerControls.Decelerate)) {
                 NewVelocity.X -= AccelerationRate * ElapsedGameTime;
             }
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.Accelerate))
-            {
+            if (Keyboard.GetState().IsKeyDown(PlayerControls.Accelerate)) {
                 NewVelocity.X += AccelerationRate * ElapsedGameTime;
             }
 
             //Add natural deceleration
-            if (Velocity.X > 0)
-            {
+            if (Velocity.X > 0) {
                 NewVelocity.X -= NaturalDecelerationRate * ElapsedGameTime;
             }
-            else if (Velocity.X < 0)
-            {
+            else if (Velocity.X < 0) {
                 NewVelocity.X += NaturalDecelerationRate * ElapsedGameTime;
             }
 
-            if (Velocity.Y > 0)
-            {
+            if (Velocity.Y > 0) {
                 NewVelocity.Y -= NaturalDecelerationRate * ElapsedGameTime;
             }
-            else if (Velocity.Y < 0)
-            {
+            else if (Velocity.Y < 0) {
                 NewVelocity.Y += NaturalDecelerationRate * ElapsedGameTime;
             }
-            
+
             Velocity = NewVelocity;
-            Position += Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds; 
+            Position += Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public bool ClickedPauseKey()
-        {
+        public bool ClickedPauseKey() {
             return Keyboard.GetState().IsKeyDown(PlayerControls.Pause);
         }
     }
