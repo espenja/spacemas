@@ -20,7 +20,12 @@ namespace SpaceMAS.Models.Components {
 
             if(Parent.Dead) {
                 //remove object
-                return;
+                if (Parent is Player.Player)
+                {
+                    //Make player stuff happen
+                }
+                else
+                    Parent.Die();
             }
 
             float percent = (Parent.HealthPoints / Parent.MaxHealthPoints);

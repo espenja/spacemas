@@ -10,5 +10,11 @@ namespace SpaceMAS.Models {
         public float MaxHealthPoints { get; protected set; }
         public bool Dead { get; protected set; }
 
+        public virtual void Die()
+        {
+            //Default die action for KillableGameObjects
+            this.AccelerationRate = 0f;
+            this.NaturalDecelerationRate = 800f;
+        }
     }
 }
