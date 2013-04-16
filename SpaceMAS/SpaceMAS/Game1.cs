@@ -86,16 +86,16 @@ namespace SpaceMAS {
             players.Add(thisPlayer);
 
             //Menu
-            mainMenuButtons.Add(playBtn = new MenuButton(Content.Load<Texture2D>("Buttons/PlayButton"),
+            mainMenuButtons.Add(playBtn = new MenuButton(Content.Load<Texture2D>("Buttons/play"),
                                                          new Vector2(200, 200), graphics.GraphicsDevice,
                                                          thisPlayer.PlayerControls, GameState.PLAYING));
-            mainMenuButtons.Add(highsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/HighsButton"),
+            mainMenuButtons.Add(highsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/highscore"),
                                                           new Vector2(200, 300), graphics.GraphicsDevice,
                                                           thisPlayer.PlayerControls, GameState.HIGHSCORE));
-            mainMenuButtons.Add(optionsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/OptionsButton"),
+            mainMenuButtons.Add(optionsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/options"),
                                                             new Vector2(200, 400), graphics.GraphicsDevice,
                                                             thisPlayer.PlayerControls, GameState.OPTIONS));
-            mainMenuButtons.Add(quitBtn = new MenuButton(Content.Load<Texture2D>("Buttons/QuitButton"),
+            mainMenuButtons.Add(quitBtn = new MenuButton(Content.Load<Texture2D>("Buttons/quit"),
                                                          new Vector2(200, 500), graphics.GraphicsDevice,
                                                          thisPlayer.PlayerControls, GameState.QUIT));
 
@@ -200,7 +200,7 @@ namespace SpaceMAS {
         /// </summary>
         /// <param Name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(16, 36, 35));
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
