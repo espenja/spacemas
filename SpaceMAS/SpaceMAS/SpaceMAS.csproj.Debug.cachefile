@@ -1,7 +1,11 @@
-Content\test1.xnb
-Content\helicopter.xnb
-Content\HighsButton.xnb
-Content\OptionsButton.xnb
-Content\PlayButton.xnb
-Content\QuitButton.xnb
+Content\Fonts\HandOfSean.xnb
+Content\Buttons\HighsButton.xnb
+Content\Buttons\OptionsButton.xnb
+Content\Buttons\PlayButton.xnb
+Content\Buttons\QuitButton.xnb
+Content\Textures\enemy_blue.xnb
+Content\Textures\enemy_orange.xnb
+Content\Textures\enemy_pink.xnb
+Content\Textures\player.xnb
+Content\Fonts\HandOfSean.spritefont
 Content\Levels\level1.txt

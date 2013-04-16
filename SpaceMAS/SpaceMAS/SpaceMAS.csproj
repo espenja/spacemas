@@ -112,16 +112,18 @@
   <ItemGroup>
     <Compile Include="Level\Level.cs" />
     <Compile Include="Level\LevelController.cs" />
+    <Compile Include="Level\LevelIntro.cs" />
     <Compile Include="Menu\Button.cs" />
     <Compile Include="Models\Enemy\Enemy.cs" />
     <Compile Include="Models\Enemy\Spawner.cs" />
+    <Compile Include="Drawing\GameDrawOrder.cs" />
     <Compile Include="Models\GameObject.cs" />
     <Compile Include="Models\Components\HealthBar.cs" />
     <Compile Include="Models\GameState.cs" />
     <Compile Include="Models\KillableGameObject.cs" />
-    <Compile Include="Models\Player\Classes\DPSPlayer.cs" />
-    <Compile Include="Models\Player\Classes\HealerPlayer.cs" />
-    <Compile Include="Models\Player\Player.cs" />
+    <Compile Include="Models\Players\Classes\DPSPlayer.cs" />
+    <Compile Include="Models\Players\Classes\HealerPlayer.cs" />
+    <Compile Include="Models\Players\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Settings\Controls.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Utils\Collition\CollitionDetection.cs" />
+    <Compile Include="Drawing\Drawing.cs" />
     <Compile Include="Utils\GameServices.cs" />
   </ItemGroup>
   <ItemGroup>

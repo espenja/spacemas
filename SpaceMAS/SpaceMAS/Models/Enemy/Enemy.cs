@@ -28,6 +28,8 @@ namespace SpaceMAS.Models.Enemy {
             Move(gameTime);
             HealthBar.Update(gameTime);
 
+            Position = new Vector2(Position.X + 1, Position.Y);
+
             base.Update(gameTime);
         }
 

@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using SpaceMAS.Level;
-using SpaceMAS.Models.Player;
+using SpaceMAS.Models.Players;
 using SpaceMAS.Settings;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
@@ -19,14 +19,14 @@ namespace SpaceMAS {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game {
-        private GraphicsDeviceManager graphics;
+    public class Game1 : Game {
+        private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        private int screenWidth = 800;
-        private int screenHeight = 600;
+        private const int screenWidth = 1024;
+        private const int screenHeight = 800;
 
-        private List<Player> players = new List<Player>();
+        public List<Player> players = new List<Player>();
         private bool gamePaused = false;
         private Player pausingPlayer;
 
@@ -34,12 +34,13 @@ namespace SpaceMAS {
         //action should not be done 182734 times(every update)
         private float timeSinceLastAction = 0f;
 
-        private GameState currentGameState = GameState.MainMenu;
+        private GameState currentGameState = GameState.MAINMENU;
         private MenuButton playBtn, highsBtn, optionsBtn, quitBtn;
         private List<MenuButton> mainMenuButtons = new List<MenuButton>();
         private int highlightedButtonIndex = 3;
 
         private Player thisPlayer;
+        private LevelController LevelController;
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -53,10 +54,25 @@ namespace SpaceMAS {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
+
+            // Create a new SpriteBatch, which can be used to draw textures.
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            //Screen stuff
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.ApplyChanges();
+
+            GameServices.AddService(graphics);
             GameServices.AddService(GraphicsDevice);
             GameServices.AddService(Content);
 
-            LevelController levelController = new LevelController();
+            LevelController = new LevelController();
+            LevelController.GoToNextLevel();
+
+            GameServices.AddService(LevelController);
+
+            
 
             base.Initialize();
         }
@@ -66,27 +82,26 @@ namespace SpaceMAS {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            //Screen stuff
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.ApplyChanges();
-
-            Random random = new Random();
-            thisPlayer = new Player("fictive", new Vector2(300, 300)) { Texture = Content.Load<Texture2D>("helicopter") };
+            thisPlayer = new Player("fictive", new Vector2(300, 300)) {Texture = Content.Load<Texture2D>("Textures/player")};
             players.Add(thisPlayer);
 
             //Menu
-            mainMenuButtons.Add(playBtn = new MenuButton(Content.Load<Texture2D>("PlayButton"), 
-                new Vector2(200, 200), graphics.GraphicsDevice, thisPlayer.PlayerControls, GameState.Playing));
-            mainMenuButtons.Add(highsBtn = new MenuButton(Content.Load<Texture2D>("HighsButton"),
-                new Vector2(200, 300), graphics.GraphicsDevice, thisPlayer.PlayerControls, GameState.HighScore));
-            mainMenuButtons.Add(optionsBtn = new MenuButton(Content.Load<Texture2D>("OptionsButton"),
-                new Vector2(200, 400), graphics.GraphicsDevice, thisPlayer.PlayerControls, GameState.Options));
-            mainMenuButtons.Add(quitBtn = new MenuButton(Content.Load<Texture2D>("QuitButton"),
-                new Vector2(200, 500), graphics.GraphicsDevice, thisPlayer.PlayerControls, GameState.Quit));
+            mainMenuButtons.Add(playBtn = new MenuButton(Content.Load<Texture2D>("Buttons/PlayButton"),
+                                                         new Vector2(200, 200), graphics.GraphicsDevice,
+                                                         thisPlayer.PlayerControls, GameState.PLAYING));
+            mainMenuButtons.Add(highsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/HighsButton"),
+                                                          new Vector2(200, 300), graphics.GraphicsDevice,
+                                                          thisPlayer.PlayerControls, GameState.HIGHSCORE));
+            mainMenuButtons.Add(optionsBtn = new MenuButton(Content.Load<Texture2D>("Buttons/OptionsButton"),
+                                                            new Vector2(200, 400), graphics.GraphicsDevice,
+                                                            thisPlayer.PlayerControls, GameState.OPTIONS));
+            mainMenuButtons.Add(quitBtn = new MenuButton(Content.Load<Texture2D>("Buttons/QuitButton"),
+                                                         new Vector2(200, 500), graphics.GraphicsDevice,
+                                                         thisPlayer.PlayerControls, GameState.QUIT));
+
+
+            GameServices.AddService(players);
+            LevelController.InitializeLevels();
             // TODO: use this.Content to load your game content here
         }
 
@@ -105,96 +120,81 @@ namespace SpaceMAS {
         /// <param Name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime) {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || currentGameState == GameState.Quit)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                currentGameState == GameState.QUIT)
                 this.Exit();
 
-            switch (currentGameState)
-            {
-                case GameState.HighScore:
+            switch (currentGameState) {
+                case GameState.HIGHSCORE:
                     break;
-                case GameState.MainMenu:
+                case GameState.MAINMENU:
                     UpdateMenuState();
                     break;
-                case GameState.Options:
+                case GameState.OPTIONS:
                     break;
-                case GameState.Playing:
+                case GameState.PLAYING:
                     UpdatePlayingState(gameTime);
                     break;
             }
-            timeSinceLastAction += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
             base.Update(gameTime);
         }
 
-        public void UpdateMenuState()
-        {
-            if (timeSinceLastAction > 0.2f)
-            {
-                if (Keyboard.GetState().IsKeyDown(thisPlayer.PlayerControls.MenuDown))
-                {
+        public void UpdateMenuState() {
+            if (timeSinceLastAction > 0.2f) {
+                if (Keyboard.GetState().IsKeyDown(thisPlayer.PlayerControls.MenuDown)) {
                     if (highlightedButtonIndex < mainMenuButtons.Count - 1) highlightedButtonIndex += 1;
                     else highlightedButtonIndex = 0;
                     timeSinceLastAction = 0f;
 
                 }
-                else if (Keyboard.GetState().IsKeyDown(thisPlayer.PlayerControls.MenuUp))
-                {
+                else if (Keyboard.GetState().IsKeyDown(thisPlayer.PlayerControls.MenuUp)) {
                     if (highlightedButtonIndex > 0) highlightedButtonIndex -= 1;
                     else highlightedButtonIndex = mainMenuButtons.Count - 1;
                     timeSinceLastAction = 0f;
                 }
             }
 
-            foreach (MenuButton button in mainMenuButtons)
-            {
+            foreach (MenuButton button in mainMenuButtons) {
                 button.Update(mainMenuButtons[highlightedButtonIndex]);
             }
 
             //Button in menu pressed, changes gamestate
-            if (mainMenuButtons[highlightedButtonIndex].isPressed)
-            {
+            if (mainMenuButtons[highlightedButtonIndex].isPressed) {
+                LevelController.CurrentLevel.GameState = GameState.PLAYING;
                 currentGameState = mainMenuButtons[highlightedButtonIndex].changesToState;
             }
         }
 
-        public void UpdatePlayingState(GameTime gameTime)
-        {
-            if (!gamePaused)
-            {
-                foreach (Player player in players)
-                {
-                    player.Update(gameTime);
-                }
+        public void UpdatePlayingState(GameTime gameTime) {
+            if (!gamePaused) {
+                LevelController.CurrentLevel.Update(gameTime);
             }
-            if (timeSinceLastAction > 1)
-            {
-                foreach (Player player in players)
-                {
-                    if (player.ClickedPauseKey() && !gamePaused)
-                    {
+            if (timeSinceLastAction > 1) {
+                foreach (Player player in players) {
+                    if (player.ClickedPauseKey() && !gamePaused) {
                         PauseGame(player);
                     }
-                    else if (gamePaused && player.ClickedPauseKey() && player == pausingPlayer)
-                    {
+                    else if (gamePaused && player.ClickedPauseKey() && player == pausingPlayer) {
                         UnPause();
                     }
                 }
             }
-            
+
         }
 
-        public void PauseGame(Player pausingPlayer)
-        {
+        public void PauseGame(Player pausingPlayer) {
             gamePaused = true;
             this.pausingPlayer = pausingPlayer;
             timeSinceLastAction = 0f;
         }
 
-        public void UnPause()
-        {
+        public void UnPause() {
             gamePaused = false;
             pausingPlayer = null;
             timeSinceLastAction = 0f;
         }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -202,25 +202,20 @@ namespace SpaceMAS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
-            switch (currentGameState)
-            {
-                case GameState.HighScore:
+            switch (currentGameState) {
+                case GameState.HIGHSCORE:
                     break;
-                case GameState.MainMenu:
-                    foreach (MenuButton button in mainMenuButtons)
-                    {
+                case GameState.MAINMENU:
+                    foreach (MenuButton button in mainMenuButtons) {
                         button.Draw(spriteBatch);
                     }
                     break;
-                case GameState.Options:
+                case GameState.OPTIONS:
                     break;
-                case GameState.Playing:
-                    foreach (Player player in players)
-                    {
-                        player.Draw(spriteBatch);
-                    }
+                case GameState.PLAYING:
+                    LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();
