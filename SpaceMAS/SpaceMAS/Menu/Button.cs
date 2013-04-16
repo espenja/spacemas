@@ -24,21 +24,24 @@ namespace SpaceMAS.Menu {
 
         public MenuButton(Texture2D texture, Vector2 position, GraphicsDevice graphics, Controls controls, GameState changesToState) {
             this.texture = texture;
-            this.position = position;
+
+            this.position = new Vector2(graphics.Viewport.Width / 2f - texture.Width / 2f, position.Y);
             this.controls = controls;
-            size = new Vector2(graphics.Viewport.Height / 8f, graphics.Viewport.Width / 20f);
-            rectangle = new Rectangle((int) position.X, (int) position.Y, (int) size.X, (int) size.Y);
+
+            size = new Vector2(texture.Width, texture.Height);
+            rectangle = new Rectangle((int) this.position.X, (int) this.position.Y, (int) size.X, (int) size.Y);
+
             this.changesToState = changesToState;
         }
 
         private void Highlight() {
             isHighlighted = true;
-            color = Color.White;
+            color = Color.LightGreen;
         }
 
         private void NotHighlight() {
             isHighlighted = false;
-            color = Color.Red;
+            color = Color.White;
         }
 
         public void Update(MenuButton selectedButton) {
@@ -50,6 +53,7 @@ namespace SpaceMAS.Menu {
         }
 
         public void Draw(SpriteBatch spriteBatch) {
+
             spriteBatch.Draw(texture, rectangle, color);
         }
     }
