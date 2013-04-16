@@ -29,7 +29,7 @@ namespace SpaceMAS.Models {
 
         public void LoadTexture(string textureName) {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
-            Texture = contentManager.Load<Texture2D>(textureName);
+            Texture = contentManager.Load<Texture2D>("Textures/" + textureName);
         }
 
         public Texture2D Texture {
@@ -85,7 +85,7 @@ namespace SpaceMAS.Models {
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
         }
 
         public bool IntersectPixels(GameObject otherObject) {

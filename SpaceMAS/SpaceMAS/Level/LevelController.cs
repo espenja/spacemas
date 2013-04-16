@@ -20,10 +20,28 @@ namespace SpaceMAS.Level {
             LoadLevels();
         }
 
+        public void InitializeLevels() {
+            foreach(Level level in Levels) {
+                level.Initialize();
+            }
+        }
+
+        public void GoToNextLevel() {
+
+            if (CurrentLevel == null) {
+                CurrentLevel = Levels[0];
+                return;
+            }
+
+            if (Levels.IndexOf(CurrentLevel) + 1 >= Levels.Count)
+                CurrentLevel = null;
+
+            CurrentLevel = Levels.Find(l => l.Id == CurrentLevel.Id + 1);
+        }
+
         private void LoadLevels() {
-            ContentManager contentManager = GameServices.GetService<ContentManager>();
-            DirectoryInfo directoryInfo =
-                new DirectoryInfo(contentManager.RootDirectory + "\\" + GeneralSettings.LevelPath);
+            var contentManager = GameServices.GetService<ContentManager>();
+            var directoryInfo = new DirectoryInfo(contentManager.RootDirectory + "\\" + GeneralSettings.LevelPath);
             FileInfo[] fileInfos = directoryInfo.GetFiles();
 
             foreach (FileInfo fileInfo in fileInfos) {
@@ -80,6 +98,9 @@ namespace SpaceMAS.Level {
                     }
                 }
             }
+
+            if (level == null) return;
+
             Levels.Add(level);
         }
 
@@ -128,7 +149,7 @@ namespace SpaceMAS.Level {
 
         private int GetIntInfo(Dictionary<string, string> info, string key, string objectType) {
             string value_str = GetStringInfo(info, key, objectType);
-            int value = 0;
+            int value;
 
             if(!int.TryParse(value_str, out value)) {
                 throw new ArgumentException(string.Format("A(n) {0}'s {1} must be an integer.", objectType, key));
@@ -146,8 +167,8 @@ namespace SpaceMAS.Level {
             if(positions.Length != 2)
                 throw new ArgumentException("A position must have the format 'x,y'");
 
-            int x = 0;
-            int y = 0;
+            int x;
+            int y;
 
             if(!int.TryParse(positions[0], out x) || !int.TryParse(positions[1], out y))
                 throw new ArgumentException("A position must have the format 'x,y' where 'x' and 'y' are integers");

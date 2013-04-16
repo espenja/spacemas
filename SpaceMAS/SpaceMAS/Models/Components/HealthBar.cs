@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Utils;
 
@@ -20,7 +19,7 @@ namespace SpaceMAS.Models.Components {
 
             if(Parent.Dead) {
                 //remove object
-                if (Parent is Player.Player)
+                if (Parent is Players.Player)
                 {
                     //Make player stuff happen
                 }
@@ -50,7 +49,7 @@ namespace SpaceMAS.Models.Components {
             Vector2 anchor = Parent.UpperLeftCorner();
             double healthBarWidth = Parent.Width * Percent;
 
-            spriteBatch.Draw(Texture, new Rectangle((int)anchor.X, (int)anchor.Y - 10, (int)healthBarWidth, 3), Color.White);
+            Drawing.Draw(spriteBatch, Texture, new Rectangle((int)anchor.X, (int)anchor.Y - 10, (int)healthBarWidth, 3), Color.White, GameDrawOrder.GAME_LEVEL_TOP);
         }
     }
 }

@@ -4,12 +4,13 @@ using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
 
-namespace SpaceMAS.Models.Player {
+namespace SpaceMAS.Models.Players {
     public class Player : KillableGameObject {
 
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
+        public bool Disabled { get; set; }
 
         public Player(string name, Vector2 position) {
             Name = name;
@@ -18,6 +19,7 @@ namespace SpaceMAS.Models.Player {
             AccelerationRate = 800f;
             NaturalDecelerationRate = 100f;
             RotationRate = 3f;
+            Scale = 0.5f;
 
             MaxHealthPoints = 100;
             HealthPoints = 100;
@@ -30,7 +32,10 @@ namespace SpaceMAS.Models.Player {
 
             //If the player is dead, then movement should not occur
             if (!Dead) {
-                Move(gameTime);
+
+                //A disabled player should not be allowed to move, but he can still be killed
+                if(!Disabled)
+                    Move(gameTime);
                 HealthBar.Update(gameTime);
             }
 
@@ -39,9 +44,7 @@ namespace SpaceMAS.Models.Player {
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
-
             HealthBar.Draw(spriteBatch);
-
             base.Draw(spriteBatch);
         }
 
@@ -49,20 +52,22 @@ namespace SpaceMAS.Models.Player {
             float ElapsedGameTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             Vector2 NewVelocity = new Vector2(Velocity.X, Velocity.Y);
 
+            KeyboardState state = Keyboard.GetState();
+
+
             //Add userinput
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnRight)) {
+            if (state.IsKeyDown(PlayerControls.TurnRight))
                 Rotation += RotationRate * ElapsedGameTime;
-            }
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.TurnLeft)) {
+
+            if (state.IsKeyDown(PlayerControls.TurnLeft)) {
                 Rotation -= RotationRate * ElapsedGameTime;
             }
             //TODO: Accelerate the direction the player is facing(need to consider rotation), not just X and Y axis as it is now
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.Decelerate)) {
+            if (state.IsKeyDown(PlayerControls.Decelerate))
                 NewVelocity.X -= AccelerationRate * ElapsedGameTime;
-            }
-            if (Keyboard.GetState().IsKeyDown(PlayerControls.Accelerate)) {
+
+            if (state.IsKeyDown(PlayerControls.Accelerate))
                 NewVelocity.X += AccelerationRate * ElapsedGameTime;
-            }
 
             //Add natural deceleration
             if (Velocity.X > 0) {
@@ -96,12 +101,14 @@ namespace SpaceMAS.Models.Player {
         private void DisablePlayer() {
             AccelerationRate = 0f;
             NaturalDecelerationRate = 800f;
+            Disabled = true;
         }
 
         //Enables the player to move again
         private void EnablePlayer() {
             AccelerationRate = 800f;
             NaturalDecelerationRate = 100f;
+            Disabled = false;
         }
     }
 }

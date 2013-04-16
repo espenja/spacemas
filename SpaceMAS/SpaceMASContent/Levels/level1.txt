@@ -17,13 +17,13 @@ spawn_rate:10000
 enemies_per_spawn:5
 
 %enemy
-id:helicopter
+id:enemy_pink
 health:100
 spawner_id:0
 amount:10
 
 %enemy
-id:test1
+id:enemy_blue
 health:200
 spawner_id:1
 amount:20
