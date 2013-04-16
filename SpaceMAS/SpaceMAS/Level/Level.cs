@@ -41,6 +41,9 @@ namespace SpaceMAS.Level {
             else {
                 foreach(Player player in Players)
                     player.Update(gameTime);
+                foreach(Spawner spawner in Spawners)
+                    spawner.Update(gameTime);
+
             }
         }
 
