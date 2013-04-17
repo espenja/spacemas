@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SpaceMAS.Models;
+using SpaceMAS.Graphics;
+using SpaceMAS.Settings;
+using SpaceMAS.State;
 using SpaceMAS.Utils;
 
 namespace SpaceMAS.Level {
@@ -37,7 +39,7 @@ namespace SpaceMAS.Level {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
             GraphicsDevice graphicsDevice = GameServices.GetService<GraphicsDevice>();
             GraphicsDeviceManager graphicsDeviceManager = GameServices.GetService<GraphicsDeviceManager>();
-            LevelIntroFont = contentManager.Load<SpriteFont>("Fonts/HandOfSean");
+            LevelIntroFont = contentManager.Load<SpriteFont>(GeneralSettings.FontsPath + "HandOfSean");
 
             int Width = graphicsDeviceManager.PreferredBackBufferWidth;
             int Height = graphicsDeviceManager.PreferredBackBufferHeight;
@@ -56,7 +58,7 @@ namespace SpaceMAS.Level {
         public void Update(GameTime gameTime) {
 
             if (!IntroRunning) return;
-            if (Level.GameState != GameState.PLAYING) return;
+            if (StateProvider.Instance.State != GameState.PLAYING) return;
 
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -91,10 +93,8 @@ namespace SpaceMAS.Level {
         }
 
         public void Draw(SpriteBatch spriteBatch) {
-
             Drawing.DrawString(spriteBatch, LevelIntroFont, Level.Name, FontPosition, Color.White, Opacity, 0.5f, GameDrawOrder.FOREGROUND_TOP);
             Drawing.Draw(spriteBatch, Texture, IntroScreen, Color.White, Opacity, GameDrawOrder.FOREGROUND_MIDDLE);
-
         }
     }
 }

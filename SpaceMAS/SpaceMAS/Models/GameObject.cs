@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Graphics;
+using SpaceMAS.Settings;
 using SpaceMAS.Utils;
 using SpaceMAS.Utils.Collition;
 
@@ -29,7 +31,7 @@ namespace SpaceMAS.Models {
 
         public void LoadTexture(string textureName) {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
-            Texture = contentManager.Load<Texture2D>("Textures/" + textureName);
+            Texture = contentManager.Load<Texture2D>(GeneralSettings.TexturesPath + textureName);
         }
 
         public Texture2D Texture {

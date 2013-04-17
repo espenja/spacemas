@@ -25,7 +25,7 @@ namespace SpaceMAS.Models.Players {
             HealthPoints = 100;
 
             HealthBar = new HealthBar(this);
-            PlayerControls = Controller.GetControls(name);
+            PlayerControls = ControlsController.GetControls(name);
         }
 
         public override void Update(GameTime gameTime) {
@@ -89,7 +89,7 @@ namespace SpaceMAS.Models.Players {
         }
 
         public bool ClickedPauseKey() {
-            return Keyboard.GetState().IsKeyDown(PlayerControls.Pause);
+            return Keyboard.GetState().IsKeyDown(Controls.Pause);
         }
 
         public override void Die() {
