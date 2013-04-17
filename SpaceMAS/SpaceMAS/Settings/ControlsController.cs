@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace SpaceMAS.Settings {
-    public static class Controller {
+    public static class ControlsController {
 
         private static readonly Dictionary<string, Controls> Controls = new Dictionary<string, Controls>();
 

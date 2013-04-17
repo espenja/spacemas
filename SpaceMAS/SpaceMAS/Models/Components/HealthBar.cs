@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Graphics;
 using SpaceMAS.Utils;
 
 namespace SpaceMAS.Models.Components {

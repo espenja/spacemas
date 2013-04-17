@@ -1,4 +1,4 @@
-﻿namespace SpaceMAS.Models {
+﻿namespace SpaceMAS.Graphics {
     public static class GameDrawOrder {
 
         public const float FOREGROUND_TOP = 0.0f;

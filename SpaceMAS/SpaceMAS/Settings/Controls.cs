@@ -12,10 +12,10 @@ namespace SpaceMAS.Settings {
         public Keys Decelerate;
         public Keys Shoot;
         public Keys Shield;
-        public Keys Pause;
-        public Keys MenuSelect;
-        public Keys MenuUp;
-        public Keys MenuDown;
+        public static Keys Pause;
+        public static Keys MenuSelect;
+        public static Keys MenuUp;
+        public static Keys MenuDown;
 
         public Controls(string player) {
             LoadPlayerControls(player);

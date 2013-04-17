@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models;
 using SpaceMAS.Models.Enemy;
 using SpaceMAS.Models.Players;
+using SpaceMAS.State;
 using SpaceMAS.Utils;
 
 namespace SpaceMAS.Level {
@@ -13,7 +14,7 @@ namespace SpaceMAS.Level {
         public int Id { get; set; }
         public string Name { get; set; }
         public List<Spawner> Spawners { get; private set; }
-        public GameState GameState;
+        public StateProvider StateProvider;
         public LevelIntro LevelIntro;
         public List<Player> Players; 
 

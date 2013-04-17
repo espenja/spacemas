@@ -160,18 +160,18 @@ namespace SpaceMAS.Level {
 
         private Vector2 GetPosition(string position) {
             if(!position.Contains(","))
-                throw new ArgumentException("A position must have the format 'x,y'");
+                throw new ArgumentException("A Position must have the format 'x,y'");
 
             string[] positions = position.Split(',');
 
             if(positions.Length != 2)
-                throw new ArgumentException("A position must have the format 'x,y'");
+                throw new ArgumentException("A Position must have the format 'x,y'");
 
             int x;
             int y;
 
             if(!int.TryParse(positions[0], out x) || !int.TryParse(positions[1], out y))
-                throw new ArgumentException("A position must have the format 'x,y' where 'x' and 'y' are integers");
+                throw new ArgumentException("A Position must have the format 'x,y' where 'x' and 'y' are integers");
 
             return new Vector2(x, y);
         }

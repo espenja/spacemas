@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace SpaceMAS.Utils {
+namespace SpaceMAS.Graphics {
     public class Drawing {
 
         public static void Draw(SpriteBatch spriteBatch, Texture2D texture, Rectangle destinationRectangle, Rectangle sourceRectangle, Color blendColor, float rotation, Vector2 origin,
