@@ -59,9 +59,9 @@ namespace SpaceMAS.Models.Players {
             if (state.IsKeyDown(PlayerControls.TurnRight))
                 Rotation += RotationRate * ElapsedGameTime;
 
-            if (state.IsKeyDown(PlayerControls.TurnLeft)) {
+            if (state.IsKeyDown(PlayerControls.TurnLeft)) 
                 Rotation -= RotationRate * ElapsedGameTime;
-            }
+            
             //TODO: Accelerate the direction the player is facing(need to consider rotation), not just X and Y axis as it is now
             if (state.IsKeyDown(PlayerControls.Decelerate))
                 NewVelocity.X -= AccelerationRate * ElapsedGameTime;
@@ -70,22 +70,26 @@ namespace SpaceMAS.Models.Players {
                 NewVelocity.X += AccelerationRate * ElapsedGameTime;
 
             //Add natural deceleration
-            if (Velocity.X > 0) {
+            if (Velocity.X > 0) 
                 NewVelocity.X -= NaturalDecelerationRate * ElapsedGameTime;
-            }
+
             else if (Velocity.X < 0) {
                 NewVelocity.X += NaturalDecelerationRate * ElapsedGameTime;
             }
 
-            if (Velocity.Y > 0) {
+            if (Velocity.Y > 0) 
                 NewVelocity.Y -= NaturalDecelerationRate * ElapsedGameTime;
-            }
-            else if (Velocity.Y < 0) {
+
+            else if (Velocity.Y < 0) 
                 NewVelocity.Y += NaturalDecelerationRate * ElapsedGameTime;
-            }
+            
 
             Velocity = NewVelocity;
             Position += Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Stop at screen edges
+
+
         }
 
         public bool ClickedPauseKey() {
