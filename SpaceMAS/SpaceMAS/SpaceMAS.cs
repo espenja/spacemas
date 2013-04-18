@@ -105,7 +105,7 @@ namespace SpaceMAS {
             base.Update(gameTime);
         }
 
-        private void UpdatePlayingState(GameTime gameTime) {
+        protected void UpdatePlayingState(GameTime gameTime) {
             LevelController.CurrentLevel.Update(gameTime);
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
@@ -116,7 +116,7 @@ namespace SpaceMAS {
             }
         }
 
-        private void UpdateGamepausedState() {
+        protected void UpdateGamepausedState() {
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
@@ -126,12 +126,12 @@ namespace SpaceMAS {
             }    
         }
 
-        private void PauseGame() {
+        protected void PauseGame() {
             StateProvider.Instance.State = GameState.GAMEPAUSED;
             timeSinceLastAction = 0f;
         }
 
-        private void UnPause() {
+        protected void UnPause() {
             StateProvider.Instance.State = GameState.PLAYING;
             timeSinceLastAction = 0f;
         }

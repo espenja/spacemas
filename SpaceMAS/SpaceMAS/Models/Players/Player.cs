@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace SpaceMAS.Models.Players {
     public class Player : KillableGameObject {
@@ -14,11 +15,10 @@ namespace SpaceMAS.Models.Players {
 
         public Player(string name, Vector2 position) {
             Name = name;
-            Rotation = 0f;
+            Rotation = 0.0f;
             Position = position;
-            AccelerationRate = 800f;
-            NaturalDecelerationRate = 100f;
-            RotationRate = 3f;
+            AccelerationRate = 5.0f;
+            RotationRate = 3.0f;
             Scale = 0.5f;
 
             MaxHealthPoints = 100;
@@ -56,39 +56,39 @@ namespace SpaceMAS.Models.Players {
 
 
             //Add userinput
-            if (state.IsKeyDown(PlayerControls.TurnRight))
-                Rotation += RotationRate * ElapsedGameTime;
+            if (state.IsKeyDown(PlayerControls.TurnRight)) Rotation += RotationRate * ElapsedGameTime;
+            if (state.IsKeyDown(PlayerControls.TurnLeft)) Rotation -= RotationRate * ElapsedGameTime;
 
-            if (state.IsKeyDown(PlayerControls.TurnLeft)) 
-                Rotation -= RotationRate * ElapsedGameTime;
-            
-            //TODO: Accelerate the direction the player is facing(need to consider rotation), not just X and Y axis as it is now
-            if (state.IsKeyDown(PlayerControls.Decelerate))
-                NewVelocity.X -= AccelerationRate * ElapsedGameTime;
-
+            if (state.IsKeyDown(PlayerControls.Decelerate)) 
+            {
+                NewVelocity.X -= (float)Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
+                NewVelocity.Y -= (float)Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
+            }
             if (state.IsKeyDown(PlayerControls.Accelerate))
-                NewVelocity.X += AccelerationRate * ElapsedGameTime;
-
-            //Add natural deceleration
-            if (Velocity.X > 0) 
-                NewVelocity.X -= NaturalDecelerationRate * ElapsedGameTime;
-
-            else if (Velocity.X < 0) {
-                NewVelocity.X += NaturalDecelerationRate * ElapsedGameTime;
+            {
+                NewVelocity.X += (float)Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
+                NewVelocity.Y += (float)Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
             }
 
-            if (Velocity.Y > 0) 
-                NewVelocity.Y -= NaturalDecelerationRate * ElapsedGameTime;
-
-            else if (Velocity.Y < 0) 
-                NewVelocity.Y += NaturalDecelerationRate * ElapsedGameTime;
-            
 
             Velocity = NewVelocity;
-            Position += Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            Position += Velocity;
 
-            //Stop at screen edges
-
+            //TODO: Stop at screen edges?
+            if (Position.X > GeneralSettings.screenWidth) {
+                Position = new Vector2(GeneralSettings.screenWidth, Position.Y);
+                Velocity = new Vector2(0, Velocity.Y);
+            } else if (Position.X < 0) {
+                Position = new Vector2(0, Position.Y);
+                Velocity = new Vector2(0, Velocity.Y);
+            }
+            if (Position.Y > GeneralSettings.screenHeight) {
+                Position = new Vector2(Position.X, GeneralSettings.screenHeight);
+                Velocity = new Vector2(Velocity.X, 0);
+            } else if (Position.Y < 0)  {
+                Position = new Vector2(Position.X, 0);
+                Velocity = new Vector2(Velocity.X, 0);
+            }
 
         }
 
@@ -104,14 +104,12 @@ namespace SpaceMAS.Models.Players {
         //Disables the player so that he cannot move and bring the spaceship to a halt quickly
         private void DisablePlayer() {
             AccelerationRate = 0f;
-            NaturalDecelerationRate = 800f;
             Disabled = true;
         }
 
         //Enables the player to move again
         private void EnablePlayer() {
-            AccelerationRate = 800f;
-            NaturalDecelerationRate = 100f;
+            AccelerationRate = 5.0f;
             Disabled = false;
         }
     }

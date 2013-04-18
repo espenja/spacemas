@@ -15,9 +15,7 @@ namespace SpaceMAS.Models.Enemy {
         public Enemy() {
             Rotation = 0f;
             AccelerationRate = 300f;
-            NaturalDecelerationRate = 0f;
             RotationRate = 2f;
-
             MaxHealthPoints = 25;
             HealthPoints = 25;
 

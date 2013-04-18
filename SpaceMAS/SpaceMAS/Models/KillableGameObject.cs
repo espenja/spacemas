@@ -9,7 +9,6 @@
         {
             //Default die action for KillableGameObjects
             AccelerationRate = 0f;
-            NaturalDecelerationRate = 800f;
         }
     }
 }

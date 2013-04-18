@@ -19,7 +19,6 @@ namespace SpaceMAS.Models {
         public Vector2 Position { get; protected set; }
         public Vector2 Origin { get; protected set; }
         public Vector2 Velocity { get; protected set; }
-        public float NaturalDecelerationRate { get; protected set; }
         public float AccelerationRate { get; protected set; }
         public float RotationRate { get; protected set; }
         public float Rotation { get; protected set; }
@@ -87,7 +86,7 @@ namespace SpaceMAS.Models {
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation + MathHelper.PiOver2, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
         }
 
         public bool IntersectPixels(GameObject otherObject) {
