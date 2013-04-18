@@ -8,6 +8,7 @@ using SpaceMAS.State;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
 using SpaceMAS.Models;
+using SpaceMAS.Settings;
 
 namespace SpaceMAS {
 
@@ -15,9 +16,6 @@ namespace SpaceMAS {
 
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
-
-        private const int screenWidth = 1024;
-        private const int screenHeight = 800;
 
         public List<Player> players = new List<Player>();
 
@@ -46,8 +44,8 @@ namespace SpaceMAS {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //Screen stuff
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.PreferredBackBufferWidth = GeneralSettings.screenWidth;
+            graphics.PreferredBackBufferHeight = GeneralSettings.screenHeight;
             graphics.ApplyChanges();
 
             GameServices.AddService(graphics);
