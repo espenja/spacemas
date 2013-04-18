@@ -20,8 +20,6 @@ namespace SpaceMAS {
         private const int screenHeight = 800;
 
         public List<Player> players = new List<Player>();
-        private bool gamePaused;
-        private Player pausingPlayer;
 
         //Needed for not letting actions get spammed every update (eg if you click Up in the main menu the up
         //action should not be done 182734 times(every update)
@@ -98,6 +96,9 @@ namespace SpaceMAS {
                     break;
                 case GameState.OPTIONS:
                     break;
+                case GameState.GAMEPAUSED:
+                    UpdateGamepausedState();
+                    break;
                 case GameState.PLAYING:
                     UpdatePlayingState(gameTime);
                     break;
@@ -106,31 +107,34 @@ namespace SpaceMAS {
             base.Update(gameTime);
         }
 
-        public void UpdatePlayingState(GameTime gameTime) {
-            if (!gamePaused) {
-                LevelController.CurrentLevel.Update(gameTime);
-            }
+        private void UpdatePlayingState(GameTime gameTime) {
+            LevelController.CurrentLevel.Update(gameTime);
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
-                    if (player.ClickedPauseKey() && !gamePaused) {
-                        PauseGame(player);
-                    }
-                    else if (gamePaused && player.ClickedPauseKey() && player == pausingPlayer) {
-                        UnPause();
+                    if (player.ClickedPauseKey()) {
+                        PauseGame();
                     }
                 }
             }
         }
 
-        public void PauseGame(Player pausingPlayer) {
-            gamePaused = true;
-            this.pausingPlayer = pausingPlayer;
+        private void UpdateGamepausedState() {
+            if (timeSinceLastAction > 1) {
+                foreach (Player player in players) {
+                    if (player.ClickedPauseKey()) {
+                        UnPause();
+                    }
+                }
+            }    
+        }
+
+        private void PauseGame() {
+            StateProvider.Instance.State = GameState.GAMEPAUSED;
             timeSinceLastAction = 0f;
         }
 
-        public void UnPause() {
-            gamePaused = false;
-            pausingPlayer = null;
+        private void UnPause() {
+            StateProvider.Instance.State = GameState.PLAYING;
             timeSinceLastAction = 0f;
         }
 
@@ -146,6 +150,9 @@ namespace SpaceMAS {
                     MenuController.Draw(spriteBatch);
                     break;
                 case GameState.OPTIONS:
+                    break;
+                case GameState.GAMEPAUSED:
+                    LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
                 case GameState.PLAYING:
                     LevelController.CurrentLevel.Draw(spriteBatch);

@@ -6,6 +6,7 @@ namespace SpaceMAS.State {
         MENU,
         OPTIONS,
         PLAYING,
+        GAMEPAUSED,
         HIGHSCORE,
         QUIT,
 
