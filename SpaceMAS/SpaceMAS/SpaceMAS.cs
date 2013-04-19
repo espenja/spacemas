@@ -65,7 +65,7 @@ namespace SpaceMAS {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            thisPlayer = new Player("fictive", new Vector2(300, 300)) {Texture = Content.Load<Texture2D>("Textures/player")};
+            thisPlayer = new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player"));
             players.Add(thisPlayer);
 
             GameServices.AddService(players);

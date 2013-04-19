@@ -135,7 +135,8 @@ namespace SpaceMAS.Level {
             for (int i = 0; i < amount; i++) {
                 Enemy enemy = new Enemy();
                 enemy.LoadTexture(id);
-                enemy.Health = health;
+                enemy.HealthPoints = health;
+                enemy.MaxHealthPoints = health;
                 level.AddEnemy(enemy, spawnerId);
             }
         }

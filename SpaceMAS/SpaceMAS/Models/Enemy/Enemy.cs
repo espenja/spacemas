@@ -6,11 +6,12 @@ namespace SpaceMAS.Models.Enemy {
     public class Enemy : KillableGameObject {
 
         private HealthBar HealthBar { get; set; }
+        public int Bounty { get; set; }
 
-        public new float Health {
-            get { return base.Health; }
-            set { base.Health = value; }
-        }
+        //public new float Health {
+        //    get { return base.Health; }
+        //    set { base.Health = value; }
+        //}
 
         public Enemy() {
             Rotation = 0f;
@@ -18,6 +19,7 @@ namespace SpaceMAS.Models.Enemy {
             RotationRate = 2f;
             MaxHealthPoints = 25;
             HealthPoints = 25;
+            Bounty = 10;
 
             HealthBar = new HealthBar(this);
         }
@@ -41,5 +43,15 @@ namespace SpaceMAS.Models.Enemy {
             //Enemies should perhaps automatically target the nearest Player?
         }
 
+
+        public override void Disable()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Enable()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -116,6 +116,11 @@
     <Compile Include="Menu\Menu.cs" />
     <Compile Include="Menu\MenuButton.cs" />
     <Compile Include="Menu\MenuController.cs" />
+    <Compile Include="Models\Components\Bullet.cs" />
+    <Compile Include="Models\Components\BulletEffect.cs" />
+    <Compile Include="Models\Components\BulletListener.cs" />
+    <Compile Include="Models\Components\BulletEffects\DisableEffect.cs" />
+    <Compile Include="Models\Components\Weapon.cs" />
     <Compile Include="Models\Enemy\Enemy.cs" />
     <Compile Include="Models\Enemy\Spawner.cs" />
     <Compile Include="Graphics\GameDrawOrder.cs" />

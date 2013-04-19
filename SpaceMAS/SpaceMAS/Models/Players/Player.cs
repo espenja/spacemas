@@ -4,25 +4,37 @@ using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
 using System;
+using SpaceMAS.Models.Components.BulletEffects;
+using SpaceMAS.Utils;
+using Microsoft.Xna.Framework.Content;
 
 namespace SpaceMAS.Models.Players {
-    public class Player : KillableGameObject {
+    public class Player : KillableGameObject, BulletListener {
 
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
         public bool Disabled { get; set; }
+        private Weapon Weapon { get; set; }
+        private int Money { get; set; }
 
-        public Player(string name, Vector2 position) {
+        public Player(string name, Vector2 position, Texture2D Texture) {
+            this.Texture = Texture;
+
             Name = name;
             Rotation = 0.0f;
             Position = position;
-            AccelerationRate = 5.0f;
-            RotationRate = 3.0f;
+            AccelerationRate = 8.0f;
+            RotationRate = 4.0f;
             Scale = 0.5f;
 
             MaxHealthPoints = 100;
             HealthPoints = 100;
+            Money = 0;
+
+            ContentManager cm = GameServices.GetService<ContentManager>();
+            Bullet weaponBullet = new Bullet(10f, 550f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
+            Weapon = new Weapon(weaponBullet, 150f, 100, this);
 
             HealthBar = new HealthBar(this);
             PlayerControls = ControlsController.GetControls(name);
@@ -37,6 +49,11 @@ namespace SpaceMAS.Models.Players {
                 if(!Disabled)
                     Move(gameTime);
                 HealthBar.Update(gameTime);
+                KeyboardState state = Keyboard.GetState();
+                if (state.IsKeyDown(PlayerControls.Shoot))
+                {
+                    Weapon.Shoot(gameTime);
+                }
             }
 
             base.Update(gameTime);
@@ -98,18 +115,28 @@ namespace SpaceMAS.Models.Players {
 
         public override void Die() {
             //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
-            DisablePlayer();
+            Disable();
         }
 
-        //Disables the player so that he cannot move and bring the spaceship to a halt quickly
-        private void DisablePlayer() {
-            AccelerationRate = 0f;
+
+       
+
+        public void BulletImpact(Bullet Bullet, GameObject Object)
+        {
+            if (Object is Enemy.Enemy)
+            {
+                Money += ((Enemy.Enemy)Object).Bounty;
+            }
+        }
+
+        public override void Disable()
+        {
             Disabled = true;
+            Velocity = Vector2.Zero;
         }
 
-        //Enables the player to move again
-        private void EnablePlayer() {
-            AccelerationRate = 5.0f;
+        public override void Enable()
+        {
             Disabled = false;
         }
     }

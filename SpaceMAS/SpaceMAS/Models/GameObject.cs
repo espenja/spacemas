@@ -16,9 +16,9 @@ namespace SpaceMAS.Models {
         private Matrix transform;
 
         //Position and size related variables
-        public Vector2 Position { get; protected set; }
+        public Vector2 Position { get; set; }
         public Vector2 Origin { get; protected set; }
-        public Vector2 Velocity { get; protected set; }
+        public Vector2 Velocity { get; set; }
         public float AccelerationRate { get; protected set; }
         public float RotationRate { get; protected set; }
         public float Rotation { get; protected set; }
@@ -26,7 +26,6 @@ namespace SpaceMAS.Models {
         public int Width { get; protected set; }
         public int Height { get; protected set; }
 
-        public float Health { get; protected set; }
 
         public void LoadTexture(string textureName) {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
@@ -93,5 +92,7 @@ namespace SpaceMAS.Models {
             return CollitionDetection.IntersectPixels(transform, texture.Width, texture.Height, colorData,
                                    otherObject.transform, otherObject.texture.Width, otherObject.texture.Height, otherObject.colorData);
         }
+
+        
     }
 }
