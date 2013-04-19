@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceMAS.Graphics;
 using SpaceMAS.Settings;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
@@ -20,6 +21,10 @@ namespace SpaceMAS.Menu {
         private MenuButton SelectedButton;
         private const float ButtonSpacing = 25f;
         private const float buttonHeight = 53f;
+        
+        private float opacity = 0.50f;
+        private Rectangle Background;
+        private Texture2D Texture;
 
         private double LastActionTime;
 
@@ -27,6 +32,11 @@ namespace SpaceMAS.Menu {
             MenuController = menuController;
             PreviousMenu = previousMenu;
             MenuID = menuID;
+
+            var graphics = GameServices.GetService<GraphicsDevice>();
+            Background = new Rectangle(0, 0, graphics.Viewport.Width, graphics.Viewport.Height);
+            Texture = new Texture2D(graphics, 1, 1);
+            Texture.SetData(new[] {Color.Black});
         }
 
         public void CreateButton(string textureName, string text, int buttonIndex, GameState changesToStateProvider, int changesToMenu) {
@@ -97,6 +107,9 @@ namespace SpaceMAS.Menu {
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {
+
+            Drawing.Draw(spriteBatch, Texture, Background, Color.White, opacity, GameDrawOrder.FOREGROUND_BOTTOM);
+
             foreach (MenuButton button in MenuButtons)
                 button.Draw(spriteBatch);
         }

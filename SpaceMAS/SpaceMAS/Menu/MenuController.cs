@@ -28,13 +28,22 @@ namespace SpaceMAS.Menu {
             optionsMenu.CreateButton("options", "Some stuff", 0, GameState.MENU, -1);
             optionsMenu.CreateButton("options", "Back", 1, GameState.MENU, 0);
             
+            //Highscore menu with ID = 2
             Menu highscoreMenu = new Menu(this, 2, 0);
             highscoreMenu.CreateButton("highscore", "Some stuff", 0, GameState.HIGHSCORE, -1);
             highscoreMenu.CreateButton("highscore", "Back", 1, GameState.MENU, 0);
 
+            //Pause menu with ID = 3
+            Menu pauseMenu = new Menu(this, 3, -1);
+            pauseMenu.CreateButton("play", "Resume", 0, GameState.PLAYING, -1);
+            pauseMenu.CreateButton("options", "Options", 1, GameState.MENU, 1);
+            pauseMenu.CreateButton("highscore", "Highscore", 2, GameState.MENU, 2);
+            pauseMenu.CreateButton("quit", "Quit", 3, GameState.QUIT, -1);
+
             Menus.Add(mainMenu);
             Menus.Add(optionsMenu);
             Menus.Add(highscoreMenu);
+            Menus.Add(pauseMenu);
 
             CurrentMenu = mainMenu;
         }

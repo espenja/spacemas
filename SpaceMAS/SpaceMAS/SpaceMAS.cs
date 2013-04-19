@@ -98,6 +98,9 @@ namespace SpaceMAS {
                     break;
                 case GameState.OPTIONS:
                     break;
+                case GameState.GAMEPAUSED:
+                    MenuController.Update(gameTime);
+                    break;
                 case GameState.PLAYING:
                     UpdatePlayingState(gameTime);
                     break;
@@ -113,7 +116,7 @@ namespace SpaceMAS {
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey() && !gamePaused) {
-                        PauseGame(player);
+                        StateProvider.Instance.State = GameState.GAMEPAUSED;
                     }
                     else if (gamePaused && player.ClickedPauseKey() && player == pausingPlayer) {
                         UnPause();
@@ -122,11 +125,12 @@ namespace SpaceMAS {
             }
         }
 
-        public void PauseGame(Player pausingPlayer) {
-            gamePaused = true;
-            this.pausingPlayer = pausingPlayer;
-            timeSinceLastAction = 0f;
-        }
+        //public void PauseGame(Player pausingPlayer) {
+        //    StateProvider.Instance.State = GameState.GAMEPAUSED;
+        //    gamePaused = true;
+        //    this.pausingPlayer = pausingPlayer;
+        //    timeSinceLastAction = 0f;
+        //}
 
         public void UnPause() {
             gamePaused = false;
@@ -146,6 +150,10 @@ namespace SpaceMAS {
                     MenuController.Draw(spriteBatch);
                     break;
                 case GameState.OPTIONS:
+                    break;
+                case GameState.GAMEPAUSED:
+                    MenuController.CurrentMenu.Draw(spriteBatch);
+                    LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
                 case GameState.PLAYING:
                     LevelController.CurrentLevel.Draw(spriteBatch);
