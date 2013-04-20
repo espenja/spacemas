@@ -36,8 +36,8 @@ namespace SpaceMAS.Models.Enemy {
                     Enemy nextEnemy = GetNext();
                     if (nextEnemy != null)
                     {
-                        nextEnemy.Position = new Vector2(Position.X, Position.Y);
                         LevelController lcon = GameServices.GetService<LevelController>();
+                        nextEnemy.Position = new Vector2(Position.X, Position.Y);
                         lcon.CurrentLevel.AllDrawableGameObjects.Add(nextEnemy);
                     }
                     TimeSinceLastSpawn = 0f;

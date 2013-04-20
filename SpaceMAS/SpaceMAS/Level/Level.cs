@@ -46,24 +46,20 @@ namespace SpaceMAS.Level {
             spawner.AddEnemy(enemy);
         }
 
-        //Removes gameobjects that is outside of the screen and dead killablegameobjects
         private void CleanUp()
         {
-            foreach (GameObject go in SafeToIterate)
-            {
-                if (go.Position.X < 0 || go.Position.X > GeneralSettings.screenWidth + go.Width
-                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight + go.Height)
-                {
-                    AllDrawableGameObjects.Remove(go);
-                }
-                if (go is KillableGameObject)
-                {
-                    if (((KillableGameObject)go).Dead)
-                    {
-                        AllDrawableGameObjects.Remove(go);
-                    }
-                }
-            }
+            //Remove objects outside the screen
+            AllDrawableGameObjects.RemoveAll(go => (go.Position.X < 0 || go.Position.X > GeneralSettings.screenWidth + go.Width
+                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight + go.Height));
+
+            //remove killed objts
+            AllDrawableGameObjects.RemoveAll(o => o is KillableGameObject && ((KillableGameObject)o).Dead);
+            
+            //Remove spawner if all its enemies has spawned
+            Spawners.RemoveAll(s => s.Enemies.Count == 0);
+
+
+
         }
 
         public void Update(GameTime gameTime) {
