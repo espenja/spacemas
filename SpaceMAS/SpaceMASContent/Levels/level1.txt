@@ -6,7 +6,7 @@ id:1
 id:0
 spawn_time:5000
 position:24,652
-spawn_rate:10000
+spawn_rate:1000
 enemies_per_spawn:5
 
 %spawner

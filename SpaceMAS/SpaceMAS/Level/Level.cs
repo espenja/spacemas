@@ -19,6 +19,7 @@ namespace SpaceMAS.Level {
         public List<Spawner> Spawners { get; private set; }
         public StateProvider StateProvider;
         public LevelIntro LevelIntro;
+        public float LevelPlayingTime { get; private set; }
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
         private List<GameObject> SafeToIterate { get; set; }
@@ -50,8 +51,8 @@ namespace SpaceMAS.Level {
         {
             foreach (GameObject go in SafeToIterate)
             {
-                if (go.Position.X < 0 || go.Position.X > GeneralSettings.screenWidth
-                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight)
+                if (go.Position.X < 0 || go.Position.X > GeneralSettings.screenWidth + go.Width
+                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight + go.Height)
                 {
                     AllDrawableGameObjects.Remove(go);
                 }
@@ -70,6 +71,7 @@ namespace SpaceMAS.Level {
                 LevelIntro.Update(gameTime);
             else
             {
+                LevelPlayingTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 SafeToIterate = new List<GameObject>();
                 SafeToIterate.AddRange(AllDrawableGameObjects);
                 AllDrawableGameObjects = new List<GameObject>();
@@ -82,13 +84,19 @@ namespace SpaceMAS.Level {
                 {
                     foreach (GameObject go2 in SafeToIterate)
                     {
-                        if (go is Bullet && go2 is KillableGameObject && go != go2 && go.IntersectPixels(go2))
+                        if (go is Bullet && !(go2 is Bullet) && go2 is KillableGameObject && go != go2 && go.IntersectPixels(go2))
                         {
                             ((Bullet)go).OnImpact(go2);
                         }
                     }
                 }
                 AllDrawableGameObjects.AddRange(SafeToIterate);
+
+                foreach (Spawner spawner in Spawners)
+                {
+                    spawner.Update(LevelPlayingTime, gameTime);
+                }
+
                 CleanUp();
             }
         }

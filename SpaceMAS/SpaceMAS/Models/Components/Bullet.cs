@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SpaceMAS.Models.Components
 {
-    public class Bullet : GameObject
+    public class Bullet : KillableGameObject
     {
         public List<BulletListener> Listeners { get; set; }
         protected float HealthChange { get; set; }
@@ -49,11 +49,13 @@ namespace SpaceMAS.Models.Components
             foreach (BulletListener Listener in Listeners)
             {
                 Listener.BulletImpact(this, Victim);
+                
             }
 
             if (Victim is KillableGameObject)
             {
                 ((KillableGameObject)Victim).HealthPoints += HealthChange;
+                Die();
             }
             Effect.OnImpact(Victim);
         }
@@ -61,6 +63,21 @@ namespace SpaceMAS.Models.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (isVisable) base.Draw(spriteBatch);
+        }
+
+        public override void Die()
+        {
+            Dead = true;   
+        }
+
+        public override void Disable()
+        {
+           
+        }
+
+        public override void Enable()
+        {
+            
         }
     }
 }

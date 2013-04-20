@@ -20,7 +20,6 @@ namespace SpaceMAS.Models.Enemy {
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
-            Position = new Vector2(0f, 100f);
 
             HealthBar = new HealthBar(this);
         }
