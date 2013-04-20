@@ -1,16 +1,23 @@
-﻿namespace SpaceMAS.Models {
+﻿using System;
+namespace SpaceMAS.Models {
     public abstract class KillableGameObject : GameObject {
 
-        public float HealthPoints { get; set; }
         public float MaxHealthPoints { get; set; }
-        public bool Dead { get; protected set; }
-
-        public virtual void Die()
+        private float healthPoints;
+        public float HealthPoints
         {
-            //Default die action for KillableGameObjects
-            AccelerationRate = 0f;
+            get { return healthPoints; }
+            set
+            {
+                healthPoints = value;
+                if (healthPoints <= 0) Die();
+            }
         }
+      
+        public bool Dead { get; protected set; }
+        public bool Disabled { get; set; }
 
+        public abstract void Die();
         public abstract void Disable();
         public abstract void Enable();
     }

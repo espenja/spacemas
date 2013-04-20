@@ -20,15 +20,16 @@ namespace SpaceMAS.Models.Enemy {
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
+            Position = new Vector2(0f, 100f);
 
             HealthBar = new HealthBar(this);
         }
 
         public override void Update(GameTime gameTime) {
-            Move(gameTime);
+            if (!Disabled)
+                Move(gameTime);
             HealthBar.Update(gameTime);
 
-            Position = new Vector2(Position.X + 1, Position.Y);
 
             base.Update(gameTime);
         }
@@ -41,17 +42,23 @@ namespace SpaceMAS.Models.Enemy {
 
         private void Move(GameTime gameTime) {
             //Enemies should perhaps automatically target the nearest Player?
+            Position = new Vector2(Position.X + 1, Position.Y);
         }
 
 
         public override void Disable()
         {
-            throw new System.NotImplementedException();
+            Disabled = true;
         }
 
         public override void Enable()
         {
-            throw new System.NotImplementedException();
+            Disabled = false;
+        }
+
+        public override void Die()
+        {
+            Dead = true;
         }
     }
 }

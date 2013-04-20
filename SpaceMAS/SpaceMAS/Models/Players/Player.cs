@@ -14,7 +14,6 @@ namespace SpaceMAS.Models.Players {
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
-        public bool Disabled { get; set; }
         private Weapon Weapon { get; set; }
         private int Money { get; set; }
 
@@ -33,7 +32,7 @@ namespace SpaceMAS.Models.Players {
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
-            Bullet weaponBullet = new Bullet(10f, 550f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
+            Bullet weaponBullet = new Bullet(-30f, 550f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
             Weapon = new Weapon(weaponBullet, 150f, 100, this);
 
             HealthBar = new HealthBar(this);
@@ -115,7 +114,8 @@ namespace SpaceMAS.Models.Players {
 
         public override void Die() {
             //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
-            Disable();
+            Console.WriteLine("died!");
+            Dead = true;
         }
 
 

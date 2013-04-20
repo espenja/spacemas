@@ -46,7 +46,6 @@ namespace SpaceMAS.Models.Components
 
         public void OnImpact(GameObject Victim)
         {
-            Console.WriteLine("Impact!");
             foreach (BulletListener Listener in Listeners)
             {
                 Listener.BulletImpact(this, Victim);

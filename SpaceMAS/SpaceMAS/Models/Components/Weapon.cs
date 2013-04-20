@@ -42,7 +42,7 @@ namespace SpaceMAS.Models.Components
                 NewBullet.Position = Owner.Position + NewBullet.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 5f;
                 NewBullet.Listeners.Add(Owner);
                 LevelController lcon = GameServices.GetService<LevelController>();
-                lcon.CurrentLevel.AllGameObjects.Add(NewBullet);
+                lcon.CurrentLevel.AllDrawableGameObjects.Add(NewBullet);
                 TimeSinceLastShot = 0;
 
             }
