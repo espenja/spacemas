@@ -32,7 +32,7 @@ namespace SpaceMAS.Models.Players {
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
-            Bullet weaponBullet = new Bullet(-30f, 550f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
+            Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
             Weapon = new Weapon(weaponBullet, 150f, 100, this);
 
             HealthBar = new HealthBar(this);

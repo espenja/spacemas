@@ -39,7 +39,7 @@ namespace SpaceMAS.Models.Components
                 Bullet NewBullet = new Bullet(BulletType);
                 NewBullet.Scale = 0.1f;
                 NewBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * NewBullet.TravelSpeed;
-                NewBullet.Position = Owner.Position + NewBullet.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds * 5f;
+                NewBullet.Position = Owner.Position + new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * 40f;
                 NewBullet.Listeners.Add(Owner);
                 LevelController lcon = GameServices.GetService<LevelController>();
                 lcon.CurrentLevel.AllDrawableGameObjects.Add(NewBullet);
