@@ -20,6 +20,7 @@ namespace SpaceMAS.Level {
         public StateProvider StateProvider;
         public LevelIntro LevelIntro;
         public float LevelPlayingTime { get; private set; }
+        private int updatesSinceLastCollDet;
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
         private List<GameObject> SafeToIterate { get; set; }
@@ -76,16 +77,23 @@ namespace SpaceMAS.Level {
                     go.Update(gameTime);
                 }
 
-                foreach (GameObject go in SafeToIterate)
+                //Only check detection ever 5th update
+                if (updatesSinceLastCollDet == 5)
                 {
-                    foreach (GameObject go2 in SafeToIterate)
+                    updatesSinceLastCollDet = 0;
+                    foreach (GameObject go in SafeToIterate)
                     {
-                        if (go is Bullet && !(go2 is Bullet) && go2 is KillableGameObject && go != go2 && go.IntersectPixels(go2))
+                        foreach (GameObject go2 in SafeToIterate)
                         {
-                            ((Bullet)go).OnImpact(go2);
+                            if (go is Bullet && !(go2 is Bullet) && go2 is KillableGameObject && go != go2 && go.IntersectPixels(go2))
+                            {
+                                ((Bullet)go).OnImpact(go2);
+                            }
                         }
                     }
                 }
+                else updatesSinceLastCollDet++;
+
                 AllDrawableGameObjects.AddRange(SafeToIterate);
 
                 foreach (Spawner spawner in Spawners)
