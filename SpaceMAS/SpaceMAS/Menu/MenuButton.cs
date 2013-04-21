@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using SpaceMAS.Models;
 using SpaceMAS.State;
 
 namespace SpaceMAS.Menu {

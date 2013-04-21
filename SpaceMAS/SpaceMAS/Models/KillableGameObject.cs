@@ -1,5 +1,4 @@
-﻿using System;
-namespace SpaceMAS.Models {
+﻿namespace SpaceMAS.Models {
     public abstract class KillableGameObject : GameObject {
 
         public float MaxHealthPoints { get; set; }

@@ -6,9 +6,9 @@ using SpaceMAS.Models.Enemy;
 using SpaceMAS.Models.Players;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
-using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using System;
+using SpaceMAS.Utils.Collition;
 
 namespace SpaceMAS.Level {
 
@@ -20,17 +20,17 @@ namespace SpaceMAS.Level {
         public StateProvider StateProvider;
         public LevelIntro LevelIntro;
         public float LevelPlayingTime { get; private set; }
-        private int updatesSinceLastCheck;
-        private int checkInterval = 5;
-        private LevelController levelController { get; set; }
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
         private List<GameObject> SafeToIterate { get; set; }
         public List<GameObject> AllDrawableGameObjects { get; set; }
 
+        public QuadTree QuadTree { get; private set; }
 
-        public Level(LevelController levelController) {
-            this.levelController = levelController;
+
+        public Level() {
+            var graphicsDevice = GameServices.GetService<GraphicsDevice>();
+            QuadTree = new QuadTree(0, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
             Spawners = new List<Spawner>();
             SafeToIterate = new List<GameObject>();
             AllDrawableGameObjects = new List<GameObject>();
@@ -50,81 +50,61 @@ namespace SpaceMAS.Level {
             spawner.AddEnemy(enemy);
         }
 
-        private void CleanUp()
-        {
+        private void CleanUp() {
             //Remove objects outside the screen
             AllDrawableGameObjects.RemoveAll(go => (go.Position.X < 0 || go.Position.X > GeneralSettings.screenWidth + go.Width
-                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight + go.Height));
+                                                    || go.Position.Y < 0 || go.Position.Y > GeneralSettings.screenHeight + go.Height));
 
             //remove killed objts
-            AllDrawableGameObjects.RemoveAll(o => o is KillableGameObject && ((KillableGameObject)o).Dead);
-            
+            AllDrawableGameObjects.RemoveAll(o => o is KillableGameObject && ((KillableGameObject) o).Dead);
+
             //Remove spawner if all its enemies has spawned
             Spawners.RemoveAll(s => s.Enemies.Count == 0);
-            
-
-
-
         }
 
         public void Update(GameTime gameTime) {
-            if (LevelIntro.IntroRunning)
+
+            if (LevelIntro.IntroRunning) {
                 LevelIntro.Update(gameTime);
-            else
-            {
-                LevelPlayingTime += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                SafeToIterate = new List<GameObject>();
-                SafeToIterate.AddRange(AllDrawableGameObjects);
-                AllDrawableGameObjects = new List<GameObject>();
-                foreach (GameObject go in SafeToIterate)
-                {
-                    go.Update(gameTime);
-                }
-
-                //Only check detection ever 5th update
-                if (updatesSinceLastCheck == checkInterval)
-                {
-                    updatesSinceLastCheck = 0;
-                    foreach (GameObject go in SafeToIterate)
-                    {
-                        foreach (GameObject go2 in SafeToIterate)
-                        {
-                            if (go is Bullet && !(go2 is Bullet) && go2 is KillableGameObject && go != go2 && go.IntersectPixels(go2))
-                            {
-                                ((Bullet)go).OnImpact(go2);
-                            }
-                        }
-                    }
-                }
-                else updatesSinceLastCheck++;
-
-                AllDrawableGameObjects.AddRange(SafeToIterate);
-
-                foreach (Spawner spawner in Spawners)
-                {
-                    spawner.Update(LevelPlayingTime, gameTime);
-                }
-
-                CleanUp();
-
-                //Checks if only players are left, if so level has ended
-                if (updatesSinceLastCheck == checkInterval)
-                {
-                    if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count)
-                    {
-                        //TODO: Gå til shop/velge difficult på neste lvl?
-                        //levelController.GoToNextLevel();
-                        Console.WriteLine("Level completet!");
-                    }
-                }
+                return;
             }
+
+            QuadTree.clear();
+
+            foreach (var gameObject in AllDrawableGameObjects) {
+                QuadTree.insert(gameObject);
+            }
+
+            LevelPlayingTime += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+            SafeToIterate = new List<GameObject>();
+            SafeToIterate.AddRange(AllDrawableGameObjects);
+            AllDrawableGameObjects = new List<GameObject>();
+
+
+            foreach (GameObject go in SafeToIterate) {
+                go.Update(gameTime);
+            }
+
+            AllDrawableGameObjects.AddRange(SafeToIterate);
+
+            foreach (Spawner spawner in Spawners) {
+                spawner.Update(LevelPlayingTime, gameTime);
+            }
+
+            if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count) {
+                //TODO: Gå til shop/velge difficult på neste lvl?
+                //levelController.GoToNextLevel();
+                Console.WriteLine("Level completet!");
+            }
+
+            CleanUp();
         }
 
         public void Draw(SpriteBatch spriteBatch) {
-            if(LevelIntro.IntroRunning)
+            QuadTree.Draw(spriteBatch);
+            if (LevelIntro.IntroRunning)
                 LevelIntro.Draw(spriteBatch);
-            else
-            {
+            else {
                 foreach (GameObject go in SafeToIterate)
                     go.Draw(spriteBatch);
             }

@@ -18,10 +18,10 @@ spawn_rate:2000
 id:enemy_pink
 health:100
 spawner_id:0
-amount:2
+amount:200
 
 %enemy
 id:enemy_blue
 health:200
 spawner_id:1
-amount:2
+amount:200

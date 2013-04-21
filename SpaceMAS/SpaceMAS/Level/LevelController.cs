@@ -111,7 +111,7 @@ namespace SpaceMAS.Level {
 
         private Level makeLevel(Dictionary<string, string> levelInfo) {
 
-            Level level = new Level(this);
+            Level level = new Level();
             level.Name = GetStringInfo(levelInfo, "name", "Level");
             level.Id = GetIntInfo(levelInfo, "id", "Level");
 
@@ -137,7 +137,8 @@ namespace SpaceMAS.Level {
             int spawnerId = GetIntInfo(enemyInfo, "spawner_id", "Enemy");
             int amount = GetIntInfo(enemyInfo, "amount", "Enemy");
 
-            for (int i = 0; i < amount; i++) {
+            for (int i = 0; i < amount; i++)
+            {
                 Enemy enemy = new Enemy();
                 enemy.LoadTexture(id);
                 enemy.HealthPoints = health;

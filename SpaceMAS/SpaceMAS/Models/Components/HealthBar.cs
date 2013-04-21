@@ -53,7 +53,7 @@ namespace SpaceMAS.Models.Components {
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
-            Vector2 anchor = Parent.UpperLeftCorner();
+            Vector2 anchor = new Vector2(Parent.BoundingBox.X, Parent.BoundingBox.Y);
             double healthBarWidth = Parent.Width * Percent;
 
             Drawing.Draw(spriteBatch, Texture, new Rectangle((int)anchor.X, (int)anchor.Y - 10, (int)healthBarWidth, 3), HealthColor, GameDrawOrder.GAME_LEVEL_TOP);

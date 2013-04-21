@@ -7,9 +7,7 @@ using SpaceMAS.Models.Players;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
-using SpaceMAS.Models;
 using SpaceMAS.Settings;
-using System;
 
 namespace SpaceMAS {
 
@@ -22,7 +20,7 @@ namespace SpaceMAS {
 
         //Needed for not letting actions get spammed every update (eg if you click Up in the main menu the up
         //action should not be done 182734 times(every update)
-        private float timeSinceLastAction = 0f;
+        private float timeSinceLastAction;
 
         private Player thisPlayer;
         private LevelController LevelController;
@@ -33,6 +31,8 @@ namespace SpaceMAS {
         public SpaceMAS() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+           
+            GameServices.AddService(this);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace SpaceMAS {
             if (LevelController.CurrentLevel != null)
                 LevelController.CurrentLevel.Update(gameTime);
             else
-                this.Exit();
+                Exit();
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
