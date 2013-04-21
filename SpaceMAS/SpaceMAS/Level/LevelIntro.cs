@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SpaceMAS.Graphics;
 using SpaceMAS.Settings;
 using SpaceMAS.State;
@@ -61,6 +62,11 @@ namespace SpaceMAS.Level {
             if (StateProvider.Instance.State != GameState.PLAYING) return;
 
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
+            KeyboardState state = Keyboard.GetState();
+
+            if (state.IsKeyDown(Keys.Enter)) {
+                IntroRunning = false;
+            }
 
             switch (State) {
                 case IntroState.FADING_IN:

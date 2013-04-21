@@ -25,12 +25,15 @@ namespace SpaceMAS.Models.Enemy {
         }
 
         public override void Update(GameTime gameTime) {
+
+            base.Update(gameTime);
+
             if (!Disabled)
                 Move(gameTime);
             HealthBar.Update(gameTime);
 
 
-            base.Update(gameTime);
+            
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

@@ -6,24 +6,24 @@ id:1
 id:0
 spawn_time:5000
 position:24,652
-spawn_rate:1000
-enemies_per_spawn:5
+spawn_rate:300
+enemies_per_spawn:1
 
 %spawner
 id:1
 spawn_time:10000
 position:80,352
-spawn_rate:10000
-enemies_per_spawn:5
+spawn_rate:200
+enemies_per_spawn:1
 
 %enemy
 id:enemy_pink
 health:100
 spawner_id:0
-amount:10
+amount:100
 
 %enemy
 id:enemy_blue
 health:200
 spawner_id:1
-amount:20
+amount:100

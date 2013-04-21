@@ -19,7 +19,7 @@ namespace SpaceMAS.Models.Components
         protected float TimeSinceLastShot { get; set; }
         protected Player Owner { get; set; }
         public bool isDisabled { get; set; }
-
+        public List<Bullet> FiredBullets { get; set; }
 
         public Weapon(Bullet BulletType, float Firerate, int NofBullets, Player Owner)
         {

@@ -16,20 +16,33 @@ namespace SpaceMAS.Models {
         private Matrix transform;
 
         //Position and size related variables
-        public Vector2 Position { get; set; }
+        private Vector2 position;
         public Vector2 Origin { get; protected set; }
         public Vector2 Velocity { get; set; }
         public float AccelerationRate { get; protected set; }
         public float RotationRate { get; protected set; }
         public float Rotation { get; protected set; }
-        public float scale = 1;
+        public float scale = 0.5f;
         public int Width { get; protected set; }
         public int Height { get; protected set; }
 
+        public Rectangle BoundingBox { get; protected set; }
+
+        public Color ColorTint { get; set; }
+
+        public float Opacity { get; set; }
 
         public void LoadTexture(string textureName) {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
             Texture = contentManager.Load<Texture2D>(GeneralSettings.TexturesPath + textureName);
+        }
+
+        public Vector2 Position {
+            get { return position; }
+            set {
+                position = value;
+                BoundingBox = new Rectangle((int) position.X - Width / 2, (int) position.Y - Height / 2, Width, Height);
+            }
         }
 
         public Texture2D Texture {
@@ -63,10 +76,6 @@ namespace SpaceMAS.Models {
             }
         }
 
-        public Vector2 UpperLeftCorner() {
-            return new Vector2(Position.X - Width / 2f, Position.Y - Height / 2f);
-        }
-
         public Matrix Transform {
             get { return transform; }
         }
@@ -85,12 +94,22 @@ namespace SpaceMAS.Models {
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {
-            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation + MathHelper.PiOver2, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
+
+            Texture2D t = GameServices.GetService<SpaceMAS>().TextureForDrawingLines;
+
+            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Top, 1, BoundingBox.Height), Color.White); // Left
+            spriteBatch.Draw(t, new Rectangle(BoundingBox.Right, BoundingBox.Top, 1, BoundingBox.Height), Color.White); // Right
+            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Top, BoundingBox.Width, 1), Color.White); // Top
+            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Bottom, BoundingBox.Width, 1), Color.White); // Bottom
+
+            spriteBatch.Draw(Texture, Position, null, new Color(ColorTint.R, ColorTint.G, ColorTint.B, Opacity), Rotation + MathHelper.PiOver2, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
+            Opacity = 1f;
+            ColorTint = Color.White;
         }
 
         public bool IntersectPixels(GameObject otherObject) {
             return CollitionDetection.IntersectPixels(transform, texture.Width, texture.Height, colorData,
-                                   otherObject.transform, otherObject.texture.Width, otherObject.texture.Height, otherObject.colorData);
+                                   otherObject.transform, otherObject.texture.Width, otherObject.texture.Height, otherObject.colorData, this, otherObject);
         }
 
         

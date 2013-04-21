@@ -132,7 +132,8 @@ namespace SpaceMAS.Level {
             int spawnerId = GetIntInfo(enemyInfo, "spawner_id", "Enemy");
             int amount = GetIntInfo(enemyInfo, "amount", "Enemy");
 
-            for (int i = 0; i < amount; i++) {
+            for (int i = 0; i < amount; i++)
+            {
                 Enemy enemy = new Enemy();
                 enemy.LoadTexture(id);
                 enemy.HealthPoints = health;

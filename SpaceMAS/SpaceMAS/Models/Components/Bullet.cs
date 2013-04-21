@@ -4,6 +4,10 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Level;
+using SpaceMAS.Utils;
+using SpaceMAS.Models.Players;
+using SpaceMAS.Utils.Collition;
 
 namespace SpaceMAS.Models.Components
 {
@@ -12,7 +16,7 @@ namespace SpaceMAS.Models.Components
         public List<BulletListener> Listeners { get; set; }
         protected float HealthChange { get; set; }
         protected BulletEffect Effect { get; set; }
-        public bool isVisable { get; set; }
+        public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }
 
         public Bullet(float HealthChange, float TravelSpeed, BulletEffect Effect, Texture2D Texture)
@@ -26,17 +30,35 @@ namespace SpaceMAS.Models.Components
         public Bullet(Bullet CopyBullet)
         {
             Listeners = new List<BulletListener>();
-            this.HealthChange = CopyBullet.HealthChange;
-            this.Effect = CopyBullet.Effect.Clone();
-            this.isVisable = true;
-            this.Texture = CopyBullet.Texture;
-            this.TravelSpeed = CopyBullet.TravelSpeed;
+            HealthChange = CopyBullet.HealthChange;
+            Effect = CopyBullet.Effect.Clone();
+            isVisible = true;
+            Texture = CopyBullet.Texture;
+            TravelSpeed = CopyBullet.TravelSpeed;
         }
 
-        public override void Update(GameTime gameTime)
-        {
+        public override void Update(GameTime gameTime) {
+            CheckCollide();
             Move(gameTime);
             base.Update(gameTime);
+        }
+
+        private void CheckCollide() {
+            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
+            List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
+
+            foreach (GameObject gameObject in GameObjectsNearby)
+            {
+                if (gameObject is KillableGameObject &&
+                    !(gameObject is Player) &&
+                    !(gameObject is Bullet) &&
+                    gameObject.IntersectPixels(this))
+                {
+
+                    OnImpact(gameObject);
+                }
+            }
+
         }
 
         private void Move(GameTime gameTime)
@@ -62,7 +84,7 @@ namespace SpaceMAS.Models.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (isVisable) base.Draw(spriteBatch);
+            if (isVisible) base.Draw(spriteBatch);
         }
 
         public override void Die()

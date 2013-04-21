@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
@@ -33,7 +35,7 @@ namespace SpaceMAS.Models.Players {
 
             ContentManager cm = GameServices.GetService<ContentManager>();
             Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
-            Weapon = new Weapon(weaponBullet, 150f, 100, this);
+            Weapon = new Weapon(weaponBullet, 50f, 10000, this);
 
             HealthBar = new HealthBar(this);
             PlayerControls = ControlsController.GetControls(name);
@@ -41,17 +43,27 @@ namespace SpaceMAS.Models.Players {
 
         public override void Update(GameTime gameTime) {
 
+            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
+            List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
+
+            foreach (var gameObject in GameObjectsNearby) {
+                gameObject.ColorTint = Color.Red;
+                gameObject.Opacity = 1f;
+            }
+
             //If the player is dead, then movement should not occur
             if (!Dead) {
 
                 //A disabled player should not be allowed to move, but he can still be killed
-                if(!Disabled)
+                if (!Disabled)
                     Move(gameTime);
                 HealthBar.Update(gameTime);
                 KeyboardState state = Keyboard.GetState();
-                if (state.IsKeyDown(PlayerControls.Shoot))
-                {
+                if (state.IsKeyDown(PlayerControls.Shoot)) {
                     Weapon.Shoot(gameTime);
+                }
+                else if (state.IsKeyDown(Keys.S)) {
+                    Velocity = new Vector2(0, 0);
                 }
             }
 
@@ -61,6 +73,7 @@ namespace SpaceMAS.Models.Players {
 
         public override void Draw(SpriteBatch spriteBatch) {
             HealthBar.Draw(spriteBatch);
+
             base.Draw(spriteBatch);
         }
 
@@ -72,18 +85,16 @@ namespace SpaceMAS.Models.Players {
 
 
             //Add userinput
-            if (state.IsKeyDown(PlayerControls.TurnRight)) Rotation += RotationRate * ElapsedGameTime;
-            if (state.IsKeyDown(PlayerControls.TurnLeft)) Rotation -= RotationRate * ElapsedGameTime;
+            if (state.IsKeyDown(PlayerControls.TurnRight)) Rotation += RotationRate * ElapsedGameTime / 2;
+            if (state.IsKeyDown(PlayerControls.TurnLeft)) Rotation -= RotationRate * ElapsedGameTime / 2;
 
-            if (state.IsKeyDown(PlayerControls.Decelerate)) 
-            {
-                NewVelocity.X -= (float)Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
-                NewVelocity.Y -= (float)Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
+            if (state.IsKeyDown(PlayerControls.Decelerate)) {
+                NewVelocity.X -= (float) Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
+                NewVelocity.Y -= (float) Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
             }
-            if (state.IsKeyDown(PlayerControls.Accelerate))
-            {
-                NewVelocity.X += (float)Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
-                NewVelocity.Y += (float)Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
+            if (state.IsKeyDown(PlayerControls.Accelerate)) {
+                NewVelocity.X += (float) Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
+                NewVelocity.Y += (float) Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
             }
 
 
@@ -94,14 +105,16 @@ namespace SpaceMAS.Models.Players {
             if (Position.X > GeneralSettings.screenWidth) {
                 Position = new Vector2(GeneralSettings.screenWidth, Position.Y);
                 Velocity = new Vector2(0, Velocity.Y);
-            } else if (Position.X < 0) {
+            }
+            else if (Position.X < 0) {
                 Position = new Vector2(0, Position.Y);
                 Velocity = new Vector2(0, Velocity.Y);
             }
             if (Position.Y > GeneralSettings.screenHeight) {
                 Position = new Vector2(Position.X, GeneralSettings.screenHeight);
                 Velocity = new Vector2(Velocity.X, 0);
-            } else if (Position.Y < 0)  {
+            }
+            else if (Position.Y < 0) {
                 Position = new Vector2(Position.X, 0);
                 Velocity = new Vector2(Velocity.X, 0);
             }
@@ -118,25 +131,18 @@ namespace SpaceMAS.Models.Players {
             Dead = true;
         }
 
-
-       
-
-        public void BulletImpact(Bullet Bullet, GameObject Object)
-        {
-            if (Object is Enemy.Enemy)
-            {
-                Money += ((Enemy.Enemy)Object).Bounty;
+        public void BulletImpact(Bullet Bullet, GameObject Object) {
+            if (Object is Enemy.Enemy) {
+                Money += ((Enemy.Enemy) Object).Bounty;
             }
         }
 
-        public override void Disable()
-        {
+        public override void Disable() {
             Disabled = true;
             Velocity = Vector2.Zero;
         }
 
-        public override void Enable()
-        {
+        public override void Enable() {
             Disabled = false;
         }
     }
