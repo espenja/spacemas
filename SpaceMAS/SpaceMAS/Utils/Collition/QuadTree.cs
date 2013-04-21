@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +14,12 @@ namespace SpaceMAS.Utils.Collition {
         private Rectangle Bounds { get; set; }
         private QuadTree[] Nodes { get; set; }
 
-        private Texture2D Texture { get; set; }
-
 
         public QuadTree(int level, Rectangle bounds) {
             Level = level;
             GameObjects = new List<GameObject>();
             Nodes = new QuadTree[4];
             Bounds = bounds;
-
-            Texture = GameServices.GetService<SpaceMAS>().TextureForDrawingLines;
         }
 
         public void clear() {
@@ -42,8 +37,6 @@ namespace SpaceMAS.Utils.Collition {
 
             int subWidth = Bounds.Width / 2;
             int subHeight = Bounds.Height / 2;
-            int x = Bounds.X;
-            int y = Bounds.Y;
 
             Nodes[0] = new QuadTree(Level + 1, new Rectangle(Bounds.Left, Bounds.Top, subWidth, subHeight));
             Nodes[1] = new QuadTree(Level + 1, new Rectangle(Bounds.Left + subWidth, Bounds.Top, subWidth, subHeight));
@@ -180,16 +173,16 @@ namespace SpaceMAS.Utils.Collition {
 
         public void Draw(SpriteBatch spriteBatch) {
 
-            SpaceMAS s = GameServices.GetService<SpaceMAS>();
+            //SpaceMAS s = GameServices.GetService<SpaceMAS>();
 
-            if (Nodes[0] != null)
-                foreach (QuadTree quadTree in Nodes)
-                    quadTree.Draw(spriteBatch);
+            //if (Nodes[0] != null)
+            //    foreach (QuadTree quadTree in Nodes)
+            //        quadTree.Draw(spriteBatch);
 
-            spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Top, Bounds.Width, 1), Color.White);
-            spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Bottom, Bounds.Width, 1), Color.White);
-            spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Top, 1, Bounds.Height), Color.White);
-            spriteBatch.Draw(Texture, new Rectangle(Bounds.Right, Bounds.Top, 1, Bounds.Height + 1), Color.White);
+            //spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Top, Bounds.Width, 1), Color.White);
+            //spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Bottom, Bounds.Width, 1), Color.White);
+            //spriteBatch.Draw(Texture, new Rectangle(Bounds.Left, Bounds.Top, 1, Bounds.Height), Color.White);
+            //spriteBatch.Draw(Texture, new Rectangle(Bounds.Right, Bounds.Top, 1, Bounds.Height + 1), Color.White);
 
             //spriteBatch.DrawString(s.Font, Level.ToString(), new Vector2(Bounds.Left + 2 * ((Level+1) * 10), Bounds.Top + 2 * ((Level+1) + 10) ), Color.White);
         }

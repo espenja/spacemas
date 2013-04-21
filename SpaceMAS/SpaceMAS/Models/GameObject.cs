@@ -28,10 +28,6 @@ namespace SpaceMAS.Models {
 
         public Rectangle BoundingBox { get; protected set; }
 
-        public Color ColorTint { get; set; }
-
-        public float Opacity { get; set; }
-
         public void LoadTexture(string textureName) {
             ContentManager contentManager = GameServices.GetService<ContentManager>();
             Texture = contentManager.Load<Texture2D>(GeneralSettings.TexturesPath + textureName);
@@ -95,23 +91,12 @@ namespace SpaceMAS.Models {
 
         public virtual void Draw(SpriteBatch spriteBatch) {
 
-            Texture2D t = GameServices.GetService<SpaceMAS>().TextureForDrawingLines;
-
-            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Top, 1, BoundingBox.Height), Color.White); // Left
-            spriteBatch.Draw(t, new Rectangle(BoundingBox.Right, BoundingBox.Top, 1, BoundingBox.Height), Color.White); // Right
-            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Top, BoundingBox.Width, 1), Color.White); // Top
-            spriteBatch.Draw(t, new Rectangle(BoundingBox.Left, BoundingBox.Bottom, BoundingBox.Width, 1), Color.White); // Bottom
-
-            spriteBatch.Draw(Texture, Position, null, new Color(ColorTint.R, ColorTint.G, ColorTint.B, Opacity), Rotation + MathHelper.PiOver2, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
-            Opacity = 1f;
-            ColorTint = Color.White;
+            spriteBatch.Draw(Texture, Position, null, Color.White, Rotation + MathHelper.PiOver2, Origin, Scale, SpriteEffects.None, GameDrawOrder.GAME_LEVEL_TOP);
         }
 
         public bool IntersectPixels(GameObject otherObject) {
             return CollitionDetection.IntersectPixels(transform, texture.Width, texture.Height, colorData,
                                    otherObject.transform, otherObject.texture.Width, otherObject.texture.Height, otherObject.colorData, this, otherObject);
         }
-
-        
     }
 }

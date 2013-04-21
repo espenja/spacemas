@@ -18,6 +18,7 @@ namespace SpaceMAS.Level {
         public LevelController() {
             Levels = new List<Level>();
             LoadLevels();
+            Console.WriteLine(Levels.Count);
         }
 
         public void InitializeLevels() {
@@ -27,16 +28,20 @@ namespace SpaceMAS.Level {
         }
 
         public void GoToNextLevel() {
-
             if (CurrentLevel == null) {
                 CurrentLevel = Levels[0];
                 return;
             }
 
             if (Levels.IndexOf(CurrentLevel) + 1 >= Levels.Count)
+            {
                 CurrentLevel = null;
+                return;
+            }
 
             CurrentLevel = Levels.Find(l => l.Id == CurrentLevel.Id + 1);
+            CurrentLevel.Initialize();
+
         }
 
         private void LoadLevels() {

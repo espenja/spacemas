@@ -6,7 +6,6 @@ using SpaceMAS.Models.Enemy;
 using SpaceMAS.Models.Players;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
-using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using System;
 using SpaceMAS.Utils.Collition;
@@ -21,21 +20,16 @@ namespace SpaceMAS.Level {
         public StateProvider StateProvider;
         public LevelIntro LevelIntro;
         public float LevelPlayingTime { get; private set; }
-        private int updatesSinceLastCollDet;
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
         private List<GameObject> SafeToIterate { get; set; }
         public List<GameObject> AllDrawableGameObjects { get; set; }
 
-        private static readonly object DrawableGameObjectsLock = new object();
-
         public QuadTree QuadTree { get; private set; }
 
 
         public Level() {
-
-            GraphicsDevice graphicsDevice = GameServices.GetService<GraphicsDevice>();
-
+            var graphicsDevice = GameServices.GetService<GraphicsDevice>();
             QuadTree = new QuadTree(0, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height));
             Spawners = new List<Spawner>();
             SafeToIterate = new List<GameObject>();
@@ -66,9 +60,6 @@ namespace SpaceMAS.Level {
 
             //Remove spawner if all its enemies has spawned
             Spawners.RemoveAll(s => s.Enemies.Count == 0);
-
-
-
         }
 
         public void Update(GameTime gameTime) {
@@ -94,23 +85,16 @@ namespace SpaceMAS.Level {
                 go.Update(gameTime);
             }
 
-            //Only check detection ever 5th update
-            //if (updatesSinceLastCollDet == 5) {
-                //updatesSinceLastCollDet = 0;
-                //foreach (GameObject go in SafeToIterate) {
-                //    foreach (GameObject go2 in SafeToIterate) {
-                //        if (go is Bullet && !(go2 is Bullet) && go2 is KillableGameObject && !(go2 is Player) && go != go2 && go.IntersectPixels(go2)) {
-                //            ((Bullet) go).OnImpact(go2);
-                //        }
-                //    }
-                //}
-            //}
-            //else updatesSinceLastCollDet++;
-
             AllDrawableGameObjects.AddRange(SafeToIterate);
 
             foreach (Spawner spawner in Spawners) {
                 spawner.Update(LevelPlayingTime, gameTime);
+            }
+
+            if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count) {
+                //TODO: Gå til shop/velge difficult på neste lvl?
+                //levelController.GoToNextLevel();
+                Console.WriteLine("Level completet!");
             }
 
             CleanUp();

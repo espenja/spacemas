@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using SpaceMAS.Settings;
 using SpaceMAS.Models.Players;
 using SpaceMAS.Utils;
 using SpaceMAS.Level;

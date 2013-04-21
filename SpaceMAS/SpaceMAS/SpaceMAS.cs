@@ -1,8 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceMAS.Level;
@@ -10,22 +7,11 @@ using SpaceMAS.Models.Players;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
-using SpaceMAS.Models;
 using SpaceMAS.Settings;
 
 namespace SpaceMAS {
 
     public class SpaceMAS : Game {
-
-        public StringBuilder BuilderConstruct = new StringBuilder();
-        public StringBuilder BuilderClear = new StringBuilder();
-        public StringBuilder BuilderSplit = new StringBuilder();
-        public StringBuilder BuilderGetIndex = new StringBuilder();
-        public StringBuilder BuilderInsert = new StringBuilder();
-        public StringBuilder BuilderRetrieve = new StringBuilder();
-        public StringBuilder BuilderDraw = new StringBuilder();
-
-        private bool written = false;
 
         private readonly GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -34,21 +20,13 @@ namespace SpaceMAS {
 
         //Needed for not letting actions get spammed every update (eg if you click Up in the main menu the up
         //action should not be done 182734 times(every update)
-        private float timeSinceLastAction = 0f;
+        private float timeSinceLastAction;
 
         private Player thisPlayer;
         private LevelController LevelController;
         private MenuController MenuController;
-
-        public Texture2D TextureForDrawingLines { get; private set; }
-
-        public SpriteFont Font { get; set; }
-
-        public Texture2D UPLEFT { get; private set; }
-        public Texture2D UPRIGHT { get; private set; }
-        public Texture2D DOWNLEFT { get; private set; }
-        public Texture2D DOWNRIGHT { get; private set; }
-
+        //to see fps
+        private SpriteFont fpsFont;
 
         public SpaceMAS() {
             graphics = new GraphicsDeviceManager(this);
@@ -64,20 +42,6 @@ namespace SpaceMAS {
         /// and initialize them as well.
         /// </summary>
         protected override void Initialize() {
-
-            TextureForDrawingLines = new Texture2D(GraphicsDevice, 1, 1);
-            TextureForDrawingLines.SetData(new [] { Color.White });
-            Font = Content.Load<SpriteFont>("Fonts/HandOfSean");
-
-            UPLEFT = new Texture2D(GraphicsDevice, 1, 1);
-            UPLEFT.SetData(new[] { Color.White });
-            UPRIGHT = new Texture2D(GraphicsDevice, 1, 1);
-            UPRIGHT.SetData(new[] { Color.White });
-            DOWNLEFT = new Texture2D(GraphicsDevice, 1, 1);
-            DOWNLEFT.SetData(new[] { Color.White });
-            DOWNRIGHT = new Texture2D(GraphicsDevice, 1, 1);
-            DOWNRIGHT.SetData(new[] { Color.White });
-
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -104,6 +68,7 @@ namespace SpaceMAS {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
+            fpsFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
             thisPlayer = new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player"));
             players.Add(thisPlayer);
 
@@ -121,6 +86,7 @@ namespace SpaceMAS {
         }
 
         protected override void Update(GameTime gameTime) {
+                
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || StateProvider.Instance.State == GameState.QUIT)
                 this.Exit();
@@ -134,17 +100,6 @@ namespace SpaceMAS {
                 case GameState.OPTIONS:
                     break;
                 case GameState.GAMEPAUSED:
-                    if (!written) {
-                        File.WriteAllText("D:\\constructlog.txt", BuilderConstruct.ToString());
-                        File.WriteAllText("D:\\clearlog.txt", BuilderClear.ToString());
-                        File.WriteAllText("D:\\splitlog.txt", BuilderSplit.ToString());
-                        File.WriteAllText("D:\\getindexlog.txt", BuilderGetIndex.ToString());
-                        File.WriteAllText("D:\\insertlog.txt", BuilderInsert.ToString());
-                        File.WriteAllText("D:\\retrievelog.txt", BuilderRetrieve.ToString());
-                        File.WriteAllText("D:\\drawlog.txt", BuilderDraw.ToString());
-                        written = true;
-                    }
-
                     UpdateGamepausedState();
                     break;
                 case GameState.PLAYING:
@@ -156,7 +111,10 @@ namespace SpaceMAS {
         }
 
         protected void UpdatePlayingState(GameTime gameTime) {
-            LevelController.CurrentLevel.Update(gameTime);
+            if (LevelController.CurrentLevel != null)
+                LevelController.CurrentLevel.Update(gameTime);
+            else
+                Exit();
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
@@ -191,6 +149,12 @@ namespace SpaceMAS {
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
+            //fps counter
+            int fps = Frames.CalculateFrameRate();
+            Vector2 FontOrigin = fpsFont.MeasureString(fps.ToString()) / 2;
+            spriteBatch.DrawString(fpsFont, fps.ToString(), FontOrigin, Color.LightGreen, 0, FontOrigin, 0.25f, SpriteEffects.None, 0.5f);
+               
+
             switch (StateProvider.Instance.State) {
                 case GameState.HIGHSCORE:
                     break;
@@ -203,7 +167,8 @@ namespace SpaceMAS {
                     LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
                 case GameState.PLAYING:
-                    LevelController.CurrentLevel.Draw(spriteBatch);
+                    if (LevelController.CurrentLevel != null)
+                        LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();

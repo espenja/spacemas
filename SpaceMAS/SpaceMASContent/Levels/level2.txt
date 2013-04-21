@@ -1,6 +1,6 @@
 %level
-name:First Level
-id:1
+name:Second Level
+id:2
 
 %spawner
 id:0
@@ -11,17 +11,17 @@ spawn_rate:1000
 %spawner
 id:1
 spawn_time:1000
-position:200,352
+position:80,352
 spawn_rate:2000
 
 %enemy
-id:enemy_pink
+id:enemy_orange
 health:100
 spawner_id:0
-amount:200
+amount:10
 
 %enemy
 id:enemy_blue
 health:200
 spawner_id:1
-amount:200
+amount:20

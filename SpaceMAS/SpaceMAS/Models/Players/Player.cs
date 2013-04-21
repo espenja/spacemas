@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
@@ -35,21 +33,13 @@ namespace SpaceMAS.Models.Players {
 
             ContentManager cm = GameServices.GetService<ContentManager>();
             Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
-            Weapon = new Weapon(weaponBullet, 50f, 10000, this);
+            Weapon = new Weapon(weaponBullet, 150f, 2000, this);
 
             HealthBar = new HealthBar(this);
             PlayerControls = ControlsController.GetControls(name);
         }
 
         public override void Update(GameTime gameTime) {
-
-            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
-            List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
-
-            foreach (var gameObject in GameObjectsNearby) {
-                gameObject.ColorTint = Color.Red;
-                gameObject.Opacity = 1f;
-            }
 
             //If the player is dead, then movement should not occur
             if (!Dead) {
