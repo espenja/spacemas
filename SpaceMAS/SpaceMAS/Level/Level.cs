@@ -20,14 +20,17 @@ namespace SpaceMAS.Level {
         public StateProvider StateProvider;
         public LevelIntro LevelIntro;
         public float LevelPlayingTime { get; private set; }
-        private int updatesSinceLastCollDet;
+        private int updatesSinceLastCheck;
+        private int checkInterval = 5;
+        private LevelController levelController { get; set; }
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
         private List<GameObject> SafeToIterate { get; set; }
         public List<GameObject> AllDrawableGameObjects { get; set; }
 
 
-        public Level() {
+        public Level(LevelController levelController) {
+            this.levelController = levelController;
             Spawners = new List<Spawner>();
             SafeToIterate = new List<GameObject>();
             AllDrawableGameObjects = new List<GameObject>();
@@ -58,6 +61,7 @@ namespace SpaceMAS.Level {
             
             //Remove spawner if all its enemies has spawned
             Spawners.RemoveAll(s => s.Enemies.Count == 0);
+            
 
 
 
@@ -78,9 +82,9 @@ namespace SpaceMAS.Level {
                 }
 
                 //Only check detection ever 5th update
-                if (updatesSinceLastCollDet == 5)
+                if (updatesSinceLastCheck == checkInterval)
                 {
-                    updatesSinceLastCollDet = 0;
+                    updatesSinceLastCheck = 0;
                     foreach (GameObject go in SafeToIterate)
                     {
                         foreach (GameObject go2 in SafeToIterate)
@@ -92,7 +96,7 @@ namespace SpaceMAS.Level {
                         }
                     }
                 }
-                else updatesSinceLastCollDet++;
+                else updatesSinceLastCheck++;
 
                 AllDrawableGameObjects.AddRange(SafeToIterate);
 
@@ -102,6 +106,17 @@ namespace SpaceMAS.Level {
                 }
 
                 CleanUp();
+
+                //Checks if only players are left, if so level has ended
+                if (updatesSinceLastCheck == checkInterval)
+                {
+                    if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count)
+                    {
+                        //TODO: Gå til shop/velge difficult på neste lvl?
+                        //levelController.GoToNextLevel();
+                        Console.WriteLine("Level completet!");
+                    }
+                }
             }
         }
 

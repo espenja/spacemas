@@ -9,6 +9,7 @@ using SpaceMAS.Utils;
 using SpaceMAS.Menu;
 using SpaceMAS.Models;
 using SpaceMAS.Settings;
+using System;
 
 namespace SpaceMAS {
 
@@ -26,6 +27,8 @@ namespace SpaceMAS {
         private Player thisPlayer;
         private LevelController LevelController;
         private MenuController MenuController;
+        //to see fps
+        private SpriteFont fpsFont;
 
         public SpaceMAS() {
             graphics = new GraphicsDeviceManager(this);
@@ -65,6 +68,7 @@ namespace SpaceMAS {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
+            fpsFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
             thisPlayer = new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player"));
             players.Add(thisPlayer);
 
@@ -82,6 +86,7 @@ namespace SpaceMAS {
         }
 
         protected override void Update(GameTime gameTime) {
+                
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || StateProvider.Instance.State == GameState.QUIT)
                 this.Exit();
@@ -106,7 +111,10 @@ namespace SpaceMAS {
         }
 
         protected void UpdatePlayingState(GameTime gameTime) {
-            LevelController.CurrentLevel.Update(gameTime);
+            if (LevelController.CurrentLevel != null)
+                LevelController.CurrentLevel.Update(gameTime);
+            else
+                this.Exit();
             if (timeSinceLastAction > 1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
@@ -141,6 +149,12 @@ namespace SpaceMAS {
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
+            //fps counter
+            int fps = Frames.CalculateFrameRate();
+            Vector2 FontOrigin = fpsFont.MeasureString(fps.ToString()) / 2;
+            spriteBatch.DrawString(fpsFont, fps.ToString(), FontOrigin, Color.LightGreen, 0, FontOrigin, 0.25f, SpriteEffects.None, 0.5f);
+               
+
             switch (StateProvider.Instance.State) {
                 case GameState.HIGHSCORE:
                     break;
@@ -153,7 +167,8 @@ namespace SpaceMAS {
                     LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
                 case GameState.PLAYING:
-                    LevelController.CurrentLevel.Draw(spriteBatch);
+                    if (LevelController.CurrentLevel != null)
+                        LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
             }
             spriteBatch.End();
