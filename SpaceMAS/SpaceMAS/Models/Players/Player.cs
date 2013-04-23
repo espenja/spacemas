@@ -34,15 +34,14 @@ namespace SpaceMAS.Models.Players {
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
-            Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
-            Weapon = new Weapon(weaponBullet, 50f, this);
+            BulletType weaponBulletType = new BulletType(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
+            Weapon = new Weapon(weaponBulletType, 50f, this);
 
             //HealthBar = new HealthBar(this);
             PlayerControls = ControlsController.GetControls(name);
         }
 
         public override void Update(GameTime gameTime) {
-
             Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
             List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
 

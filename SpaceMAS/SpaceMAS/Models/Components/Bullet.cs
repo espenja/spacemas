@@ -15,20 +15,13 @@ namespace SpaceMAS.Models.Components {
         public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }
 
-        public Bullet(float HealthChange, float TravelSpeed, IImpactEffect Effect, Texture2D Texture) {
-            this.HealthChange = HealthChange;
-            this.Effect = Effect;
-            this.Texture = Texture;
-            this.TravelSpeed = TravelSpeed;
-        }
-
-        public Bullet(Bullet CopyBullet) {
+        public Bullet(BulletType bulletType) {
             Listeners = new List<IBulletListener>();
-            HealthChange = CopyBullet.HealthChange;
-            Effect = CopyBullet.Effect.Clone();
+            HealthChange = bulletType.HealthChange;
+            Effect = bulletType.Effect.Clone();
             isVisible = true;
-            Texture = CopyBullet.Texture;
-            TravelSpeed = CopyBullet.TravelSpeed;
+            Texture = bulletType.Texture;
+            TravelSpeed = bulletType.TravelSpeed;
         }
 
         public override void Update(GameTime gameTime) {

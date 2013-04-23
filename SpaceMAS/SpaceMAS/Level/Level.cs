@@ -101,7 +101,7 @@ namespace SpaceMAS.Level {
             StarField.Draw(spriteBatch);
             QuadTree.Draw(spriteBatch);
 
-            foreach (GameObject go in SafeToIterate)
+            foreach (GameObject go in AllDrawableGameObjects)
                 go.Draw(spriteBatch);
 
             foreach (Spawner spawner in Spawners) {
