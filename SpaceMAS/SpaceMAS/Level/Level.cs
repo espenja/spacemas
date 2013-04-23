@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Level.Background;
 using SpaceMAS.Models;
 using SpaceMAS.Models.Enemy;
 using SpaceMAS.Models.Players;
@@ -22,10 +23,11 @@ namespace SpaceMAS.Level {
         public float LevelPlayingTime { get; private set; }
 
         //Two lists because when iterating through and updating all the objects, new objects can be added to the list
-        private List<GameObject> SafeToIterate { get; set; }
+        public List<GameObject> SafeToIterate { get; set; }
         public List<GameObject> AllDrawableGameObjects { get; set; }
 
         public QuadTree QuadTree { get; private set; }
+        private Starfield StarField;
 
 
         public Level() {
@@ -34,6 +36,8 @@ namespace SpaceMAS.Level {
             Spawners = new List<Spawner>();
             SafeToIterate = new List<GameObject>();
             AllDrawableGameObjects = new List<GameObject>();
+
+            StarField = new Starfield();
         }
 
         public void Initialize() {
@@ -65,6 +69,12 @@ namespace SpaceMAS.Level {
 
         public void Update(GameTime gameTime) {
 
+            if (LevelIntro.IntroRunning) {
+                LevelIntro.Update(gameTime);
+                return;
+            }
+
+            StarField.Update(gameTime);
             QuadTree.clear();
 
             foreach (var gameObject in AllDrawableGameObjects) {
@@ -95,7 +105,9 @@ namespace SpaceMAS.Level {
         }
 
         public void Draw(SpriteBatch spriteBatch) {
+            StarField.Draw(spriteBatch);
             QuadTree.Draw(spriteBatch);
+
             foreach (GameObject go in SafeToIterate)
                 go.Draw(spriteBatch);
         }
