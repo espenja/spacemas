@@ -8,6 +8,7 @@ using SpaceMAS.State;
 using SpaceMAS.Utils;
 using SpaceMAS.Menu;
 using SpaceMAS.Settings;
+using SpaceMAS.Graphics;
 
 namespace SpaceMAS {
 
@@ -21,12 +22,10 @@ namespace SpaceMAS {
         //Needed for not letting actions get spammed every update (eg if you click Up in the main menu the up
         //action should not be done 182734 times(every update)
         private float timeSinceLastAction;
-
-        private Player thisPlayer;
         private LevelController LevelController;
         private MenuController MenuController;
         //to see fps
-        public SpriteFont fpsFont { get; private set; }
+        public SpriteFont TextFont { get; private set; }
 
         public Texture2D T { get; set; }
 
@@ -76,9 +75,9 @@ namespace SpaceMAS {
         /// all of your content.
         /// </summary>
         protected override void LoadContent() {
-            fpsFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
-            thisPlayer = new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player"));
-            players.Add(thisPlayer);
+            TextFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
+            players.Add(new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("fictive2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
 
             GameServices.AddService(players);
             LevelController.InitializeLevels();
@@ -169,8 +168,8 @@ namespace SpaceMAS {
 
             //fps counter
             int fps = Frames.CalculateFrameRate();
-            Vector2 FontOrigin = fpsFont.MeasureString(fps.ToString()) / 2;
-            spriteBatch.DrawString(fpsFont, fps.ToString(), FontOrigin, Color.LightGreen, 0, FontOrigin, 0.25f, SpriteEffects.None, 0.5f);
+            Vector2 fontOrigin = TextFont.MeasureString(fps.ToString()) / 2;
+            spriteBatch.DrawString(TextFont, fps.ToString(), new Vector2(10,10), Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, 0.5f);
                
 
             switch (StateProvider.Instance.State) {
@@ -189,15 +188,24 @@ namespace SpaceMAS {
                     break;
                 case GameState.PLAYING_EASY:
                     if (LevelController.CurrentLevel != null)
+                    {
                         LevelController.CurrentLevel.Draw(spriteBatch);
+                        DrawPlayerMoney(spriteBatch);
+                    }
                     break;
                 case GameState.PLAYING_NORMAL:
                     if (LevelController.CurrentLevel != null)
+                    {
                         LevelController.CurrentLevel.Draw(spriteBatch);
+                        DrawPlayerMoney(spriteBatch);
+                    }
                     break;
                 case GameState.PLAYING_HARD:
                     if (LevelController.CurrentLevel != null)
+                    {
                         LevelController.CurrentLevel.Draw(spriteBatch);
+                        DrawPlayerMoney(spriteBatch);
+                    }
                     break;
             }
             spriteBatch.End();
@@ -205,6 +213,19 @@ namespace SpaceMAS {
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+        }
+
+        protected void DrawPlayerMoney(SpriteBatch spriteBatch)
+        {
+            Vector2 position = new Vector2(50, 100);
+            foreach (var player in players)
+            {
+                Vector2 fontOrigin = TextFont.MeasureString(player.Money.ToString() + "$") / 2;
+                spriteBatch.DrawString(TextFont, player.Money.ToString() + "$", 
+                    position, Color.LightGreen, 0, fontOrigin, 0.5f, 
+                    SpriteEffects.None, GameDrawOrder.FOREGROUND_TOP);
+                position.Y += 50;
+            }
         }
     }
 }
