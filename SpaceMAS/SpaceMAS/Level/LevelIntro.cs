@@ -21,8 +21,6 @@ namespace SpaceMAS.Level {
         private Vector2 FontPosition;
         private Texture2D Texture;
         private Rectangle IntroScreen;
-
-        public bool IntroRunning = true;
         private double timer;
         private IntroState State = IntroState.FADING_IN;
 

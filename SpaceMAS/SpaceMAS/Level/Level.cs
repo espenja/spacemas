@@ -68,12 +68,6 @@ namespace SpaceMAS.Level {
         }
 
         public void Update(GameTime gameTime) {
-
-            if (LevelIntro.IntroRunning) {
-                LevelIntro.Update(gameTime);
-                return;
-            }
-
             StarField.Update(gameTime);
             QuadTree.clear();
 

@@ -17,6 +17,7 @@ namespace SpaceMAS.Models {
 
         //Position and size related variables
         private Vector2 position;
+        public Color Color { get; set; }
         public Vector2 Origin { get; protected set; }
         public Vector2 Velocity { get; set; }
         public float AccelerationRate { get; protected set; }

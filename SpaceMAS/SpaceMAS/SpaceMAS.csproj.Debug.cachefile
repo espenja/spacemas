@@ -7,11 +7,11 @@ Content\Textures\player.xnb
 Content\Buttons\highscore.xnb
 Content\Buttons\options.xnb
 Content\Buttons\quit.xnb
-Content\Textures\star.xnb
+Content\Textures\bullet.xnb
 Content\Buttons\easy.xnb
 Content\Buttons\hard.xnb
 Content\Buttons\normal.xnb
-Content\Textures\bullet.xnb
+Content\Textures\star.xnb
 Content\Fonts\HandOfSean.spritefont
 Content\Levels\level1.txt
 Content\Levels\level2.txt
