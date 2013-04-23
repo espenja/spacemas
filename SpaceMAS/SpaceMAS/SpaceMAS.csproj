@@ -123,6 +123,7 @@
     <Compile Include="Models\Components\Bullet.cs" />
     <Compile Include="Interfaces\IImpactEffect.cs" />
     <Compile Include="Interfaces\IBulletListener.cs" />
+    <Compile Include="Models\Components\BulletType.cs" />
     <Compile Include="Models\Components\ImpactEffects\DisableEffect.cs" />
     <Compile Include="Models\Components\Weapon.cs" />
     <Compile Include="Models\Enemy\Enemy.cs" />

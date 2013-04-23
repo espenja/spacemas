@@ -10,31 +10,31 @@ namespace SpaceMAS.Models.Components
     class Weapon
     {
         protected float Firerate { get; set; }
-        protected Bullet BulletType { get; set; }
+        protected BulletType BulletType { get; set; }
         protected float TimeSinceLastShot { get; set; }
         protected Player Owner { get; set; }
-        public bool isDisabled { get; set; }
+        public bool IsDisabled { get; set; }
 
-        public Weapon(Bullet BulletType, float Firerate, Player Owner)
+        public Weapon(BulletType bulletType, float firerate, Player owner)
         {
-            this.BulletType = BulletType;
-            this.Firerate = Firerate;
-            this.Owner = Owner;
-            TimeSinceLastShot = Firerate;
+            BulletType = bulletType;
+            Firerate = firerate;
+            Owner = owner;
+            TimeSinceLastShot = firerate;
         }
 
         public void Shoot(GameTime gameTime)
         {
             TimeSinceLastShot += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (!isDisabled && TimeSinceLastShot >= Firerate)
+            if (!IsDisabled && TimeSinceLastShot >= Firerate)
             {
-                Bullet NewBullet = new Bullet(BulletType);
-                NewBullet.Scale = 0.1f;
-                NewBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * NewBullet.TravelSpeed;
-                NewBullet.Position = Owner.Position + new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * 40f;
-                NewBullet.Listeners.Add(Owner);
+                Bullet newBullet = new Bullet(BulletType);
+                newBullet.Scale = 0.1f;
+                newBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * newBullet.TravelSpeed;
+                newBullet.Position = Owner.Position + new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * 40f;
+                newBullet.Listeners.Add(Owner);
                 LevelController lcon = GameServices.GetService<LevelController>();
-                lcon.CurrentLevel.AllDrawableGameObjects.Add(NewBullet);
+                lcon.CurrentLevel.AllDrawableGameObjects.Add(newBullet);
                 TimeSinceLastShot = 0;
 
             }
