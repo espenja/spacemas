@@ -41,8 +41,6 @@ namespace SpaceMAS.Level {
 
             CurrentLevel = Levels.Find(l => l.Id == CurrentLevel.Id + 1);
             StateProvider.Instance.State = GameState.LEVEL_INTRO;
-            CurrentLevel.Initialize();
-
         }
 
         private void LoadLevels() {

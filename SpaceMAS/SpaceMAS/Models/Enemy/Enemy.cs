@@ -127,7 +127,6 @@ namespace SpaceMAS.Models.Enemy {
             if (victim is Player)
             {
                 ((Player)victim).HealthPoints -= ImpactDamage;
-                Console.WriteLine(((Player)victim).HealthPoints);
                 Die();
             }
         }
