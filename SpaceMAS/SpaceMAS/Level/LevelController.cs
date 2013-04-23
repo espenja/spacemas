@@ -18,7 +18,6 @@ namespace SpaceMAS.Level {
         public LevelController() {
             Levels = new List<Level>();
             LoadLevels();
-            Console.WriteLine(Levels.Count);
         }
 
         public void InitializeLevels() {

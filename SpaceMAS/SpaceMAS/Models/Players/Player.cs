@@ -24,7 +24,7 @@ namespace SpaceMAS.Models.Players {
             Rotation = 0.0f;
             Position = position;
             AccelerationRate = 8.0f;
-            RotationRate = 4.0f;
+            RotationRate = 8.0f;
             Scale = 0.5f;
 
             MaxHealthPoints = 100;
@@ -32,7 +32,7 @@ namespace SpaceMAS.Models.Players {
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
-            Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/enemy_blue"));
+            Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
             Weapon = new Weapon(weaponBullet, 150f, 2000, this);
 
             HealthBar = new HealthBar(this);
@@ -117,7 +117,6 @@ namespace SpaceMAS.Models.Players {
 
         public override void Die() {
             //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
-            Console.WriteLine("died!");
             Dead = true;
         }
 

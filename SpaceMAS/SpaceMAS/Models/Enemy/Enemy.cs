@@ -1,6 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
+using SpaceMAS.Models.Players;
+using SpaceMAS.Utils;
 
 namespace SpaceMAS.Models.Enemy {
     public class Enemy : KillableGameObject {
@@ -15,8 +20,8 @@ namespace SpaceMAS.Models.Enemy {
 
         public Enemy() {
             Rotation = 0f;
-            AccelerationRate = 300f;
-            RotationRate = 2f;
+            AccelerationRate = 100f;
+            RotationRate = 5f;
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
@@ -24,16 +29,14 @@ namespace SpaceMAS.Models.Enemy {
             HealthBar = new HealthBar(this);
         }
 
-        public override void Update(GameTime gameTime) {
-
-            base.Update(gameTime);
-
+        public override void Update(GameTime gameTime)
+        {
+            Rotation += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (!Disabled)
                 Move(gameTime);
             HealthBar.Update(gameTime);
 
-
-            
+            base.Update(gameTime); 
         }
 
         public override void Draw(SpriteBatch spriteBatch) {
@@ -43,8 +46,44 @@ namespace SpaceMAS.Models.Enemy {
         }
 
         private void Move(GameTime gameTime) {
-            //Enemies should perhaps automatically target the nearest Player?
-            Position = new Vector2(Position.X + 1, Position.Y);
+
+            var players = GameServices.GetService<List<Player>>();
+            Player closestTarget = null;
+            var targetDistance = float.MaxValue;
+
+            foreach (var player in players)
+            {
+                var distance = Math.Abs((float)Math.Sqrt(Math.Pow(player.Position.X - Position.X, 2) 
+                    + Math.Pow((player.Position.Y - player.Position.Y), 2)));
+                if (distance < targetDistance || closestTarget == null)
+                {
+                    targetDistance = distance;
+                    closestTarget = player;
+                }
+            }
+
+            var closestPosDistance = AccelerationRate / 20;
+            if (closestTarget != null) {
+                if (closestTarget.Position.X - Position.X > closestPosDistance)
+                {
+                    Position = new Vector2(Position.X + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                        Position.Y);
+                }
+                else if (closestTarget.Position.X - Position.X < -closestPosDistance)
+                {
+                    Position = new Vector2(Position.X - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                        Position.Y);
+                }
+                if (closestTarget.Position.Y - Position.Y > closestPosDistance)
+                {
+                    Position = new Vector2(Position.X, Position.Y + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+                else if (closestTarget.Position.Y - Position.Y < -closestPosDistance)
+                {
+                    Position = new Vector2(Position.X, Position.Y - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                }
+            }
+            
         }
 
 
