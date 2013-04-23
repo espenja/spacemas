@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,7 +26,9 @@ namespace SpaceMAS {
         private LevelController LevelController;
         private MenuController MenuController;
         //to see fps
-        private SpriteFont fpsFont;
+        public SpriteFont fpsFont { get; private set; }
+
+        public Texture2D T { get; set; }
 
         //save gamestate for pause
         private GameState BeforePauseState { get; set; }
@@ -49,6 +50,9 @@ namespace SpaceMAS {
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            T = new Texture2D(GraphicsDevice, 1, 1);
+            T.SetData(new [] { Color.White } );
 
             //Screen stuff
             graphics.PreferredBackBufferWidth = GeneralSettings.screenWidth;
@@ -128,7 +132,7 @@ namespace SpaceMAS {
                 LevelController.CurrentLevel.Update(gameTime);
             else
                 Exit();
-            if (timeSinceLastAction > 1) {
+            if (timeSinceLastAction > 0.1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
                         PauseGame();
@@ -138,7 +142,7 @@ namespace SpaceMAS {
         }
 
         protected void UpdateGamepausedState() {
-            if (timeSinceLastAction > 1) {
+            if (timeSinceLastAction > 0.1) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
                         UnPause();
