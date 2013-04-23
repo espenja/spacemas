@@ -1,6 +1,6 @@
 id:enemy_pink
 name:Pink Speeder
-hp:25
-speed:3
+hp:100
+speed:30
 bounty:10
 damage:1

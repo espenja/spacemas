@@ -45,14 +45,18 @@ namespace SpaceMAS.Level {
         }
 
         private void LoadLevels() {
-            var contentManager = GameServices.GetService<ContentManager>();
-            var directoryInfo = new DirectoryInfo(contentManager.RootDirectory + "\\" + GeneralSettings.LevelPath);
-            FileInfo[] fileInfos = directoryInfo.GetFiles();
-
-            foreach (FileInfo fileInfo in fileInfos) {
-                Console.WriteLine(fileInfo.FullName);
-                CreateLevel(File.ReadAllLines(fileInfo.FullName));
-            }
+            Level level = new Level();
+            Spawner spawner = SpawnerFactory.Instance.CreateSpawner();
+            level.Name = "Level 1";
+            level.Id = 1;
+            level.AddSpawner(spawner);
+            Levels.Add(level);
+            level = new Level();
+            level.Name = "Level 2";
+            level.Id = 2;
+            spawner = SpawnerFactory.Instance.CreateSpawner();
+            level.AddSpawner(spawner);
+            Levels.Add(level);
             Levels = Levels.OrderBy(l => l.Id).ToList();
         }
 

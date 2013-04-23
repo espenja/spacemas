@@ -53,6 +53,10 @@ namespace SpaceMAS.Models.Enemy {
 
             _speed = type.Speed;
             _isDiffBoosted = false;
+            Dead = false;
+            Disabled = false;
+
+            HealthBar = new HealthBar(this);
 
         }
 
@@ -92,7 +96,6 @@ namespace SpaceMAS.Models.Enemy {
         }
 
         private void Move(GameTime gameTime) {
-
             var players = GameServices.GetService<List<Player>>();
             Player closestTarget = null;
             var targetDistance = float.MaxValue;
@@ -109,25 +112,25 @@ namespace SpaceMAS.Models.Enemy {
                 }
             }
 
-            var closestPosDistance = AccelerationRate / 20;
+            var closestPosDistance = _speed / 20;
             if (closestTarget != null) {
                 if (closestTarget.Position.X - Position.X > closestPosDistance)
                 {
-                    Position = new Vector2(Position.X + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                    Position = new Vector2(Position.X + _speed * (float)gameTime.ElapsedGameTime.TotalSeconds,
                         Position.Y);
                 }
                 else if (closestTarget.Position.X - Position.X < -closestPosDistance)
                 {
-                    Position = new Vector2(Position.X - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
+                    Position = new Vector2(Position.X - _speed * (float)gameTime.ElapsedGameTime.TotalSeconds,
                         Position.Y);
                 }
                 if (closestTarget.Position.Y - Position.Y > closestPosDistance)
                 {
-                    Position = new Vector2(Position.X, Position.Y + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    Position = new Vector2(Position.X, Position.Y + _speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
                 else if (closestTarget.Position.Y - Position.Y < -closestPosDistance)
                 {
-                    Position = new Vector2(Position.X, Position.Y - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
+                    Position = new Vector2(Position.X, Position.Y - _speed * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
             } 
         }

@@ -31,16 +31,27 @@ namespace SpaceMAS.Factories
 
         public Spawner CreateSpawner()
         {
-            Vector2 position = new Vector2(ThreadSafeRandom.Next(0, GeneralSettings.screenWidth), ThreadSafeRandom.Next(0, GeneralSettings.screenHeight));
+            /**Vector2 position = new Vector2(UtilRandom.Next(0, GeneralSettings.screenWidth), UtilRandom.Next(0, GeneralSettings.screenHeight));
             List <Enemy> enemies = new List<Enemy>();
-            int enemyTypeIndex = ThreadSafeRandom.Next(_enemyTypes.Count);
-            int nofEnemies = ThreadSafeRandom.Next(21);
+            int enemyTypeIndex = UtilRandom.Next(_enemyTypes.Count);
+            int nofEnemies = UtilRandom.Next(21);
             for (int i = 0; i < nofEnemies; i++)
             {
                 enemies.Add(new Enemy(_enemyTypes[enemyTypeIndex], new DisableEffect(1000)));
             }
-            Console.WriteLine(enemies.Count);
-            return new Spawner(ThreadSafeRandom.Next(1, 10) * 1000, ThreadSafeRandom.Next(1, 10) * 300, position, enemies);
+            return new Spawner(UtilRandom.Next(1, 10) * 1000, UtilRandom.Next(1, 10) * 300, position, enemies);**/
+
+            Vector2 position = new Vector2(100, 100);
+            List<Enemy> enemies = new List<Enemy>();
+            int enemyTypeIndex = 0;
+            int nofEnemies = 15;
+            for (int i = 0; i < nofEnemies; i++)
+            {
+                enemies.Add(new Enemy(_enemyTypes[enemyTypeIndex], new DisableEffect(1000)));
+            }
+            Spawner spawner = new Spawner(2000, 1000, position, enemies);
+            return spawner;
+
         }
         
         private SpawnerFactory()

@@ -149,7 +149,7 @@
     <Compile Include="Utils\Collition\QuadTree.cs" />
     <Compile Include="Utils\Frames.cs" />
     <Compile Include="Utils\GameServices.cs" />
-    <Compile Include="Utils\ThreadSafeRandom.cs" />
+    <Compile Include="Utils\UtilRandom.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

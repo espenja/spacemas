@@ -18,6 +18,7 @@ namespace SpaceMAS.Models.Enemy {
             SpawnRate = spawnRate;
             SpawnTime = spawnTime;
             Position = position;
+            Enemies = new List<Enemy>();
             Enemies = enemies;
         }
 
@@ -34,6 +35,7 @@ namespace SpaceMAS.Models.Enemy {
                         LevelController lcon = GameServices.GetService<LevelController>();
                         nextEnemy.Position = new Vector2(Position.X, Position.Y);
                         lcon.CurrentLevel.AllDrawableGameObjects.Add(nextEnemy);
+                        Console.WriteLine("Spawning enemy at pos " + nextEnemy.Position);
                     }
                     TimeSinceLastSpawn = 0f;
                 }
@@ -48,19 +50,15 @@ namespace SpaceMAS.Models.Enemy {
 
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
-            foreach (Enemy enemy in Enemies) {
-                enemy.Draw(spriteBatch);
-            }
+            //foreach (Enemy enemy in Enemies) {
+            //    enemy.Draw(spriteBatch);
+            //}
         }
 
         //public new Vector2 Position {
             //get { return base.Position; }
           //  set { base.Position = value; }
         //}
-
-        public void AddEnemy(Enemy enemy) {
-            Enemies.Add(enemy);
-        }
 
         private Enemy GetNext()
         {

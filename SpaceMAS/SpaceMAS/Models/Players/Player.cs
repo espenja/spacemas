@@ -124,7 +124,7 @@ namespace SpaceMAS.Models.Players {
         }
 
         public override void Die() {
-            //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
+            Console.WriteLine("Dead!");
             Dead = true;
         }
 

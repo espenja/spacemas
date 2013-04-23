@@ -16,11 +16,11 @@ namespace SpaceMAS.Models {
             }
         }
 
-        public KillableGameObject()  {
+        protected KillableGameObject()  {
             HealthBar = new HealthBar(this);
         }
       
-        public bool Dead { get; protected set; }
+        public bool Dead { get; set; }
         public bool Disabled { get; set; }
 
         public abstract void Die();
