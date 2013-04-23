@@ -30,8 +30,10 @@ namespace SpaceMAS.Models.Components {
         }
 
         public override void Update(GameTime gameTime) {
-            CheckCollide();
-            Move(gameTime);
+            if (!Dead) {
+                CheckCollide();
+                Move(gameTime);
+            }
             base.Update(gameTime);
         }
 
@@ -48,7 +50,6 @@ namespace SpaceMAS.Models.Components {
                     OnImpact(gameObject);
                 }
             }
-
         }
 
         private void Move(GameTime gameTime) {

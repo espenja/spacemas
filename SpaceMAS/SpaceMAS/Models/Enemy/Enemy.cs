@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Models.Players;
 using SpaceMAS.Utils;
@@ -13,7 +14,8 @@ namespace SpaceMAS.Models.Enemy {
 
         private HealthBar HealthBar { get; set; }
         public int Bounty { get; set; }
-        private bool isDiffBoosted;
+        private bool _isDiffBoosted;
+        public int ImpactDamage { get; set; }
 
         //public new float Health {
         //    get { return base.Health; }
@@ -27,14 +29,15 @@ namespace SpaceMAS.Models.Enemy {
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
-            isDiffBoosted = false;
+            ImpactDamage = 1;
+            _isDiffBoosted = false;
 
             HealthBar = new HealthBar(this);
         }
 
         public override void Update(GameTime gameTime)
         {
-            if (!isDiffBoosted) {
+            if (!_isDiffBoosted) {
             switch (StateProvider.Instance.State)
                 {
                     case GameState.PLAYING_EASY:
@@ -51,10 +54,11 @@ namespace SpaceMAS.Models.Enemy {
                         break;
                 }
             }
-            isDiffBoosted = true;
+            _isDiffBoosted = true;
             Rotation += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (!Disabled)
+            if (!Disabled && !Dead)
                 Move(gameTime);
+                CheckCollide();
             HealthBar.Update(gameTime);
 
             base.Update(gameTime); 
@@ -103,8 +107,29 @@ namespace SpaceMAS.Models.Enemy {
                 {
                     Position = new Vector2(Position.X, Position.Y - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
+            } 
+        }
+
+        private void CheckCollide() {
+            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
+            List<GameObject> gameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
+
+            foreach (GameObject gameObject in gameObjectsNearby)
+            {
+                if (gameObject is Player && gameObject.IntersectPixels(this)) {
+                    OnImpact(gameObject);
+                }
             }
-            
+        }
+
+        public void OnImpact(GameObject victim)
+        {
+            if (victim is Player)
+            {
+                ((Player)victim).HealthPoints -= ImpactDamage;
+                Console.WriteLine(((Player)victim).HealthPoints);
+                Die();
+            }
         }
 
 

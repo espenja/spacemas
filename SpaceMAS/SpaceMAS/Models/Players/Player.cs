@@ -17,8 +17,8 @@ namespace SpaceMAS.Models.Players {
         private Weapon Weapon { get; set; }
         private int Money { get; set; }
 
-        public Player(string name, Vector2 position, Texture2D Texture) {
-            this.Texture = Texture;
+        public Player(string name, Vector2 position, Texture2D texture) {
+            this.Texture = texture;
 
             Name = name;
             Rotation = 0.0f;
@@ -31,8 +31,8 @@ namespace SpaceMAS.Models.Players {
             HealthPoints = 100;
             Money = 0;
 
-            ContentManager cm = GameServices.GetService<ContentManager>();
-            Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
+            var cm = GameServices.GetService<ContentManager>();
+            var weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
             Weapon = new Weapon(weaponBullet, 150f, 2000, this);
 
             HealthBar = new HealthBar(this);
@@ -68,30 +68,29 @@ namespace SpaceMAS.Models.Players {
         }
 
         private void Move(GameTime gameTime) {
-            float ElapsedGameTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
-            Vector2 NewVelocity = new Vector2(Velocity.X, Velocity.Y);
+            var elapsedGameTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            var newVelocity = new Vector2(Velocity.X, Velocity.Y);
 
             KeyboardState state = Keyboard.GetState();
 
 
             //Add userinput
-            if (state.IsKeyDown(PlayerControls.TurnRight)) Rotation += RotationRate * ElapsedGameTime / 2;
-            if (state.IsKeyDown(PlayerControls.TurnLeft)) Rotation -= RotationRate * ElapsedGameTime / 2;
+            if (state.IsKeyDown(PlayerControls.TurnRight)) Rotation += RotationRate * elapsedGameTime / 2;
+            if (state.IsKeyDown(PlayerControls.TurnLeft)) Rotation -= RotationRate * elapsedGameTime / 2;
 
             if (state.IsKeyDown(PlayerControls.Decelerate)) {
-                NewVelocity.X -= (float) Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
-                NewVelocity.Y -= (float) Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
+                newVelocity.X -= (float) Math.Cos(Rotation) * AccelerationRate * elapsedGameTime;
+                newVelocity.Y -= (float) Math.Sin(Rotation) * AccelerationRate * elapsedGameTime;
             }
             if (state.IsKeyDown(PlayerControls.Accelerate)) {
-                NewVelocity.X += (float) Math.Cos(Rotation) * AccelerationRate * ElapsedGameTime;
-                NewVelocity.Y += (float) Math.Sin(Rotation) * AccelerationRate * ElapsedGameTime;
+                newVelocity.X += (float) Math.Cos(Rotation) * AccelerationRate * elapsedGameTime;
+                newVelocity.Y += (float) Math.Sin(Rotation) * AccelerationRate * elapsedGameTime;
             }
 
 
-            Velocity = NewVelocity;
+            Velocity = newVelocity;
             Position += Velocity;
 
-            //TODO: Stop at screen edges?
             if (Position.X > GeneralSettings.screenWidth) {
                 Position = new Vector2(GeneralSettings.screenWidth, Position.Y);
                 Velocity = new Vector2(0, Velocity.Y);
@@ -120,9 +119,12 @@ namespace SpaceMAS.Models.Players {
             Dead = true;
         }
 
-        public void BulletImpact(Bullet Bullet, GameObject Object) {
-            if (Object is Enemy.Enemy) {
-                Money += ((Enemy.Enemy) Object).Bounty;
+        public void BulletImpact(Bullet bullet, GameObject Object)
+        {
+            var enemy = Object as Enemy.Enemy;
+            if (enemy != null)
+            {
+                Money += enemy.Bounty;
             }
         }
 
