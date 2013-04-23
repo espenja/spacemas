@@ -78,9 +78,9 @@ namespace SpaceMAS.Models.Players {
         }
 
         private void Move(GameTime gameTime) {
+            
             var elapsedGameTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
             var newVelocity = new Vector2(Velocity.X, Velocity.Y);
-
             KeyboardState state = Keyboard.GetState();
 
 
