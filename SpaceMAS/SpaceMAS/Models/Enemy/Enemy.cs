@@ -6,12 +6,14 @@ using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Models.Players;
 using SpaceMAS.Utils;
+using SpaceMAS.State;
 
 namespace SpaceMAS.Models.Enemy {
     public class Enemy : KillableGameObject {
 
         private HealthBar HealthBar { get; set; }
         public int Bounty { get; set; }
+        private bool isDiffBoosted;
 
         //public new float Health {
         //    get { return base.Health; }
@@ -25,12 +27,31 @@ namespace SpaceMAS.Models.Enemy {
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
+            isDiffBoosted = false;
 
             HealthBar = new HealthBar(this);
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (!isDiffBoosted) {
+            switch (StateProvider.Instance.State)
+                {
+                    case GameState.PLAYING_EASY:
+                        break;
+                    case GameState.PLAYING_NORMAL:
+                        MaxHealthPoints *= 2;
+                        Bounty *= 2;
+                        HealthPoints *= 2;
+                        break;
+                    case GameState.PLAYING_HARD:
+                        MaxHealthPoints *= 4;
+                        Bounty *= 4;
+                        HealthPoints *= 4;
+                        break;
+                }
+            }
+            isDiffBoosted = true;
             Rotation += (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (!Disabled)
                 Move(gameTime);

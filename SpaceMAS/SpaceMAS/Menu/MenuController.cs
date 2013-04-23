@@ -18,7 +18,7 @@ namespace SpaceMAS.Menu {
 
             //Main menu with ID = 0
             Menu mainMenu = new Menu(this, 0, -1);
-            mainMenu.CreateButton("play", "Play", 0, GameState.PLAYING, -1);
+            mainMenu.CreateButton("play", "Play", 0, GameState.LEVEL_INTRO, 3);
             mainMenu.CreateButton("options", "Options", 1, GameState.MENU, 1);
             mainMenu.CreateButton("highscore", "Highscore", 2, GameState.MENU, 2);
             mainMenu.CreateButton("quit", "Quit", 3, GameState.QUIT, -1);
@@ -32,9 +32,16 @@ namespace SpaceMAS.Menu {
             highscoreMenu.CreateButton("highscore", "Some stuff", 0, GameState.HIGHSCORE, -1);
             highscoreMenu.CreateButton("highscore", "Back", 1, GameState.MENU, 0);
 
+            Menu levelChangeMenu = new Menu(this, 3, -1);
+            levelChangeMenu.CreateButton("easy", "Easy", 0, GameState.PLAYING_EASY, -1);
+            levelChangeMenu.CreateButton("normal", "Normal", 1, GameState.PLAYING_NORMAL, -1);
+            levelChangeMenu.CreateButton("hard", "Hard", 2, GameState.PLAYING_HARD, -1);
+            
+
             Menus.Add(mainMenu);
             Menus.Add(optionsMenu);
             Menus.Add(highscoreMenu);
+            Menus.Add(levelChangeMenu);
 
             CurrentMenu = mainMenu;
         }
