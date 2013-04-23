@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Timers;
 
-namespace SpaceMAS.Models.Components.BulletEffects {
-    internal class DisableEffect : BulletEffect {
+namespace SpaceMAS.Models.Components.ImpactEffects {
+    internal class DisableEffect : IImpactEffect {
         protected float Duration;
         private KillableGameObject Victim;
 
@@ -28,8 +28,8 @@ namespace SpaceMAS.Models.Components.BulletEffects {
             Victim.Enable();
         }
 
-        public BulletEffect Clone() {
-            BulletEffect clone = new DisableEffect(Duration);
+        public IImpactEffect Clone() {
+            IImpactEffect clone = new DisableEffect(Duration);
             return clone;
         }
     }

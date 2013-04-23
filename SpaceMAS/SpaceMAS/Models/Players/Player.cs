@@ -3,15 +3,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
+using SpaceMAS.Models.Components.ImpactEffects;
 using SpaceMAS.Settings;
 using Microsoft.Xna.Framework.Input;
 using System;
-using SpaceMAS.Models.Components.BulletEffects;
 using SpaceMAS.Utils;
 using Microsoft.Xna.Framework.Content;
 
 namespace SpaceMAS.Models.Players {
-    public class Player : KillableGameObject, BulletListener {
+    public class Player : KillableGameObject, IBulletListener {
 
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
@@ -132,7 +132,7 @@ namespace SpaceMAS.Models.Players {
         public void BulletImpact(Bullet bullet, GameObject Object)
         {
             var enemy = Object as Enemy.Enemy;
-            if (enemy != null)
+            if (enemy != null && enemy.Dead)
             {
                 Money += enemy.Bounty;
             }

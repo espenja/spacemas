@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Level;
+using SpaceMAS.Models.Components.ImpactEffects;
 using SpaceMAS.Utils;
 using SpaceMAS.Models.Players;
 
@@ -9,11 +10,11 @@ namespace SpaceMAS.Models.Components {
     public class Bullet : KillableGameObject {
         public List<IBulletListener> Listeners { get; set; }
         protected float HealthChange { get; set; }
-        protected BulletEffect Effect { get; set; }
+        protected IImpactEffect Effect { get; set; }
         public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }
 
-        public Bullet(float HealthChange, float TravelSpeed, BulletEffect Effect, Texture2D Texture) {
+        public Bullet(float HealthChange, float TravelSpeed, IImpactEffect Effect, Texture2D Texture) {
             this.HealthChange = HealthChange;
             this.Effect = Effect;
             this.Texture = Texture;
@@ -56,16 +57,15 @@ namespace SpaceMAS.Models.Components {
             Position += Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public void OnImpact(GameObject Victim) {
-            foreach (IBulletListener Listener in Listeners) {
-                Listener.BulletImpact(this, Victim);
-            }
-
-            if (Victim is KillableGameObject) {
-                ((KillableGameObject) Victim).HealthPoints += HealthChange;
+        public void OnImpact(GameObject victim) {
+            if (victim is KillableGameObject) {
+                ((KillableGameObject) victim).HealthPoints += HealthChange;
                 Die();
             }
-            Effect.OnImpact(Victim);
+            Effect.OnImpact(victim);
+            foreach (IBulletListener listener in Listeners) {
+                listener.BulletImpact(this, victim);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch) {

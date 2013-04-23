@@ -169,7 +169,8 @@ namespace SpaceMAS {
             //fps counter
             int fps = Frames.CalculateFrameRate();
             Vector2 fontOrigin = TextFont.MeasureString(fps.ToString()) / 2;
-            spriteBatch.DrawString(TextFont, fps.ToString(), new Vector2(10,10), Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, 0.5f);
+            Vector2 position = new Vector2(GeneralSettings.screenHeight - 10, GeneralSettings.screenWidth - 10);
+            spriteBatch.DrawString(TextFont, fps.ToString(), position, Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, 0.5f);
                
 
             switch (StateProvider.Instance.State) {
@@ -217,13 +218,12 @@ namespace SpaceMAS {
 
         protected void DrawPlayerMoney(SpriteBatch spriteBatch)
         {
-            Vector2 position = new Vector2(50, 100);
+            Vector2 position = new Vector2(10, 10);
             foreach (var player in players)
             {
-                Vector2 fontOrigin = TextFont.MeasureString(player.Money.ToString() + "$") / 2;
-                spriteBatch.DrawString(TextFont, player.Money.ToString() + "$", 
-                    position, Color.LightGreen, 0, fontOrigin, 0.5f, 
-                    SpriteEffects.None, GameDrawOrder.FOREGROUND_TOP);
+                spriteBatch.DrawString(TextFont, player.Name + " : " + player.Money.ToString() + "$", 
+                    position, Color.Gold, 0, Vector2.Zero, 0.4f,
+                    SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
                 position.Y += 50;
             }
         }
