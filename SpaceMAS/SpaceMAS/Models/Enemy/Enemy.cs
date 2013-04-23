@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Factories;
+using SpaceMAS.Interfaces;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Models.Components.ImpactEffects;
@@ -16,26 +18,43 @@ namespace SpaceMAS.Models.Enemy {
         private HealthBar HealthBar { get; set; }
         public int Bounty { get; set; }
         private bool _isDiffBoosted;
-        public int ImpactDamage { get; set; }
+        public String Name { get; set; }
+        public int Damage { get; set; }
         public IImpactEffect ImpactEffect { get; set; }
+        private int _speed;
 
         //public new float Health {
         //    get { return base.Health; }
         //    set { base.Health = value; }
         //}
 
-        public Enemy() {
+       /** public Enemy() {
             Rotation = 0f;
             AccelerationRate = 100f;
             RotationRate = 5f;
             MaxHealthPoints = 25;
             HealthPoints = 25;
             Bounty = 10;
-            ImpactDamage = 1;
+            Damage = 1;
             _isDiffBoosted = false;
             ImpactEffect = new DisableEffect(1000);
 
             HealthBar = new HealthBar(this);
+        }**/
+
+        public Enemy(EnemyType type, IImpactEffect effect)
+        {
+            Name = type.Name;
+            Damage = type.Damage;
+            MaxHealthPoints = type.Health;
+            HealthPoints = type.Health;
+            Bounty = type.Bounty;
+            ImpactEffect = effect;
+            LoadTexture(type.Id);
+
+            _speed = type.Speed;
+            _isDiffBoosted = false;
+
         }
 
         public override void Update(GameTime gameTime)
@@ -130,7 +149,7 @@ namespace SpaceMAS.Models.Enemy {
         {
             if (victim is Player)
             {
-                ((Player)victim).HealthPoints -= ImpactDamage;
+                ((Player)victim).HealthPoints -= Damage;
                 if (ImpactEffect != null)
                     ImpactEffect.OnImpact(victim);
                 Die();

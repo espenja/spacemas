@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Interfaces;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components.ImpactEffects;
 using SpaceMAS.Utils;

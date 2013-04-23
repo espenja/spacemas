@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceMAS.Factories;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Players;
 using SpaceMAS.State;
@@ -92,7 +93,8 @@ namespace SpaceMAS {
             // TODO: Unload any non ContentManager content here
         }
 
-        protected override void Update(GameTime gameTime) {
+        protected override void Update(GameTime gameTime)
+        {
                 
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || StateProvider.Instance.State == GameState.QUIT)
@@ -123,6 +125,7 @@ namespace SpaceMAS {
                     break;
             }
             timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
+             
             base.Update(gameTime);
         }
 

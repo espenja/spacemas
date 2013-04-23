@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using SpaceMAS.Factories;
 using SpaceMAS.Models.Enemy;
 using SpaceMAS.Settings;
 using SpaceMAS.Utils;
@@ -49,6 +50,7 @@ namespace SpaceMAS.Level {
             FileInfo[] fileInfos = directoryInfo.GetFiles();
 
             foreach (FileInfo fileInfo in fileInfos) {
+                Console.WriteLine(fileInfo.FullName);
                 CreateLevel(File.ReadAllLines(fileInfo.FullName));
             }
             Levels = Levels.OrderBy(l => l.Id).ToList();
@@ -95,11 +97,11 @@ namespace SpaceMAS.Level {
                             level.AddSpawner(makeSpawner(segments));
                         break;
                     }
-                    case "enemy": {
+                    /**case "enemy": {
                         if(level != null)
                             makeEnemy(segments, level);
                         break;
-                    }
+                    }**/
                 }
             }
 
@@ -117,7 +119,7 @@ namespace SpaceMAS.Level {
             return level;
         }
 
-        private Spawner makeSpawner(Dictionary<string, string> spawnerInfo) {
+        /**private Spawner makeSpawner(Dictionary<string, string> spawnerInfo) {
 
             Spawner spawner = new Spawner();
 
@@ -127,9 +129,14 @@ namespace SpaceMAS.Level {
             spawner.Position = GetPosition(GetStringInfo(spawnerInfo, "position", "Spawner"));
 
             return spawner;
+        }**/
+
+        private Spawner makeSpawner(Dictionary<string, string> spawnerInfo)
+        {
+            return SpawnerFactory.Instance.CreateSpawner();
         }
 
-        private void makeEnemy(Dictionary<string, string> enemyInfo, Level level) {
+        /**private void makeEnemy(Dictionary<string, string> enemyInfo, Level level) {
 
             string id = GetStringInfo(enemyInfo, "id", "Enemy");
             int health = GetIntInfo(enemyInfo, "health", "Enemy");
@@ -144,7 +151,7 @@ namespace SpaceMAS.Level {
                 enemy.MaxHealthPoints = health;
                 level.AddEnemy(enemy, spawnerId);
             }
-        }
+        }**/
 
         private string GetStringInfo(Dictionary<string, string> info, string key, string objectType) {
             string value;

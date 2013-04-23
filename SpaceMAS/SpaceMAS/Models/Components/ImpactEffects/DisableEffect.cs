@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using SpaceMAS.Interfaces;
 
 namespace SpaceMAS.Models.Components.ImpactEffects {
     internal class DisableEffect : IImpactEffect {

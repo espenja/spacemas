@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using SpaceMAS.Level;
 using SpaceMAS.Utils;
@@ -6,28 +7,23 @@ using SpaceMAS.Utils;
 namespace SpaceMAS.Models.Enemy {
     public class Spawner : GameObject {
 
-        public int Id { get; set; }
         public long SpawnTime { get; set; }
         public long SpawnRate { get; set; }
         private float TimeSinceLastSpawn { get; set; }
 
         public List<Enemy> Enemies { get; set; }
 
-        public Spawner(int Id, long SpawnTime, long SpawnRate) {
-            this.Id = Id;
-            this.SpawnRate = SpawnRate;
-            this.SpawnTime = SpawnTime;
-            Enemies = new List<Enemy>();
+        public Spawner(long spawnTime, long spawnRate, Vector2 position, List<Enemy> enemies)
+        {
+            SpawnRate = spawnRate;
+            SpawnTime = spawnTime;
+            Position = position;
+            Enemies = enemies;
         }
 
-        public Spawner()
+        public void Update(float levelPlayingTime, GameTime gameTime)
         {
-            Enemies = new List<Enemy>();
-        }
-
-        public void Update(float LevelPlayingTime, GameTime gameTime)
-        {
-            if (SpawnTime <= LevelPlayingTime)
+            if (SpawnTime <= levelPlayingTime)
             {
                 TimeSinceLastSpawn += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
                 if (TimeSinceLastSpawn >= SpawnRate)

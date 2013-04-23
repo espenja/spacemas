@@ -1,4 +1,6 @@
-﻿namespace SpaceMAS.Models.Components.ImpactEffects
+﻿using SpaceMAS.Models;
+
+namespace SpaceMAS.Interfaces
 {
     public interface IImpactEffect
     {
