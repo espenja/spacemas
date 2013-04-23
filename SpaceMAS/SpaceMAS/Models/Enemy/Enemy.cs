@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
+using SpaceMAS.Models.Components.ImpactEffects;
 using SpaceMAS.Models.Players;
 using SpaceMAS.Utils;
 using SpaceMAS.State;
@@ -16,6 +17,7 @@ namespace SpaceMAS.Models.Enemy {
         public int Bounty { get; set; }
         private bool _isDiffBoosted;
         public int ImpactDamage { get; set; }
+        public IImpactEffect ImpactEffect { get; set; }
 
         //public new float Health {
         //    get { return base.Health; }
@@ -31,6 +33,7 @@ namespace SpaceMAS.Models.Enemy {
             Bounty = 10;
             ImpactDamage = 1;
             _isDiffBoosted = false;
+            ImpactEffect = new DisableEffect(1000);
 
             HealthBar = new HealthBar(this);
         }
@@ -128,6 +131,8 @@ namespace SpaceMAS.Models.Enemy {
             if (victim is Player)
             {
                 ((Player)victim).HealthPoints -= ImpactDamage;
+                if (ImpactEffect != null)
+                    ImpactEffect.OnImpact(victim);
                 Die();
             }
         }
