@@ -20,7 +20,7 @@ namespace SpaceMAS.Level.Background
             Stars = new List<Star>();
 
             ContentManager contentManager = GameServices.GetService<ContentManager>();
-            Texture = contentManager.Load<Texture2D>(GeneralSettings.TexturesPath + "star2");
+            Texture = contentManager.Load<Texture2D>(GeneralSettings.TexturesPath + "star");
 
             Random = new Random();
 
