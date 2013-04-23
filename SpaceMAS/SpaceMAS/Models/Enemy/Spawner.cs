@@ -39,7 +39,18 @@ namespace SpaceMAS.Models.Enemy {
                 }
             }
 
+            foreach (Enemy enemy in Enemies) {
+                enemy.Update(gameTime);
+            }
+
             base.Update(gameTime);
+        }
+
+        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
+        {
+            foreach (Enemy enemy in Enemies) {
+                enemy.Draw(spriteBatch);
+            }
         }
 
         //public new Vector2 Position {

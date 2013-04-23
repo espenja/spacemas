@@ -97,11 +97,11 @@ namespace SpaceMAS.Level {
                             level.AddSpawner(makeSpawner(segments));
                         break;
                     }
-                    /**case "enemy": {
-                        if(level != null)
-                            makeEnemy(segments, level);
-                        break;
-                    }**/
+                    //case "enemy": {
+                    //    if(level != null)
+                    //        makeEnemy(segments, level);
+                    //    break;
+                    //}
                 }
             }
 

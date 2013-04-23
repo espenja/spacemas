@@ -103,6 +103,10 @@ namespace SpaceMAS.Level {
 
             foreach (GameObject go in SafeToIterate)
                 go.Draw(spriteBatch);
+
+            foreach (Spawner spawner in Spawners) {
+                spawner.Draw(spriteBatch);
+            }
         }
     }
 }

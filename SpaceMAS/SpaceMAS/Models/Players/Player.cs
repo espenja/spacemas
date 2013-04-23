@@ -15,7 +15,6 @@ namespace SpaceMAS.Models.Players {
     public class Player : KillableGameObject, IBulletListener {
 
         public string Name { get; private set; }
-        private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
         private Weapon Weapon { get; set; }
         public int Money { get; set; }
@@ -38,7 +37,7 @@ namespace SpaceMAS.Models.Players {
             Bullet weaponBullet = new Bullet(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
             Weapon = new Weapon(weaponBullet, 50f, this);
 
-            HealthBar = new HealthBar(this);
+            //HealthBar = new HealthBar(this);
             PlayerControls = ControlsController.GetControls(name);
         }
 

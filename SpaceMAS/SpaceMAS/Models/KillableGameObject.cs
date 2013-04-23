@@ -1,6 +1,9 @@
-﻿namespace SpaceMAS.Models {
+﻿using SpaceMAS.Models.Components;
+
+namespace SpaceMAS.Models {
     public abstract class KillableGameObject : GameObject {
 
+        public HealthBar HealthBar { get; set; }
         public float MaxHealthPoints { get; set; }
         private float healthPoints;
         public float HealthPoints
@@ -11,6 +14,10 @@
                 healthPoints = value;
                 if (healthPoints <= 0) Die();
             }
+        }
+
+        public KillableGameObject()  {
+            HealthBar = new HealthBar(this);
         }
       
         public bool Dead { get; protected set; }

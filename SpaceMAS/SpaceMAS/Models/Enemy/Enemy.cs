@@ -15,7 +15,6 @@ using SpaceMAS.State;
 namespace SpaceMAS.Models.Enemy {
     public class Enemy : KillableGameObject {
 
-        private HealthBar HealthBar { get; set; }
         public int Bounty { get; set; }
         private bool _isDiffBoosted;
         public String Name { get; set; }
