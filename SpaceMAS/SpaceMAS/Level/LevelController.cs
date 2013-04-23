@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using SpaceMAS.Models.Enemy;
 using SpaceMAS.Settings;
 using SpaceMAS.Utils;
+using SpaceMAS.State;
 
 namespace SpaceMAS.Level {
 
@@ -18,7 +19,6 @@ namespace SpaceMAS.Level {
         public LevelController() {
             Levels = new List<Level>();
             LoadLevels();
-            Console.WriteLine(Levels.Count);
         }
 
         public void InitializeLevels() {
@@ -40,8 +40,7 @@ namespace SpaceMAS.Level {
             }
 
             CurrentLevel = Levels.Find(l => l.Id == CurrentLevel.Id + 1);
-            CurrentLevel.Initialize();
-
+            StateProvider.Instance.State = GameState.LEVEL_INTRO;
         }
 
         private void LoadLevels() {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,6 +28,9 @@ namespace SpaceMAS {
         private MenuController MenuController;
         //to see fps
         private SpriteFont fpsFont;
+
+        //save gamestate for pause
+        private GameState BeforePauseState { get; set; }
 
         public SpaceMAS() {
             graphics = new GraphicsDeviceManager(this);
@@ -102,7 +106,16 @@ namespace SpaceMAS {
                 case GameState.GAMEPAUSED:
                     UpdateGamepausedState();
                     break;
-                case GameState.PLAYING:
+                case GameState.LEVEL_INTRO:
+                    LevelController.CurrentLevel.LevelIntro.Update(gameTime);
+                    break;
+                case GameState.PLAYING_EASY:
+                    UpdatePlayingState(gameTime);
+                    break;
+                case GameState.PLAYING_NORMAL:
+                    UpdatePlayingState(gameTime);
+                    break;
+                case GameState.PLAYING_HARD:
                     UpdatePlayingState(gameTime);
                     break;
             }
@@ -135,12 +148,13 @@ namespace SpaceMAS {
         }
 
         protected void PauseGame() {
+            BeforePauseState = StateProvider.Instance.State;
             StateProvider.Instance.State = GameState.GAMEPAUSED;
             timeSinceLastAction = 0f;
         }
 
         protected void UnPause() {
-            StateProvider.Instance.State = GameState.PLAYING;
+            StateProvider.Instance.State = BeforePauseState;
             timeSinceLastAction = 0f;
         }
 
@@ -166,7 +180,18 @@ namespace SpaceMAS {
                 case GameState.GAMEPAUSED:
                     LevelController.CurrentLevel.Draw(spriteBatch);
                     break;
-                case GameState.PLAYING:
+                case GameState.LEVEL_INTRO:
+                    LevelController.CurrentLevel.LevelIntro.Draw(spriteBatch);
+                    break;
+                case GameState.PLAYING_EASY:
+                    if (LevelController.CurrentLevel != null)
+                        LevelController.CurrentLevel.Draw(spriteBatch);
+                    break;
+                case GameState.PLAYING_NORMAL:
+                    if (LevelController.CurrentLevel != null)
+                        LevelController.CurrentLevel.Draw(spriteBatch);
+                    break;
+                case GameState.PLAYING_HARD:
                     if (LevelController.CurrentLevel != null)
                         LevelController.CurrentLevel.Draw(spriteBatch);
                     break;

@@ -57,16 +57,7 @@ namespace SpaceMAS.Level {
 
 
         public void Update(GameTime gameTime) {
-
-            if (!IntroRunning) return;
-            if (StateProvider.Instance.State != GameState.PLAYING) return;
-
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
-            KeyboardState state = Keyboard.GetState();
-
-            if (state.IsKeyDown(Keys.Enter)) {
-                IntroRunning = false;
-            }
 
             switch (State) {
                 case IntroState.FADING_IN:
@@ -92,7 +83,7 @@ namespace SpaceMAS.Level {
                     Opacity -= (1f / (float) FadeOutTime) * (float) gameTime.ElapsedGameTime.TotalMilliseconds;
 
                     if(timer > FadeOutTime) {
-                        IntroRunning = false;
+                        StateProvider.Instance.State = GameState.MENU;
                     }
                     break;
             }

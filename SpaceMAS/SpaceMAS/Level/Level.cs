@@ -39,6 +39,7 @@ namespace SpaceMAS.Level {
         public void Initialize() {
             LevelIntro = new LevelIntro(this);
             AllDrawableGameObjects.AddRange(GameServices.GetService<List<Player>>());
+         
         }
 
         public void AddSpawner(Spawner spawner) {
@@ -64,11 +65,6 @@ namespace SpaceMAS.Level {
 
         public void Update(GameTime gameTime) {
 
-            if (LevelIntro.IntroRunning) {
-                LevelIntro.Update(gameTime);
-                return;
-            }
-
             QuadTree.clear();
 
             foreach (var gameObject in AllDrawableGameObjects) {
@@ -92,9 +88,7 @@ namespace SpaceMAS.Level {
             }
 
             if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count) {
-                //TODO: Gå til shop/velge difficult på neste lvl?
-                //levelController.GoToNextLevel();
-                Console.WriteLine("Level completet!");
+                GameServices.GetService<LevelController>().GoToNextLevel();
             }
 
             CleanUp();
@@ -102,12 +96,8 @@ namespace SpaceMAS.Level {
 
         public void Draw(SpriteBatch spriteBatch) {
             QuadTree.Draw(spriteBatch);
-            if (LevelIntro.IntroRunning)
-                LevelIntro.Draw(spriteBatch);
-            else {
-                foreach (GameObject go in SafeToIterate)
-                    go.Draw(spriteBatch);
-            }
+            foreach (GameObject go in SafeToIterate)
+                go.Draw(spriteBatch);
         }
     }
 }

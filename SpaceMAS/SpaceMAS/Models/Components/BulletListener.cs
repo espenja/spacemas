@@ -2,6 +2,6 @@
 {
     public interface BulletListener
     {
-        void BulletImpact(Bullet Bullet, GameObject Object);
+        void BulletImpact(Bullet bullet, GameObject Object);
     }
 }
