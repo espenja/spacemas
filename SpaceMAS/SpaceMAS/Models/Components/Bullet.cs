@@ -7,7 +7,7 @@ using SpaceMAS.Models.Players;
 
 namespace SpaceMAS.Models.Components {
     public class Bullet : KillableGameObject {
-        public List<BulletListener> Listeners { get; set; }
+        public List<IBulletListener> Listeners { get; set; }
         protected float HealthChange { get; set; }
         protected BulletEffect Effect { get; set; }
         public bool isVisible { get; set; }
@@ -21,7 +21,7 @@ namespace SpaceMAS.Models.Components {
         }
 
         public Bullet(Bullet CopyBullet) {
-            Listeners = new List<BulletListener>();
+            Listeners = new List<IBulletListener>();
             HealthChange = CopyBullet.HealthChange;
             Effect = CopyBullet.Effect.Clone();
             isVisible = true;
@@ -57,7 +57,7 @@ namespace SpaceMAS.Models.Components {
         }
 
         public void OnImpact(GameObject Victim) {
-            foreach (BulletListener Listener in Listeners) {
+            foreach (IBulletListener Listener in Listeners) {
                 Listener.BulletImpact(this, Victim);
             }
 

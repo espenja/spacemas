@@ -29,8 +29,6 @@ namespace SpaceMAS.Level {
         public QuadTree QuadTree { get; private set; }
         private Starfield StarField;
 
-        private SpriteFont PlayerMoneyFont { get; set; }
-
 
         public Level() {
             var graphicsDevice = GameServices.GetService<GraphicsDevice>();

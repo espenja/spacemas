@@ -1,6 +1,6 @@
 ﻿namespace SpaceMAS.Models.Components
 {
-    public interface BulletListener
+    public interface IBulletListener
     {
         void BulletImpact(Bullet bullet, GameObject Object);
     }
