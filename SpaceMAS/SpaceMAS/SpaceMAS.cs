@@ -169,8 +169,8 @@ namespace SpaceMAS {
             //fps counter
             int fps = Frames.CalculateFrameRate();
             Vector2 fontOrigin = TextFont.MeasureString(fps.ToString()) / 2;
-            Vector2 position = new Vector2(GeneralSettings.screenHeight - 10, GeneralSettings.screenWidth - 10);
-            spriteBatch.DrawString(TextFont, fps.ToString(), position, Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, 0.5f);
+            Vector2 position = new Vector2(50, 50);
+            spriteBatch.DrawString(TextFont, fps.ToString(), position, Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
                
 
             switch (StateProvider.Instance.State) {

@@ -11,16 +11,14 @@ namespace SpaceMAS.Models.Components
     {
         protected float Firerate { get; set; }
         protected Bullet BulletType { get; set; }
-        protected int NofBullets { get; set; }
         protected float TimeSinceLastShot { get; set; }
         protected Player Owner { get; set; }
         public bool isDisabled { get; set; }
 
-        public Weapon(Bullet BulletType, float Firerate, int NofBullets, Player Owner)
+        public Weapon(Bullet BulletType, float Firerate, Player Owner)
         {
             this.BulletType = BulletType;
             this.Firerate = Firerate;
-            this.NofBullets = NofBullets;
             this.Owner = Owner;
             TimeSinceLastShot = Firerate;
         }
@@ -28,9 +26,8 @@ namespace SpaceMAS.Models.Components
         public void Shoot(GameTime gameTime)
         {
             TimeSinceLastShot += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (!isDisabled && TimeSinceLastShot >= Firerate && NofBullets > 0)
+            if (!isDisabled && TimeSinceLastShot >= Firerate)
             {
-                NofBullets--;
                 Bullet NewBullet = new Bullet(BulletType);
                 NewBullet.Scale = 0.1f;
                 NewBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * NewBullet.TravelSpeed;

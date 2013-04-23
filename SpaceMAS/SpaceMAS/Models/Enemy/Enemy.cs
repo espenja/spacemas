@@ -78,8 +78,9 @@ namespace SpaceMAS.Models.Enemy {
 
             foreach (var player in players)
             {
-                var distance = Math.Abs((float)Math.Sqrt(Math.Pow(player.Position.X - Position.X, 2) 
-                    + Math.Pow((player.Position.Y - player.Position.Y), 2)));
+                if (player.Dead) continue;
+                var distance = (float)Math.Sqrt(Math.Pow(player.Position.X - Position.X, 2) 
+                    + Math.Pow((player.Position.Y - player.Position.Y), 2));
                 if (distance < targetDistance || closestTarget == null)
                 {
                     targetDistance = distance;

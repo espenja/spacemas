@@ -1,0 +1,27 @@
+%level
+name:Level 4
+id:4
+
+%spawner
+id:0
+spawn_time:5000
+position:100,100
+spawn_rate:1000
+
+%spawner
+id:1
+spawn_time:5000
+position:800,800
+spawn_rate:1000
+
+%enemy
+id:enemy_blue
+health:2000
+spawner_id:0
+amount:1
+
+%enemy
+id:enemy_blue
+health:2000
+spawner_id:1
+amount:1

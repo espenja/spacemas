@@ -1,5 +1,5 @@
 %level
-name:Second Level
+name:Level 2
 id:2
 
 %spawner
