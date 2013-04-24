@@ -16,6 +16,7 @@ namespace SpaceMAS.Settings {
         public static Keys MenuSelect;
         public static Keys MenuUp;
         public static Keys MenuDown;
+        public static Keys Back;
 
         public Controls(string player) {
             LoadPlayerControls(player);
@@ -32,6 +33,8 @@ namespace SpaceMAS.Settings {
             MenuSelect = Keys.Enter;
             MenuDown = Keys.Down;
             MenuUp = Keys.Up;
+            Back = Keys.Escape;
+            
         }
 
         //Converts all fields in this class to a List of Keys.

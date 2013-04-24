@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -104,7 +106,8 @@ namespace SpaceMAS {
                 case GameState.MENU:
                     MenuController.Update(gameTime);
                     break;
-                case GameState.OPTIONS:
+                case GameState.CONTROLS:
+                    UpdateControlsState(gameTime);
                     break;
                 case GameState.GAMEPAUSED:
                     UpdateGamepausedState();
@@ -124,6 +127,16 @@ namespace SpaceMAS {
             }
             timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
             base.Update(gameTime);
+        }
+
+        protected void UpdateControlsState(GameTime gameTime) {
+            foreach (Player player in players) {
+                if (Keyboard.GetState().IsKeyDown(Controls.Back)) {
+                    StateProvider.Instance.State = GameState.MENU;
+                }
+            }
+            Draw(gameTime);
+            
         }
 
         protected void UpdatePlayingState(GameTime gameTime) {
@@ -179,7 +192,8 @@ namespace SpaceMAS {
                 case GameState.MENU:
                     MenuController.Draw(spriteBatch);
                     break;
-                case GameState.OPTIONS:
+                case GameState.CONTROLS:
+                    DrawControls(spriteBatch);
                     break;
                 case GameState.GAMEPAUSED:
                     LevelController.CurrentLevel.Draw(spriteBatch);
@@ -219,13 +233,49 @@ namespace SpaceMAS {
         protected void DrawPlayerMoney(SpriteBatch spriteBatch)
         {
             Vector2 position = new Vector2(10, 10);
+            float scale = 0.4f;
             foreach (var player in players)
             {
                 spriteBatch.DrawString(TextFont, player.Name + " : " + player.Money.ToString() + "$", 
-                    position, Color.Gold, 0, Vector2.Zero, 0.4f,
+                    position, Color.Gold, 0, Vector2.Zero, scale,
                     SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
-                position.Y += 50;
+                position.Y += TextFont.LineSpacing * scale;
+            }
+        }
+
+        protected void DrawControls(SpriteBatch spriteBatch)
+        {
+            
+            Vector2 position = new Vector2(GeneralSettings.screenHeight / 10, GeneralSettings.screenWidth / 50);
+
+            foreach (Player player in players)
+            {
+                float scale = 0.6f;
+                String keyLine = player.Name;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                scale = 0.4f;
+
+                keyLine = "Accelerate:       " + player.PlayerControls.Accelerate;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+
+                keyLine = "Decelerate:       " + player.PlayerControls.Decelerate;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+
+                keyLine = "Turn left:            " + player.PlayerControls.TurnLeft;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+
+                keyLine = "Turn right:          " + player.PlayerControls.TurnRight;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Pause:                " + Controls.Pause;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
             }
         }
     }
 }
+

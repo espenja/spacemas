@@ -4,7 +4,7 @@ namespace SpaceMAS.State {
     public enum GameState {
 
         MENU,
-        OPTIONS,
+        CONTROLS,
         LEVEL_INTRO,
         PLAYING_EASY,
         PLAYING_NORMAL,

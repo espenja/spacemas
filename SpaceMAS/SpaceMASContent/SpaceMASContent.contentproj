@@ -90,8 +90,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Buttons\options.png">
-      <Name>options</Name>
+    <Compile Include="Buttons\controls.png">
+      <Name>controls</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
