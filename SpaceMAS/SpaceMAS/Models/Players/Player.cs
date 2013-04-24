@@ -38,7 +38,7 @@ namespace SpaceMAS.Models.Players {
             Weapon = new Weapon(weaponBullet, 50f, this);
 
             HealthBar = new HealthBar(this);
-            PlayerControls = ControlsController.GetControls(name);
+            PlayerControls = ControlsController.GetControls(this);
         }
 
         public override void Update(GameTime gameTime) {

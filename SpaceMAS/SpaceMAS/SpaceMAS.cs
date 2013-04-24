@@ -145,16 +145,14 @@ namespace SpaceMAS {
             else
                 Exit();
             if (timeSinceLastAction > 0.1) {
-                foreach (Player player in players) {
-                    if (player.ClickedPauseKey()) {
-                        PauseGame();
-                    }
+                if (players[0].ClickedPauseKey()) {
+                    PauseGame();
                 }
             }
         }
 
         protected void UpdateGamepausedState() {
-            if (timeSinceLastAction > 0.1) {
+            if (timeSinceLastAction > 0.5) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
                         UnPause();
