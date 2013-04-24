@@ -10,6 +10,7 @@
             {
                 healthPoints = value;
                 if (healthPoints <= 0) Die();
+                if (healthPoints > MaxHealthPoints) healthPoints = MaxHealthPoints;
             }
         }
       

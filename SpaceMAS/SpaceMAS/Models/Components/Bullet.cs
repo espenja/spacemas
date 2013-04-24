@@ -44,7 +44,6 @@ namespace SpaceMAS.Models.Components {
 
             foreach (GameObject gameObject in GameObjectsNearby) {
                 if (gameObject is KillableGameObject &&
-                    !(gameObject is Player) &&
                     !(gameObject is Bullet) &&
                     gameObject.IntersectPixels(this)) {
 
@@ -58,11 +57,15 @@ namespace SpaceMAS.Models.Components {
         }
 
         public void OnImpact(GameObject victim) {
-            if (victim is KillableGameObject) {
-                ((KillableGameObject) victim).HealthPoints += HealthChange;
+            if (victim is Enemy.Enemy) {
+                ((Enemy.Enemy) victim).HealthPoints += HealthChange;
+                Effect.OnImpact(victim);
+                Die();
+            } else if (victim is Player)
+            {
+                ((Player)victim).HealthPoints -= HealthChange;
                 Die();
             }
-            Effect.OnImpact(victim);
             foreach (IBulletListener listener in Listeners) {
                 listener.BulletImpact(this, victim);
             }
