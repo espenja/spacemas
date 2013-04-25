@@ -146,6 +146,7 @@
     <Compile Include="Utils\Collition\QuadTree.cs" />
     <Compile Include="Utils\Frames.cs" />
     <Compile Include="Utils\GameServices.cs" />
+    <Compile Include="Utils\HighscoreProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

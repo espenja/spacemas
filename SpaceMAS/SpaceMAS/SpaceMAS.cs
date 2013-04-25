@@ -71,7 +71,6 @@ namespace SpaceMAS {
             GameServices.AddService(LevelController);
 
             MenuController = new MenuController();
-
             ShopCost = 50;
             base.Initialize();
         }
@@ -100,16 +99,14 @@ namespace SpaceMAS {
 
         protected override void Update(GameTime gameTime) {
                 
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || StateProvider.Instance.State == GameState.QUIT)
-                this.Exit();
-
             switch (StateProvider.Instance.State) {
+                case GameState.QUIT:
+                    Exit();
+                    break;
                 case GameState.HIGHSCORE:
                     break;
                 case GameState.MENU:
                     MenuController.Update(gameTime);
-                    break;
                     break;
                 case GameState.CONTROLS:
                     UpdateControlsState(gameTime);
@@ -203,7 +200,42 @@ namespace SpaceMAS {
             
         }
 
+        private bool AllPlayersDead() {
+            foreach (var player in players) {
+                if (!player.Dead) return false;
+            }
+            return true;
+        }
+
+        private void UpdateHighScore()
+        {
+            List<String> highscore = HighscoreProvider.Instance.Highscore;
+            foreach (var score in highscore)
+            {
+                if (LevelController.CurrentLevel.Id >= Convert.ToInt32(score.Split(' ')[1]))
+                {
+                    highscore.Insert(highscore.IndexOf(score), "Level " + LevelController.CurrentLevel.Id + " : " + players[0].Name + " + " + players[1].Name);
+                    HighscoreProvider.Instance.SaveHighscore();
+                    return;
+                }
+            }
+            highscore.Add("Level " + LevelController.CurrentLevel.Id + " : " + players[0].Name + " + " + players[1].Name);
+            HighscoreProvider.Instance.SaveHighscore();
+        }
+
+        private void Reset()
+        {
+            
+        }
+
         protected void UpdatePlayingState(GameTime gameTime) {
+            if (AllPlayersDead())
+            {
+                MenuController.ChangeMenu(0);
+                StateProvider.Instance.State = GameState.MENU;
+                UpdateHighScore();
+                Reset();
+            }
             if (LevelController.CurrentLevel != null)
                 LevelController.CurrentLevel.Update(gameTime);
             else
@@ -313,25 +345,28 @@ namespace SpaceMAS {
 
             foreach (Player player in players)
             {
-                float scale = 0.6f;
+                float scale = 0.5f;
                 String keyLine = player.Name;
                 spriteBatch.DrawString(TextFont, keyLine, position, Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
                 position.Y += TextFont.LineSpacing * scale;
-                scale = 0.4f;
+                scale = 0.3f;
 
-                keyLine = "Accelerate:       " + player.PlayerControls.Accelerate;
+                keyLine = "Accelerate:      " + player.PlayerControls.Accelerate;
                 spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
                 position.Y += TextFont.LineSpacing * scale;
-
-                keyLine = "Decelerate:       " + player.PlayerControls.Decelerate;
+                keyLine = "Decelerate:      " + player.PlayerControls.Decelerate;
                 spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
                 position.Y += TextFont.LineSpacing * scale;
-
-                keyLine = "Turn left:            " + player.PlayerControls.TurnLeft;
+                keyLine = "Turn left:           " + player.PlayerControls.TurnLeft;
                 spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
                 position.Y += TextFont.LineSpacing * scale;
-
                 keyLine = "Turn right:          " + player.PlayerControls.TurnRight;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Shoot:                 " + player.PlayerControls.Shoot;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Menu Select:     " + player.PlayerControls.MenuSelect;
                 spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
                 position.Y += TextFont.LineSpacing * scale;
                 keyLine = "Pause:                " + Controls.Pause;
