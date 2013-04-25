@@ -91,7 +91,7 @@ namespace SpaceMAS.Level {
             }
 
             if (AllDrawableGameObjects.FindAll(o => o is Player).Count == AllDrawableGameObjects.Count + Spawners.Count) {
-                GameServices.GetService<LevelController>().GoToNextLevel();
+                StateProvider.Instance.State = GameState.MENU;
             }
 
             CleanUp();

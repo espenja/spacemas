@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpaceMAS.Graphics;
+using SpaceMAS.Models.Players;
 using SpaceMAS.Settings;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
@@ -55,6 +57,18 @@ namespace SpaceMAS.Level {
 
 
         public void Update(GameTime gameTime) {
+
+            if (timer > 500)
+            {
+                foreach (Player player in GameServices.GetService<List<Player>>())
+                {
+                    if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect))
+                    {
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                } 
+            }
+            
             timer += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             switch (State) {

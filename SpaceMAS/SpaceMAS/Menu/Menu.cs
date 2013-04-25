@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceMAS.Models.Players;
 using SpaceMAS.Settings;
 using SpaceMAS.State;
 using SpaceMAS.Utils;
@@ -71,29 +72,37 @@ namespace SpaceMAS.Menu {
 
             LastActionTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             KeyboardState state = Keyboard.GetState();
+            foreach (Player player in GameServices.GetService<List<Player>>())
+            {
+                if (LastActionTime > 200f)
+                {
+                    if (state.IsKeyDown(player.PlayerControls.MenuDown))
+                    {
+                        SelectNextButton();
+                        LastActionTime = 0;
+                    }
+                    else if (state.IsKeyDown(player.PlayerControls.MenuUp))
+                    {
+                        SelectPreviousButton();
+                        LastActionTime = 0;
+                    }
+                    else if (state.IsKeyDown(player.PlayerControls.MenuSelect))
+                    {
+                        StateProvider.Instance.State = SelectedButton.ChangesToState;
+                        MenuController.ChangeMenu(SelectedButton.ChangesToMenu);
+                        LastActionTime = 0;
+                    }
+                    else if (state.IsKeyDown(Controls.Back))
+                    {
+                        StateProvider.Instance.State = GameState.MENU;
 
-            if (LastActionTime > 200f) {
-                if (state.IsKeyDown(Controls.MenuDown)) {
-                    SelectNextButton();
-                    LastActionTime = 0;
-                }
-                else if (state.IsKeyDown(Controls.MenuUp)) {
-                    SelectPreviousButton();
-                    LastActionTime = 0;
-                }
-                else if(state.IsKeyDown(Controls.MenuSelect)) {
-                    StateProvider.Instance.State = SelectedButton.ChangesToState;
-                    MenuController.ChangeMenu(SelectedButton.ChangesToMenu);
-                    LastActionTime = 0;
-                }
-                else if(state.IsKeyDown(Keys.Back)) {
-                    StateProvider.Instance.State = GameState.MENU;
-
-                    if(PreviousMenu != -1)
-                        MenuController.ChangeMenu(PreviousMenu);
-                    LastActionTime = 0;
+                        if (PreviousMenu != -1)
+                            MenuController.ChangeMenu(PreviousMenu);
+                        LastActionTime = 0;
+                    }
                 }
             }
+            
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {

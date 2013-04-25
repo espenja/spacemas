@@ -11,27 +11,13 @@ namespace SpaceMAS.Settings {
         public Keys Accelerate;
         public Keys Decelerate;
         public Keys Shoot;
-        public Keys Shield;
         public static Keys Pause;
-        public static Keys MenuSelect;
-        public static Keys MenuUp;
-        public static Keys MenuDown;
+        public Keys MenuSelect;
+        public Keys MenuUp;
+        public Keys MenuDown;
+        public static Keys Back;
 
-        public Controls(string player) {
-            LoadPlayerControls(player);
-        }
-
-        public void LoadDefaults() {
-            TurnLeft = Keys.Left;
-            TurnRight = Keys.Right;
-            Accelerate = Keys.Up;
-            Decelerate = Keys.Down;
-            Shoot = Keys.Space;
-            Shield = Keys.LeftShift;
-            Pause = Keys.P;
-            MenuSelect = Keys.Enter;
-            MenuDown = Keys.Down;
-            MenuUp = Keys.Up;
+        public Controls() {
         }
 
         //Converts all fields in this class to a List of Keys.
@@ -42,9 +28,31 @@ namespace SpaceMAS.Settings {
                     select (Keys) fields.GetValue(this)).ToList();
         }
 
-        public void LoadPlayerControls(string playerName) {
-            //Load controls for player
-            LoadDefaults();
+        public void LoadPlayer1Controls() {
+            TurnLeft = Keys.Left;
+            TurnRight = Keys.Right;
+            Accelerate = Keys.Up;
+            Decelerate = Keys.Down;
+            Shoot = Keys.RightControl;
+            Pause = Keys.P;
+            MenuSelect = Keys.RightShift;
+            MenuDown = Keys.Down;
+            MenuUp = Keys.Up;
+            Back = Keys.Escape;
+        }
+
+        public void LoadPlayer2Controls()
+        {
+            TurnLeft = Keys.A;
+            TurnRight = Keys.D;
+            Accelerate = Keys.W;
+            Decelerate = Keys.S;
+            Shoot = Keys.LeftControl;
+            Pause = Keys.P;
+            MenuSelect = Keys.LeftShift;
+            MenuDown = Keys.S;
+            MenuUp = Keys.W;
+            Back = Keys.Escape;
         }
     }
 }

@@ -7,10 +7,10 @@ using SpaceMAS.Level;
 
 namespace SpaceMAS.Models.Components
 {
-    class Weapon
+    public class Weapon
     {
         protected float Firerate { get; set; }
-        protected BulletType BulletType { get; set; }
+        public Bullet BulletType { get; set; }
         protected float TimeSinceLastShot { get; set; }
         protected Player Owner { get; set; }
         public bool IsDisabled { get; set; }
@@ -28,11 +28,11 @@ namespace SpaceMAS.Models.Components
             TimeSinceLastShot += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (!IsDisabled && TimeSinceLastShot >= Firerate)
             {
-                Bullet newBullet = new Bullet(BulletType);
-                newBullet.Scale = 0.1f;
-                newBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * newBullet.TravelSpeed;
-                newBullet.Position = Owner.Position + new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * 40f;
-                newBullet.Listeners.Add(Owner);
+                Bullet NewBullet = new Bullet(BulletType);
+                NewBullet.Scale = BulletType.Scale;
+                NewBullet.Velocity = new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * NewBullet.TravelSpeed;
+                NewBullet.Position = Owner.Position + new Vector2((float)Math.Cos(Owner.Rotation), (float)Math.Sin(Owner.Rotation)) * 40f;
+                NewBullet.Listeners.Add(Owner);
                 LevelController lcon = GameServices.GetService<LevelController>();
                 lcon.CurrentLevel.AllDrawableGameObjects.Add(newBullet);
                 TimeSinceLastShot = 0;

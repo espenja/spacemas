@@ -1,24 +1,30 @@
 ﻿using System.Collections.Generic;
+using SpaceMAS.Models.Players;
 
 namespace SpaceMAS.Settings {
-    public static class ControlsController {
+    public static class ControlsController
+    {
 
-        private static readonly Dictionary<string, Controls> Controls = new Dictionary<string, Controls>();
+        private static Player _player1;
+        private static Player _player2;
 
-        public static Controls GetControls(string player) {
-            if (Controls.ContainsKey(player))
-                return Controls[player];
+        public static Controls GetControls(Player player) {
+            if (_player1 == player) return _player1.PlayerControls;
+            if (_player2 == player) return _player2.PlayerControls;
+            Controls c = new Controls();
+            if (_player1 == null)
+            {
+                _player1 = player;
+                c.LoadPlayer1Controls();
+                return c;
+            }
+            else
+            {
+                c.LoadPlayer2Controls();
+                _player2 = player;
+                return c;
+            }
 
-            Controls[player] = new Controls(player);
-            return Controls[player];
-        }
-
-        public static void SetControls(string player, Controls controls) {
-            Controls[player] = controls;
-        }
-
-        public static void LoadControls() {
-            //Load controls serialized to file plz
         }
     }
 }

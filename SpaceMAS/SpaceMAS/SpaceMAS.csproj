@@ -151,6 +151,7 @@
     <Compile Include="Utils\GameServices.cs" />
     <Compile Include="Utils\Textures.cs" />
     <Compile Include="Utils\UtilRandom.cs" />
+    <Compile Include="Utils\HighscoreProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

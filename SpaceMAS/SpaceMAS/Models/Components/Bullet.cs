@@ -9,18 +9,26 @@ using SpaceMAS.Utils;
 namespace SpaceMAS.Models.Components {
     public class Bullet : KillableGameObject {
         public List<IBulletListener> Listeners { get; set; }
-        protected float HealthChange { get; set; }
+        public float HealthChange { get; set; }
         protected IImpactEffect Effect { get; set; }
         public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }
+        
+        public Bullet(float HealthChange, float TravelSpeed, IImpactEffect Effect, Texture2D Texture) {
+            this.HealthChange = HealthChange;
+            this.Effect = Effect;
+            this.Texture = Texture;
+            this.TravelSpeed = TravelSpeed;
+        }
 
-        public Bullet(BulletType bulletType) {
+        public Bullet(Bullet CopyBullet) {
             Listeners = new List<IBulletListener>();
-            HealthChange = bulletType.HealthChange;
-            Effect = bulletType.Effect.Clone();
+            HealthChange = CopyBullet.HealthChange;
+            Effect = CopyBullet.Effect.Clone();
             isVisible = true;
-            Texture = bulletType.Texture;
-            TravelSpeed = bulletType.TravelSpeed;
+            Texture = CopyBullet.Texture;
+            TravelSpeed = CopyBullet.TravelSpeed;
+            Scale = 0.4f;
         }
 
         public override void Update(GameTime gameTime) {
@@ -37,7 +45,6 @@ namespace SpaceMAS.Models.Components {
 
             foreach (GameObject gameObject in GameObjectsNearby) {
                 if (gameObject is KillableGameObject &&
-                    !(gameObject is Player) &&
                     !(gameObject is Bullet) &&
                     gameObject.IntersectPixels(this)) {
 
@@ -51,17 +58,22 @@ namespace SpaceMAS.Models.Components {
         }
 
         public void OnImpact(GameObject victim) {
-            if (victim is KillableGameObject) {
-                ((KillableGameObject) victim).HealthPoints += HealthChange;
+            if (victim is Enemy.Enemy) {
+                ((Enemy.Enemy) victim).HealthPoints += HealthChange;
+                Effect.OnImpact(victim);
+                Die();
+            } else if (victim is Player)
+            {
+                ((Player)victim).HealthPoints -= HealthChange;
                 Die();
             }
-            Effect.OnImpact(victim);
             foreach (IBulletListener listener in Listeners) {
                 listener.BulletImpact(this, victim);
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
+        public override void Draw(SpriteBatch spriteBatch)
+        {
             if (isVisible) base.Draw(spriteBatch);
         }
 

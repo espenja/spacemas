@@ -6,7 +6,7 @@ id:1
 id:0
 spawn_time:1000
 position:24,652
-spawn_rate:1000
+spawn_rate:100
 
 %spawner
 id:1
@@ -18,7 +18,7 @@ spawn_rate:2000
 id:enemy_pink
 health:100
 spawner_id:0
-amount:5
+amount:20
 
 %enemy
 id:enemy_blue

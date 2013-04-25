@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,6 +31,8 @@ namespace SpaceMAS {
         public SpriteFont TextFont { get; private set; }
 
         public Texture2D T { get; set; }
+
+        private int ShopCost { get; set; }
 
         //save gamestate for pause
         private GameState BeforePauseState { get; set; }
@@ -75,6 +78,7 @@ namespace SpaceMAS {
             GameServices.AddService(LevelController);
 
             MenuController = new MenuController();
+            ShopCost = 50;
             base.Initialize();
         }
 
@@ -84,8 +88,8 @@ namespace SpaceMAS {
         /// </summary>
         protected override void LoadContent() {
             TextFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
-            players.Add(new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
-            players.Add(new Player("fictive2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("Player 1", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("Player 2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
 
             GameServices.AddService(players);
             LevelController.InitializeLevels();
@@ -103,17 +107,17 @@ namespace SpaceMAS {
         protected override void Update(GameTime gameTime)
         {
                 
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || StateProvider.Instance.State == GameState.QUIT)
-                this.Exit();
-
             switch (StateProvider.Instance.State) {
+                case GameState.QUIT:
+                    Exit();
+                    break;
                 case GameState.HIGHSCORE:
                     break;
                 case GameState.MENU:
                     MenuController.Update(gameTime);
                     break;
-                case GameState.OPTIONS:
+                case GameState.CONTROLS:
+                    UpdateControlsState(gameTime);
                     break;
                 case GameState.GAMEPAUSED:
                     UpdateGamepausedState();
@@ -130,28 +134,130 @@ namespace SpaceMAS {
                 case GameState.PLAYING_HARD:
                     UpdatePlayingState(gameTime);
                     break;
+                case GameState.SHOP_DAMAGE:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.Weapon.BulletType.HealthChange -= 10;
+                                player.Money -= ShopCost;
+                            }   
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_ACCELERATION:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.AccelerationRate += 1;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_HEALTH:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.MaxHealthPoints += 10;
+                                player.HealthPoints += 10;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_HEAL:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.HealthPoints = player.MaxHealthPoints;
+                                player.Money -= ShopCost;
+                            }    
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_BULLETSPEED:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.Weapon.BulletType.TravelSpeed += 50;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_DONE:
+                    LevelController.GoToNextLevel();
+                    break;
             }
             timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
              
             base.Update(gameTime);
         }
 
+        protected void UpdateControlsState(GameTime gameTime) {
+            foreach (Player player in players) {
+                if (Keyboard.GetState().IsKeyDown(Controls.Back)) {
+                    StateProvider.Instance.State = GameState.MENU;
+                }
+            }
+            Draw(gameTime);
+            
+        }
+
+        private bool AllPlayersDead() {
+            foreach (var player in players) {
+                if (!player.Dead) return false;
+            }
+            return true;
+        }
+
+        private void UpdateHighScore()
+        {
+            List<String> highscore = HighscoreProvider.Instance.Highscore;
+            foreach (var score in highscore)
+            {
+                if (LevelController.CurrentLevel.Id >= Convert.ToInt32(score.Split(' ')[1]))
+                {
+                    highscore.Insert(highscore.IndexOf(score), "Level " + LevelController.CurrentLevel.Id + " : " + players[0].Name + " + " + players[1].Name);
+                    HighscoreProvider.Instance.SaveHighscore();
+                    return;
+                }
+            }
+            highscore.Add("Level " + LevelController.CurrentLevel.Id + " : " + players[0].Name + " + " + players[1].Name);
+            HighscoreProvider.Instance.SaveHighscore();
+        }
+
+        private void Reset()
+        {
+            
+        }
+
         protected void UpdatePlayingState(GameTime gameTime) {
+            if (AllPlayersDead())
+            {
+                MenuController.ChangeMenu(0);
+                StateProvider.Instance.State = GameState.MENU;
+                UpdateHighScore();
+                Reset();
+            }
             if (LevelController.CurrentLevel != null)
                 LevelController.CurrentLevel.Update(gameTime);
             else
                 Exit();
             if (timeSinceLastAction > 0.1) {
-                foreach (Player player in players) {
-                    if (player.ClickedPauseKey()) {
-                        PauseGame();
-                    }
+                if (players[0].ClickedPauseKey()) {
+                    PauseGame();
                 }
             }
         }
 
         protected void UpdateGamepausedState() {
-            if (timeSinceLastAction > 0.1) {
+            if (timeSinceLastAction > 0.5) {
                 foreach (Player player in players) {
                     if (player.ClickedPauseKey()) {
                         UnPause();
@@ -187,8 +293,10 @@ namespace SpaceMAS {
                     break;
                 case GameState.MENU:
                     MenuController.Draw(spriteBatch);
+                    DrawPlayerMoney(spriteBatch);
                     break;
-                case GameState.OPTIONS:
+                case GameState.CONTROLS:
+                    DrawControls(spriteBatch);
                     break;
                 case GameState.GAMEPAUSED:
                     LevelController.CurrentLevel.Draw(spriteBatch);
@@ -228,13 +336,52 @@ namespace SpaceMAS {
         protected void DrawPlayerMoney(SpriteBatch spriteBatch)
         {
             Vector2 position = new Vector2(10, 10);
+            float scale = 0.4f;
             foreach (var player in players)
             {
                 spriteBatch.DrawString(TextFont, player.Name + " : " + player.Money.ToString() + "$", 
-                    position, Color.Gold, 0, Vector2.Zero, 0.4f,
+                    position, Color.Gold, 0, Vector2.Zero, scale,
                     SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
-                position.Y += 50;
+                position.Y += TextFont.LineSpacing * scale;
+            }
+        }
+
+        protected void DrawControls(SpriteBatch spriteBatch)
+        {
+            
+            Vector2 position = new Vector2(GeneralSettings.screenHeight / 10, GeneralSettings.screenWidth / 50);
+
+            foreach (Player player in players)
+            {
+                float scale = 0.5f;
+                String keyLine = player.Name;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Black, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                scale = 0.3f;
+
+                keyLine = "Accelerate:      " + player.PlayerControls.Accelerate;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Decelerate:      " + player.PlayerControls.Decelerate;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Turn left:           " + player.PlayerControls.TurnLeft;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Turn right:          " + player.PlayerControls.TurnRight;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Shoot:                 " + player.PlayerControls.Shoot;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Menu Select:     " + player.PlayerControls.MenuSelect;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                keyLine = "Pause:                " + Controls.Pause;
+                spriteBatch.DrawString(TextFont, keyLine, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
             }
         }
     }
 }
+

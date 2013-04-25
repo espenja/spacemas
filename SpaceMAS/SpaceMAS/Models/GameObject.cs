@@ -20,7 +20,7 @@ namespace SpaceMAS.Models {
         public Color Color { get; set; }
         public Vector2 Origin { get; protected set; }
         public Vector2 Velocity { get; set; }
-        public float AccelerationRate { get; protected set; }
+        public float AccelerationRate { get; set; }
         public float RotationRate { get; protected set; }
         public float Rotation { get; protected set; }
         private float scale = 0.5f;

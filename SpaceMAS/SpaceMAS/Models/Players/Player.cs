@@ -16,7 +16,7 @@ namespace SpaceMAS.Models.Players {
 
         public string Name { get; private set; }
         public Controls PlayerControls { get; set; }
-        private Weapon Weapon { get; set; }
+        public Weapon Weapon { get; set; }
         public int Money { get; set; }
 
         public Player(string name, Vector2 position, Texture2D texture) {
@@ -34,11 +34,11 @@ namespace SpaceMAS.Models.Players {
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
-            BulletType weaponBulletType = new BulletType(-30f, 850f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
-            Weapon = new Weapon(weaponBulletType, 50f, this);
+            Bullet weaponBullet = new Bullet(-30f, 700f, new DisableEffect(2000f), cm.Load<Texture2D>("Textures/bullet"));
+            Weapon = new Weapon(weaponBullet, 100f, this);
 
-            //HealthBar = new HealthBar(this);
-            PlayerControls = ControlsController.GetControls(name);
+            HealthBar = new HealthBar(this);
+            PlayerControls = ControlsController.GetControls(this);
         }
 
         public override void Update(GameTime gameTime) {
