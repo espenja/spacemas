@@ -12,12 +12,14 @@ namespace SpaceMAS.Models.Enemy {
         private float TimeSinceLastSpawn { get; set; }
 
         public List<Enemy> Enemies { get; set; }
+        private List<Enemy> SpawnedEnemies { get; set; } 
 
         public Spawner(long spawnTime, long spawnRate, Vector2 position) {
             SpawnRate = spawnRate;
             SpawnTime = spawnTime;
             Position = position;
             Enemies = new List<Enemy>();
+            SpawnedEnemies = new List<Enemy>();
         }
 
         public Spawner(long spawnTime, long spawnRate, Vector2 position, List<Enemy> enemies)
@@ -26,37 +28,32 @@ namespace SpaceMAS.Models.Enemy {
         }
 
         public void Update(float levelPlayingTime, GameTime gameTime) {
+
             if (SpawnTime <= levelPlayingTime) {
                 TimeSinceLastSpawn += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+
                 if (TimeSinceLastSpawn >= SpawnRate) {
-                    Enemy nextEnemy = GetNext();
+                    var nextEnemy = GetNext();
+
                     if (nextEnemy != null) {
-                        LevelController lcon = GameServices.GetService<LevelController>();
+
+                        Enemies.Remove(nextEnemy);
+                        var lcon = GameServices.GetService<LevelController>();
                         nextEnemy.Position = new Vector2(Position.X, Position.Y);
                         lcon.CurrentLevel.AllDrawableGameObjects.Add(nextEnemy);
-                        Console.WriteLine("Spawning enemy at pos " + nextEnemy.Position);
+                        SpawnedEnemies.Add(nextEnemy);
+                        Console.WriteLine(DateTime.Now.Ticks + "Spawning enemy at pos " + nextEnemy.Position);
                     }
                     TimeSinceLastSpawn = 0f;
                 }
             }
 
-            foreach (Enemy enemy in Enemies) {
+            foreach (Enemy enemy in SpawnedEnemies) {
                 enemy.Update(gameTime);
             }
 
             base.Update(gameTime);
         }
-
-        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch) {
-            //foreach (Enemy enemy in Enemies) {
-            //    enemy.Draw(spriteBatch);
-            //}
-        }
-
-        //public new Vector2 Position {
-        //get { return base.Position; }
-        //  set { base.Position = value; }
-        //}
 
         private Enemy GetNext() {
             if (Enemies.Count > 0) {

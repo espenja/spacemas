@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using SpaceMAS.Factories;
-using SpaceMAS.Models.Enemy;
-using SpaceMAS.Settings;
-using SpaceMAS.Utils;
 using SpaceMAS.State;
 
 namespace SpaceMAS.Level {
@@ -19,14 +12,14 @@ namespace SpaceMAS.Level {
 
         public LevelController() {
             Levels = new List<Level>();
-            LoadLevels();
+            Levels.Add(GenerateNextLevel());
         }
 
-        public void InitializeLevels() {
-            foreach(Level level in Levels) {
-                level.Initialize();
-            }
-        }
+        //public void InitializeLevels() {
+        //    foreach (Level level in Levels) {
+        //        level.Initialize();
+        //    }
+        //}
 
         public void GoToNextLevel() {
             if (CurrentLevel == null) {
@@ -34,32 +27,32 @@ namespace SpaceMAS.Level {
                 return;
             }
 
-            if (Levels.IndexOf(CurrentLevel) + 1 >= Levels.Count)
-            {
-                CurrentLevel = null;
-                return;
-            }
+            //if (Levels.IndexOf(CurrentLevel) + 1 >= Levels.Count) {
+            //    CurrentLevel = GenerateNextLevel();
+            //}
 
-            CurrentLevel = Levels.Find(l => l.Id == CurrentLevel.Id + 1);
+            CurrentLevel = GenerateNextLevel();
             StateProvider.Instance.State = GameState.LEVEL_INTRO;
         }
 
-        private void LoadLevels() {
-            Level level = new Level();
-            Spawner spawner = SpawnerFactory.Instance.CreateSpawnerWithRandomPositionAndEnemies("enemy_blue", 30);
-            spawner.SpawnRate = 100;
-            level.Name = "Level 1";
-            level.Id = 1;
+        public Level GenerateNextLevel() {
+            var random = new Random();
+            var level = new Level();
+
+            var levelid = CurrentLevel == null ? 1 : CurrentLevel.Id + 1;
+            level.Name = "Level " + levelid;
+            level.Id = levelid;
+
+            var amountOfEnemies = random.Next(5, 15) * level.Id * random.Next(1, 4);
+            var spawner = SpawnerFactory.Instance.CreateSpawnerWithRandomPositionAndEnemies("enemy_blue", amountOfEnemies);
+
+            spawner.SpawnRate = 2000 - random.Next(10, 80);
+
             level.AddSpawner(spawner);
+            level.Initialize();
             Levels.Add(level);
-            level = new Level();
-            level.Name = "Level 2";
-            level.Id = 2;
-            spawner = SpawnerFactory.Instance.CreateSpawnerWithEnemies("enemy_pink", 100);
-            spawner.SpawnRate = 100;
-            level.AddSpawner(spawner);
-            Levels.Add(level);
-            Levels = Levels.OrderBy(l => l.Id).ToList();
+
+            return level;
         }
 
         //private void CreateLevel(string[] levelInfo) {
@@ -76,10 +69,10 @@ namespace SpaceMAS.Level {
         //        if (line.StartsWith("%")) header = line.Trim().Remove(0, 1);
 
         //        var segments = new Dictionary<string, string>();
-                
+
         //        //Read info about header until we hit the next header
         //        for (int j = i+1; j < levelInfo.Length; j++) {
-                    
+
         //            string innerLine = levelInfo[j];
         //            if(innerLine.StartsWith("#") || innerLine.Trim() == "") continue;
 
@@ -159,40 +152,40 @@ namespace SpaceMAS.Level {
             }
         }**/
 
-        private string GetStringInfo(Dictionary<string, string> info, string key, string objectType) {
-            string value;
-            if (!info.TryGetValue(key, out value))
-                throw new ArgumentException(string.Format("A(n) {0} must have a {1}", objectType, key));
-            return value;
-        }
+        //private string GetStringInfo(Dictionary<string, string> info, string key, string objectType) {
+        //    string value;
+        //    if (!info.TryGetValue(key, out value))
+        //        throw new ArgumentException(string.Format("A(n) {0} must have a {1}", objectType, key));
+        //    return value;
+        //}
 
-        private int GetIntInfo(Dictionary<string, string> info, string key, string objectType) {
-            string value_str = GetStringInfo(info, key, objectType);
-            int value;
+        //private int GetIntInfo(Dictionary<string, string> info, string key, string objectType) {
+        //    string value_str = GetStringInfo(info, key, objectType);
+        //    int value;
 
-            if(!int.TryParse(value_str, out value)) {
-                throw new ArgumentException(string.Format("A(n) {0}'s {1} must be an integer.", objectType, key));
-            }
+        //    if(!int.TryParse(value_str, out value)) {
+        //        throw new ArgumentException(string.Format("A(n) {0}'s {1} must be an integer.", objectType, key));
+        //    }
 
-            return value;
-        }
+        //    return value;
+        //}
 
-        private Vector2 GetPosition(string position) {
-            if(!position.Contains(","))
-                throw new ArgumentException("A Position must have the format 'x,y'");
+        //private Vector2 GetPosition(string position) {
+        //    if(!position.Contains(","))
+        //        throw new ArgumentException("A Position must have the format 'x,y'");
 
-            string[] positions = position.Split(',');
+        //    string[] positions = position.Split(',');
 
-            if(positions.Length != 2)
-                throw new ArgumentException("A Position must have the format 'x,y'");
+        //    if(positions.Length != 2)
+        //        throw new ArgumentException("A Position must have the format 'x,y'");
 
-            int x;
-            int y;
+        //    int x;
+        //    int y;
 
-            if(!int.TryParse(positions[0], out x) || !int.TryParse(positions[1], out y))
-                throw new ArgumentException("A Position must have the format 'x,y' where 'x' and 'y' are integers");
+        //    if(!int.TryParse(positions[0], out x) || !int.TryParse(positions[1], out y))
+        //        throw new ArgumentException("A Position must have the format 'x,y' where 'x' and 'y' are integers");
 
-            return new Vector2(x, y);
-        }
+        //    return new Vector2(x, y);
+        //}
     }
 }
