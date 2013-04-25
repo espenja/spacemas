@@ -7,10 +7,10 @@ using SpaceMAS.Level;
 
 namespace SpaceMAS.Models.Components
 {
-    class Weapon
+    public class Weapon
     {
         protected float Firerate { get; set; }
-        protected Bullet BulletType { get; set; }
+        public Bullet BulletType { get; set; }
         protected float TimeSinceLastShot { get; set; }
         protected Player Owner { get; set; }
         public bool isDisabled { get; set; }

@@ -16,7 +16,7 @@ namespace SpaceMAS.Models.Players {
         public string Name { get; private set; }
         private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
-        private Weapon Weapon { get; set; }
+        public Weapon Weapon { get; set; }
         public int Money { get; set; }
 
         public Player(string name, Vector2 position, Texture2D texture) {

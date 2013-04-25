@@ -9,7 +9,7 @@ using SpaceMAS.Models.Players;
 namespace SpaceMAS.Models.Components {
     public class Bullet : KillableGameObject {
         public List<IBulletListener> Listeners { get; set; }
-        protected float HealthChange { get; set; }
+        public float HealthChange { get; set; }
         protected IImpactEffect Effect { get; set; }
         public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }

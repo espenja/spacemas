@@ -31,6 +31,8 @@ namespace SpaceMAS {
 
         public Texture2D T { get; set; }
 
+        private int ShopCost { get; set; }
+
         //save gamestate for pause
         private GameState BeforePauseState { get; set; }
 
@@ -69,6 +71,8 @@ namespace SpaceMAS {
             GameServices.AddService(LevelController);
 
             MenuController = new MenuController();
+
+            ShopCost = 50;
             base.Initialize();
         }
 
@@ -78,8 +82,8 @@ namespace SpaceMAS {
         /// </summary>
         protected override void LoadContent() {
             TextFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
-            players.Add(new Player("fictive", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
-            players.Add(new Player("fictive2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("Player 1", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("Player 2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
 
             GameServices.AddService(players);
             LevelController.InitializeLevels();
@@ -106,6 +110,7 @@ namespace SpaceMAS {
                 case GameState.MENU:
                     MenuController.Update(gameTime);
                     break;
+                    break;
                 case GameState.CONTROLS:
                     UpdateControlsState(gameTime);
                     break;
@@ -123,6 +128,65 @@ namespace SpaceMAS {
                     break;
                 case GameState.PLAYING_HARD:
                     UpdatePlayingState(gameTime);
+                    break;
+                case GameState.SHOP_DAMAGE:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.Weapon.BulletType.HealthChange -= 10;
+                                player.Money -= ShopCost;
+                            }   
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_ACCELERATION:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.AccelerationRate += 1;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_HEALTH:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.MaxHealthPoints += 10;
+                                player.HealthPoints += 10;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_HEAL:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.HealthPoints = player.MaxHealthPoints;
+                                player.Money -= ShopCost;
+                            }    
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_BULLETSPEED:
+                    foreach (var player in players) {
+                        if (Keyboard.GetState().IsKeyDown(player.PlayerControls.MenuSelect)) {
+                            if (player.Money >= ShopCost) {
+                                player.Weapon.BulletType.TravelSpeed += 50;
+                                player.Money -= ShopCost;
+                            } 
+                        }
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
+                    break;
+                case GameState.SHOP_DONE:
+                    LevelController.GoToNextLevel();
                     break;
             }
             timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
@@ -189,6 +253,7 @@ namespace SpaceMAS {
                     break;
                 case GameState.MENU:
                     MenuController.Draw(spriteBatch);
+                    DrawPlayerMoney(spriteBatch);
                     break;
                 case GameState.CONTROLS:
                     DrawControls(spriteBatch);
