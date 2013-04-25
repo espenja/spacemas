@@ -1,106 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using SpaceMAS.Models.Components.ImpactEffects;
+using Microsoft.Xna.Framework.Graphics;
 using SpaceMAS.Models.Enemy;
-using SpaceMAS.Settings;
 using SpaceMAS.Utils;
 
-namespace SpaceMAS.Factories
-{
-    class SpawnerFactory
-    {
-        private static SpawnerFactory _instance;
-        public static SpawnerFactory Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new SpawnerFactory();
-                }
-                return _instance;
-            }
+namespace SpaceMAS.Factories {
+    internal class SpawnerFactory {
 
+        private static SpawnerFactory instance;
+
+        public static SpawnerFactory Instance {
+            get { return instance ?? (instance = new SpawnerFactory()); }
         }
-        private readonly List<EnemyType> _enemyTypes = new List<EnemyType>();
 
-        public Spawner CreateSpawner()
-        {
-            /**Vector2 position = new Vector2(UtilRandom.Next(0, GeneralSettings.screenWidth), UtilRandom.Next(0, GeneralSettings.screenHeight));
-            List <Enemy> enemies = new List<Enemy>();
-            int enemyTypeIndex = UtilRandom.Next(_enemyTypes.Count);
-            int nofEnemies = UtilRandom.Next(21);
-            for (int i = 0; i < nofEnemies; i++)
-            {
-                enemies.Add(new Enemy(_enemyTypes[enemyTypeIndex], new DisableEffect(1000)));
-            }
-            return new Spawner(UtilRandom.Next(1, 10) * 1000, UtilRandom.Next(1, 10) * 300, position, enemies);**/
+        private SpawnerFactory() { }
 
-            Vector2 position = new Vector2(100, 100);
-            List<Enemy> enemies = new List<Enemy>();
-            int enemyTypeIndex = 0;
-            int nofEnemies = 15;
-            for (int i = 0; i < nofEnemies; i++)
-            {
-                enemies.Add(new Enemy(_enemyTypes[enemyTypeIndex], new DisableEffect(1000)));
-            }
-            Spawner spawner = new Spawner(2000, 1000, position, enemies);
+        public Spawner CreateSpawnerWithRandomPosition() {
+            var graphicsDevice = GameServices.GetService<GraphicsDevice>();
+
+            var width = graphicsDevice.Viewport.Width;
+            var height = graphicsDevice.Viewport.Height;
+            var random = new Random();
+
+            return  new Spawner(1000, 1000, new Vector2(random.Next(width), random.Next(height)));
+        }
+
+        public Spawner CreateSpawnerWithEnemies(string enemyId, int amount) {
+            var spawner = new Spawner(1000, 1000, new Vector2(100, 100));
+            spawner.Enemies.AddRange(EnemyFactory.Instance.CreateEnemies(enemyId, amount));
             return spawner;
-
-        }
-        
-        private SpawnerFactory()
-        {
-            var contentManager = GameServices.GetService<ContentManager>();
-            var directoryInfo = new DirectoryInfo(contentManager.RootDirectory + "\\" + GeneralSettings.EnemyPath);
-            FileInfo[] fileInfos = directoryInfo.GetFiles();
-            CreateTypes(fileInfos);
         }
 
-        private void CreateTypes(FileInfo[] fileInfos)
-        {
-            foreach (FileInfo fileInfo in fileInfos)
-            {
-                CreateType(File.ReadAllLines(fileInfo.FullName));
-            }
-        }
-
-        private void CreateType(string[] enemyInfo)
-        {
-            var type = new EnemyType();
-
-            foreach (var s in enemyInfo)
-            {
-                var header = s.Split(':')[0];
-                var info = s.Split(':')[1];
-                switch (header)
-                {
-                    case "id":
-                        type.Id = info;
-                        break;
-                    case "name":
-                        type.Name = info;
-                        break;
-                    case "damage":
-                        type.Damage = Convert.ToInt32(info);
-                        break;
-                    case "speed":
-                        type.Speed = Convert.ToInt32(info);
-                        break;
-                    case "health":
-                        type.Health = Convert.ToInt32(info);
-                        break;
-                    case "bounty":
-                        type.Bounty = Convert.ToInt32(info);
-                        break;
-                }
-            }
-            _enemyTypes.Add(type);
+        public Spawner CreateSpawnerWithRandomPositionAndEnemies(string enemyId, int amount) {
+            var spawner = CreateSpawnerWithRandomPosition();
+            spawner.Enemies.AddRange(EnemyFactory.Instance.CreateEnemies(enemyId, amount));
+            return spawner;
         }
     }
 }

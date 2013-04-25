@@ -46,7 +46,8 @@ namespace SpaceMAS.Level {
 
         private void LoadLevels() {
             Level level = new Level();
-            Spawner spawner = SpawnerFactory.Instance.CreateSpawner();
+            Spawner spawner = SpawnerFactory.Instance.CreateSpawnerWithRandomPositionAndEnemies("enemy_blue", 30);
+            spawner.SpawnRate = 100;
             level.Name = "Level 1";
             level.Id = 1;
             level.AddSpawner(spawner);
@@ -54,74 +55,75 @@ namespace SpaceMAS.Level {
             level = new Level();
             level.Name = "Level 2";
             level.Id = 2;
-            spawner = SpawnerFactory.Instance.CreateSpawner();
+            spawner = SpawnerFactory.Instance.CreateSpawnerWithEnemies("enemy_pink", 100);
+            spawner.SpawnRate = 100;
             level.AddSpawner(spawner);
             Levels.Add(level);
             Levels = Levels.OrderBy(l => l.Id).ToList();
         }
 
-        private void CreateLevel(string[] levelInfo) {
+        //private void CreateLevel(string[] levelInfo) {
 
-            Level level = null;
+        //    Level level = null;
 
-            for (int i = 0; i < levelInfo.Length; i++) {
+        //    for (int i = 0; i < levelInfo.Length; i++) {
 
-                string line = levelInfo[i];
-                string header = "";
+        //        string line = levelInfo[i];
+        //        string header = "";
 
-                //Lines starting with # is a comment, discard empty lines
-                if (line.StartsWith("#") || line.Trim() == "") continue;
-                if (line.StartsWith("%")) header = line.Trim().Remove(0, 1);
+        //        //Lines starting with # is a comment, discard empty lines
+        //        if (line.StartsWith("#") || line.Trim() == "") continue;
+        //        if (line.StartsWith("%")) header = line.Trim().Remove(0, 1);
 
-                var segments = new Dictionary<string, string>();
+        //        var segments = new Dictionary<string, string>();
                 
-                //Read info about header until we hit the next header
-                for (int j = i+1; j < levelInfo.Length; j++) {
+        //        //Read info about header until we hit the next header
+        //        for (int j = i+1; j < levelInfo.Length; j++) {
                     
-                    string innerLine = levelInfo[j];
-                    if(innerLine.StartsWith("#") || innerLine.Trim() == "") continue;
+        //            string innerLine = levelInfo[j];
+        //            if(innerLine.StartsWith("#") || innerLine.Trim() == "") continue;
 
-                    //We hit a new segment, break and continue reading
-                    if (innerLine.StartsWith("%")) {
-                        i = j - 1;
-                        break;
-                    }
+        //            //We hit a new segment, break and continue reading
+        //            if (innerLine.StartsWith("%")) {
+        //                i = j - 1;
+        //                break;
+        //            }
 
-                    string[] keyValue = innerLine.Split(':');
-                    segments.Add(keyValue[0].ToLower(), keyValue[1]);
-                }
+        //            string[] keyValue = innerLine.Split(':');
+        //            segments.Add(keyValue[0].ToLower(), keyValue[1]);
+        //        }
 
-                switch (header) {
-                    case "level": {
-                        level = makeLevel(segments);
-                        break;
-                    }
-                    case "spawner": {
-                        if(level != null)
-                            level.AddSpawner(makeSpawner(segments));
-                        break;
-                    }
-                    //case "enemy": {
-                    //    if(level != null)
-                    //        makeEnemy(segments, level);
-                    //    break;
-                    //}
-                }
-            }
+        //        switch (header) {
+        //            case "level": {
+        //                level = makeLevel(segments);
+        //                break;
+        //            }
+        //            case "spawner": {
+        //                if(level != null)
+        //                    level.AddSpawner(makeSpawner(segments));
+        //                break;
+        //            }
+        //            //case "enemy": {
+        //            //    if(level != null)
+        //            //        makeEnemy(segments, level);
+        //            //    break;
+        //            //}
+        //        }
+        //    }
 
-            if (level == null) return;
+        //    if (level == null) return;
 
-            Levels.Add(level);
-        }
+        //    Levels.Add(level);
+        //}
 
-        private Level makeLevel(Dictionary<string, string> levelInfo) {
+        //private Level makeLevel(Dictionary<string, string> levelInfo) {
 
-            Level level = new Level();
-            level.Name = GetStringInfo(levelInfo, "name", "Level");
-            level.Id = GetIntInfo(levelInfo, "id", "Level");
+        //    Level level = new Level();
+        //    level.Name = GetStringInfo(levelInfo, "name", "Level");
+        //    level.Id = GetIntInfo(levelInfo, "id", "Level");
 
-            return level;
-        }
+        //    return level;
+        //}
 
         /**private Spawner makeSpawner(Dictionary<string, string> spawnerInfo) {
 
@@ -135,10 +137,10 @@ namespace SpaceMAS.Level {
             return spawner;
         }**/
 
-        private Spawner makeSpawner(Dictionary<string, string> spawnerInfo)
-        {
-            return SpawnerFactory.Instance.CreateSpawner();
-        }
+        //private Spawner makeSpawner(Dictionary<string, string> spawnerInfo)
+        //{
+        //    return SpawnerFactory.Instance.CreateSpawner();
+        //}
 
         /**private void makeEnemy(Dictionary<string, string> enemyInfo, Level level) {
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,8 +35,14 @@ namespace SpaceMAS {
         private GameState BeforePauseState { get; set; }
 
         public SpaceMAS() {
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //IsFixedTimeStep = true;
+            //TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 600);
+            //graphics.SynchronizeWithVerticalRetrace = false;
+            //graphics.ApplyChanges();
            
             GameServices.AddService(this);
         }
@@ -166,7 +173,6 @@ namespace SpaceMAS {
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(new Color(16, 36, 35));
-
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
             //fps counter

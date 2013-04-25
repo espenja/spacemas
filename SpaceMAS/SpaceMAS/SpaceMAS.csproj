@@ -110,8 +110,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Factories\EnemyType.cs" />
     <Compile Include="Factories\SpawnerFactory.cs" />
+    <Compile Include="Factories\EnemyFactory.cs" />
     <Compile Include="Level\Level.cs" />
     <Compile Include="Level\LevelController.cs" />
     <Compile Include="Level\LevelIntro.cs" />
@@ -149,6 +149,7 @@
     <Compile Include="Utils\Collition\QuadTree.cs" />
     <Compile Include="Utils\Frames.cs" />
     <Compile Include="Utils\GameServices.cs" />
+    <Compile Include="Utils\Textures.cs" />
     <Compile Include="Utils\UtilRandom.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,25 +13,24 @@ namespace SpaceMAS.Models.Enemy {
 
         public List<Enemy> Enemies { get; set; }
 
-        public Spawner(long spawnTime, long spawnRate, Vector2 position, List<Enemy> enemies)
-        {
+        public Spawner(long spawnTime, long spawnRate, Vector2 position) {
             SpawnRate = spawnRate;
             SpawnTime = spawnTime;
             Position = position;
             Enemies = new List<Enemy>();
+        }
+
+        public Spawner(long spawnTime, long spawnRate, Vector2 position, List<Enemy> enemies)
+            : this(spawnTime, spawnRate, position) {
             Enemies = enemies;
         }
 
-        public void Update(float levelPlayingTime, GameTime gameTime)
-        {
-            if (SpawnTime <= levelPlayingTime)
-            {
-                TimeSinceLastSpawn += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-                if (TimeSinceLastSpawn >= SpawnRate)
-                {
+        public void Update(float levelPlayingTime, GameTime gameTime) {
+            if (SpawnTime <= levelPlayingTime) {
+                TimeSinceLastSpawn += (float) gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (TimeSinceLastSpawn >= SpawnRate) {
                     Enemy nextEnemy = GetNext();
-                    if (nextEnemy != null)
-                    {
+                    if (nextEnemy != null) {
                         LevelController lcon = GameServices.GetService<LevelController>();
                         nextEnemy.Position = new Vector2(Position.X, Position.Y);
                         lcon.CurrentLevel.AllDrawableGameObjects.Add(nextEnemy);
@@ -48,22 +47,19 @@ namespace SpaceMAS.Models.Enemy {
             base.Update(gameTime);
         }
 
-        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
-        {
+        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch) {
             //foreach (Enemy enemy in Enemies) {
             //    enemy.Draw(spriteBatch);
             //}
         }
 
         //public new Vector2 Position {
-            //get { return base.Position; }
-          //  set { base.Position = value; }
+        //get { return base.Position; }
+        //  set { base.Position = value; }
         //}
 
-        private Enemy GetNext()
-        {
-            if (Enemies.Count > 0)
-            {
+        private Enemy GetNext() {
+            if (Enemies.Count > 0) {
                 Enemy e = Enemies[0];
                 Enemies.Remove(e);
                 return e;

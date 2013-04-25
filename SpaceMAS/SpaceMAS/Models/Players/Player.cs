@@ -20,7 +20,7 @@ namespace SpaceMAS.Models.Players {
         public int Money { get; set; }
 
         public Player(string name, Vector2 position, Texture2D texture) {
-            this.Texture = texture;
+            Texture = texture;
 
             Name = name;
             Rotation = 0.0f;
@@ -29,8 +29,8 @@ namespace SpaceMAS.Models.Players {
             RotationRate = 8.0f;
             Scale = 0.5f;
 
-            MaxHealthPoints = 100;
-            HealthPoints = 100;
+            MaxHealthPoints = 100000;
+            HealthPoints = MaxHealthPoints;
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
@@ -47,7 +47,7 @@ namespace SpaceMAS.Models.Players {
 
             foreach (GameObject gameObject in GameObjectsNearby)
             {
-                gameObject.Color = Color.Red;
+                gameObject.Color = Color.Blue;
             }
 
             //If the player is dead, then movement should not occur
