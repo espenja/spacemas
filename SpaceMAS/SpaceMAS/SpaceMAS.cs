@@ -79,6 +79,7 @@ namespace SpaceMAS {
 
             MenuController = new MenuController();
             ShopCost = 50;
+
             base.Initialize();
         }
 
@@ -283,10 +284,10 @@ namespace SpaceMAS {
 
             //fps counter
             int fps = Frames.CalculateFrameRate();
-            Vector2 fontOrigin = TextFont.MeasureString(fps.ToString()) / 2;
-            Vector2 position = new Vector2(50, 50);
+            var fontOrigin = TextFont.MeasureString(fps.ToString()) / 2;
+            var position = new Vector2(50, 50);
             spriteBatch.DrawString(TextFont, fps.ToString(), position, Color.LightGreen, 0, fontOrigin, 0.25f, SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
-               
+
 
             switch (StateProvider.Instance.State) {
                 case GameState.HIGHSCORE:
@@ -305,22 +306,19 @@ namespace SpaceMAS {
                     LevelController.CurrentLevel.LevelIntro.Draw(spriteBatch);
                     break;
                 case GameState.PLAYING_EASY:
-                    if (LevelController.CurrentLevel != null)
-                    {
+                    if (LevelController.CurrentLevel != null) {
                         LevelController.CurrentLevel.Draw(spriteBatch);
                         DrawPlayerMoney(spriteBatch);
                     }
                     break;
                 case GameState.PLAYING_NORMAL:
-                    if (LevelController.CurrentLevel != null)
-                    {
+                    if (LevelController.CurrentLevel != null) {
                         LevelController.CurrentLevel.Draw(spriteBatch);
                         DrawPlayerMoney(spriteBatch);
                     }
                     break;
                 case GameState.PLAYING_HARD:
-                    if (LevelController.CurrentLevel != null)
-                    {
+                    if (LevelController.CurrentLevel != null) {
                         LevelController.CurrentLevel.Draw(spriteBatch);
                         DrawPlayerMoney(spriteBatch);
                     }

@@ -1,47 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework.Content;
-using SpaceMAS.Models.Players;
 
-namespace SpaceMAS.Utils
-{
-    class HighscoreProvider
-    {
+namespace SpaceMAS.Utils {
+    internal class HighscoreProvider {
         public List<String> Highscore;
 
         private static HighscoreProvider _instance;
 
-        public static HighscoreProvider Instance
-        {
-            get
-            {
-                if (_instance == null) _instance = new HighscoreProvider();
-                return _instance;
-            }
-
+        public static HighscoreProvider Instance {
+            get { return _instance ?? (_instance = new HighscoreProvider()); }
         }
 
-        private HighscoreProvider ()
-        {
-            try
-            {
+        private HighscoreProvider() {
+            try {
                 var contentManager = GameServices.GetService<ContentManager>();
-                Highscore = new List<string>(System.IO.File.ReadAllLines(contentManager.RootDirectory + "/highscore.txt"));
-               
+                Highscore = new List<string>(File.ReadAllLines(contentManager.RootDirectory + "/highscore.txt"));
+
             }
-            catch (FileNotFoundException e)
-            {
+            catch (FileNotFoundException e) {
                 Highscore = new List<string>();
+                Console.WriteLine(e.Message);
             }
         }
 
-        public void SaveHighscore()
-        {
+        public void SaveHighscore() {
             var contentManager = GameServices.GetService<ContentManager>();
-            System.IO.File.WriteAllLines(contentManager.RootDirectory + "/highscore.txt", Highscore);
+            File.WriteAllLines(contentManager.RootDirectory + "/highscore.txt", Highscore);
         }
     }
 }
