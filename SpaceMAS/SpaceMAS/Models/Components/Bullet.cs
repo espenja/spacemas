@@ -28,6 +28,7 @@ namespace SpaceMAS.Models.Components {
             isVisible = true;
             Texture = CopyBullet.Texture;
             TravelSpeed = CopyBullet.TravelSpeed;
+            Scale = 0.4f;
         }
 
         public override void Update(GameTime gameTime) {
@@ -71,7 +72,8 @@ namespace SpaceMAS.Models.Components {
             }
         }
 
-        public override void Draw(SpriteBatch spriteBatch) {
+        public override void Draw(SpriteBatch spriteBatch)
+        {
             if (isVisible) base.Draw(spriteBatch);
         }
 
