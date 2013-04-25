@@ -5,12 +5,7 @@
         public GameState State { get; set; }
 
         public static StateProvider Instance {
-            get {
-                if (instance == null) {
-                    instance = new StateProvider { State = GameState.MENU };
-                }
-                return instance;
-            }
+            get { return instance ?? (instance = new StateProvider {State = GameState.MENU}); }
         }
     }
 }
