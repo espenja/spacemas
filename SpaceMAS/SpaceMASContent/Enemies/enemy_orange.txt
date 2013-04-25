@@ -1,6 +1,6 @@
 id:enemy_orange
 name:Orange Skirmisher
 health:200
-speed:20
-bounty:15
+speed:100
+bounty:10
 damage:2

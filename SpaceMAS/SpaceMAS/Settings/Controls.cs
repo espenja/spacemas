@@ -35,7 +35,7 @@ namespace SpaceMAS.Settings {
             Decelerate = Keys.Down;
             Shoot = Keys.RightControl;
             Pause = Keys.P;
-            MenuSelect = Keys.RightShift;
+            MenuSelect = Keys.Enter;
             MenuDown = Keys.Down;
             MenuUp = Keys.Up;
             Back = Keys.Escape;
@@ -49,7 +49,7 @@ namespace SpaceMAS.Settings {
             Decelerate = Keys.S;
             Shoot = Keys.LeftControl;
             Pause = Keys.P;
-            MenuSelect = Keys.LeftShift;
+            MenuSelect = Keys.Space;
             MenuDown = Keys.S;
             MenuUp = Keys.W;
             Back = Keys.Escape;

@@ -112,7 +112,9 @@ namespace SpaceMAS {
                     Exit();
                     break;
                 case GameState.HIGHSCORE:
-                    if (Keyboard.GetState().IsKeyDown(Controls.Back)) StateProvider.Instance.State = GameState.MENU;
+                    if (Keyboard.GetState().IsKeyDown(Controls.Back)) {
+                        StateProvider.Instance.State = GameState.MENU;
+                    }
                     break;
                 case GameState.MENU:
                     MenuController.Update(gameTime);
@@ -235,14 +237,17 @@ namespace SpaceMAS {
 
         private void Reset()
         {
-            
+            MenuController.ChangeMenu(0);
+            LevelController.GoToNextLevel();
+            StateProvider.Instance.State = GameState.HIGHSCORE;
+            foreach (var player in players) {
+                player.Reset();
+            }
         }
 
         protected void UpdatePlayingState(GameTime gameTime) {
             if (AllPlayersDead())
             {
-                MenuController.ChangeMenu(0);
-                StateProvider.Instance.State = GameState.MENU;
                 UpdateHighScore();
                 Reset();
             }

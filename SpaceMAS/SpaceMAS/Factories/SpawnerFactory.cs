@@ -45,5 +45,11 @@ namespace SpaceMAS.Factories {
             spawner.Enemies.AddRange(EnemyFactory.Instance.CreateEnemies(enemyId, amount));
             return spawner;
         }
+
+        public Spawner CreateSpawnerWIthRandomPositionAndRandomEnemies(int amount) {
+            var spawner = CreateSpawnerWithRandomPosition();
+            spawner.Enemies.AddRange(EnemyFactory.Instance.CreateRandomEnemies(amount));
+            return spawner;
+        }
     }
 }

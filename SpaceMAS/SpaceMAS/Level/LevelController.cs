@@ -43,12 +43,16 @@ namespace SpaceMAS.Level {
             level.Name = "Level " + levelid;
             level.Id = levelid;
 
-            var amountOfEnemies = random.Next(5, 15) * level.Id * random.Next(1, 4);
-            var spawner = SpawnerFactory.Instance.CreateSpawnerWithRandomPositionAndEnemies("enemy_blue", amountOfEnemies);
+            var amountOfSpawners = level.Id/2 + 1;
+            for (int i = 0; i < amountOfSpawners; i++) {
+                var amountOfEnemies = random.Next(5, 15) * level.Id * random.Next(1, 4);
+                var spawner = SpawnerFactory.Instance.CreateSpawnerWIthRandomPositionAndRandomEnemies(amountOfEnemies);
 
-            spawner.SpawnRate = 2000 - random.Next(10, 80);
+                spawner.SpawnRate = 2000 - random.Next(10, 80);
 
-            level.AddSpawner(spawner);
+                level.AddSpawner(spawner);
+            }
+            
             level.Initialize();
             Levels.Add(level);
 

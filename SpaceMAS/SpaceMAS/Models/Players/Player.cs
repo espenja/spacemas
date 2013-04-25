@@ -21,7 +21,6 @@ namespace SpaceMAS.Models.Players {
 
         public Player(string name, Vector2 position, Texture2D texture) {
             Texture = texture;
-
             Name = name;
             Rotation = 0.0f;
             Position = position;
@@ -43,13 +42,6 @@ namespace SpaceMAS.Models.Players {
         }
 
         public override void Update(GameTime gameTime) {
-            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
-            List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
-
-            foreach (GameObject gameObject in GameObjectsNearby)
-            {
-                gameObject.Color = Color.Blue;
-            }
 
             //If the player is dead, then movement should not occur
             if (!Dead) {
@@ -136,6 +128,21 @@ namespace SpaceMAS.Models.Players {
             {
                 Money += enemy.Bounty;
             }
+        }
+
+        public void Reset() {
+            AccelerationRate = 8.0f;
+            RotationRate = 8.0f;
+            MaxHealthPoints = 1000;
+            HealthPoints = MaxHealthPoints;
+            Dead = false;
+            Disabled = false;
+
+            Money = 0;
+
+            ContentManager cm = GameServices.GetService<ContentManager>();
+            Bullet weaponBullet = new Bullet(-30f, 700f, new DisableEffect(2000f), Weapon.BulletType.Texture);
+            Weapon = new Weapon(weaponBullet, 100f, this);
         }
 
         public override void Disable() {
