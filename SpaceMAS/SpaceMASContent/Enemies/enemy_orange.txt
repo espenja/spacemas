@@ -1,0 +1,6 @@
+id:enemy_orange
+name:Orange Skirmisher
+health:200
+speed:20
+bounty:15
+damage:2

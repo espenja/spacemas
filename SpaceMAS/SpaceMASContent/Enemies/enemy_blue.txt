@@ -1,0 +1,6 @@
+id:enemy_blue
+name:Blue Tanker
+health:500
+speed:100
+bounty:20
+damage:3

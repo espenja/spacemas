@@ -49,10 +49,10 @@ namespace SpaceMAS.Level {
             Spawners.Add(spawner);
         }
 
-        public void AddEnemy(Enemy enemy, int spawnerId) {
+        /**public void AddEnemy(Enemy enemy, int spawnerId) {
             Spawner spawner = Spawners.Find(p => p.Id == spawnerId);
             spawner.AddEnemy(enemy);
-        }
+        }**/
 
         private void CleanUp() {
             //Remove objects outside the screen
@@ -103,6 +103,10 @@ namespace SpaceMAS.Level {
 
             foreach (GameObject go in SafeToIterate)
                 go.Draw(spriteBatch);
+
+            //foreach (Spawner spawner in Spawners) {
+            //    spawner.Draw(spriteBatch);
+            //}
         }
     }
 }

@@ -48,12 +48,12 @@ namespace SpaceMAS.Utils.Collition {
             // This algorithm steps through A one pixel at a time along A's X and Y axes
             // Calculate the analogous steps in B:
 
-            Vector2 stepX = Vector2.TransformNormal(Vector2.UnitX, transformAToB);
-            Vector2 stepY = Vector2.TransformNormal(Vector2.UnitY, transformAToB);
+            var stepX = Vector2.TransformNormal(Vector2.UnitX, transformAToB);
+            var stepY = Vector2.TransformNormal(Vector2.UnitY, transformAToB);
 
             // Calculate the top left corner of A in B's local space
             // This variable will be reused to keep track of the start of each row
-            Vector2 yPosInB = Vector2.Transform(Vector2.Zero, transformAToB);
+            var yPosInB = Vector2.Transform(Vector2.Zero, transformAToB);
 
             // For each row of pixels in A
             for (int yA = 0; yA < heightA; yA++) {

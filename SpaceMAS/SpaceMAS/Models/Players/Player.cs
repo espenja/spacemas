@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Interfaces;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
 using SpaceMAS.Models.Components.ImpactEffects;
@@ -14,13 +15,12 @@ namespace SpaceMAS.Models.Players {
     public class Player : KillableGameObject, IBulletListener {
 
         public string Name { get; private set; }
-        private HealthBar HealthBar { get; set; }
         public Controls PlayerControls { get; set; }
         public Weapon Weapon { get; set; }
         public int Money { get; set; }
 
         public Player(string name, Vector2 position, Texture2D texture) {
-            this.Texture = texture;
+            Texture = texture;
 
             Name = name;
             Rotation = 0.0f;
@@ -29,8 +29,8 @@ namespace SpaceMAS.Models.Players {
             RotationRate = 8.0f;
             Scale = 0.5f;
 
-            MaxHealthPoints = 100;
-            HealthPoints = 100;
+            MaxHealthPoints = 100000;
+            HealthPoints = MaxHealthPoints;
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
@@ -42,13 +42,12 @@ namespace SpaceMAS.Models.Players {
         }
 
         public override void Update(GameTime gameTime) {
-
             Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
             List<GameObject> GameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
 
             foreach (GameObject gameObject in GameObjectsNearby)
             {
-                gameObject.Color = Color.Red;
+                gameObject.Color = Color.Blue;
             }
 
             //If the player is dead, then movement should not occur
@@ -125,7 +124,7 @@ namespace SpaceMAS.Models.Players {
         }
 
         public override void Die() {
-            //Player specific die actions, for example that the player does not disappear but instead is "greyed out" and stationary/uncontrollable
+            Console.WriteLine("Dead!");
             Dead = true;
         }
 

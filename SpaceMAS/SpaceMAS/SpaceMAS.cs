@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SpaceMAS.Factories;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Players;
 using SpaceMAS.State;
@@ -37,8 +38,14 @@ namespace SpaceMAS {
         private GameState BeforePauseState { get; set; }
 
         public SpaceMAS() {
+
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            //IsFixedTimeStep = true;
+            //TargetElapsedTime = TimeSpan.FromMilliseconds(1000 / 600);
+            //graphics.SynchronizeWithVerticalRetrace = false;
+            //graphics.ApplyChanges();
            
             GameServices.AddService(this);
         }
@@ -97,7 +104,8 @@ namespace SpaceMAS {
             // TODO: Unload any non ContentManager content here
         }
 
-        protected override void Update(GameTime gameTime) {
+        protected override void Update(GameTime gameTime)
+        {
                 
             switch (StateProvider.Instance.State) {
                 case GameState.QUIT:
@@ -187,6 +195,7 @@ namespace SpaceMAS {
                     break;
             }
             timeSinceLastAction += (float) gameTime.ElapsedGameTime.TotalSeconds;
+             
             base.Update(gameTime);
         }
 
@@ -270,7 +279,6 @@ namespace SpaceMAS {
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(new Color(16, 36, 35));
-
             spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);
 
             //fps counter

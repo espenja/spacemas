@@ -152,6 +152,21 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Enemies\enemy_blue.txt">
+      <Name>enemy_blue</Name>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Processor>PassThroughProcessor</Processor>
+    </None>
+    <None Include="Enemies\enemy_orange.txt">
+      <Name>enemy_orange</Name>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Enemies\enemy_pink.txt">
+      <Name>enemy_pink</Name>
+      <Processor>PassThroughProcessor</Processor>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Compile Include="Buttons\acceleration.png">
       <Name>acceleration</Name>
       <Importer>TextureImporter</Importer>

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Interfaces;
 using SpaceMAS.Level;
-using SpaceMAS.Models.Components.ImpactEffects;
-using SpaceMAS.Utils;
 using SpaceMAS.Models.Players;
+using SpaceMAS.Utils;
 
 namespace SpaceMAS.Models.Components {
     public class Bullet : KillableGameObject {
@@ -13,7 +13,7 @@ namespace SpaceMAS.Models.Components {
         protected IImpactEffect Effect { get; set; }
         public bool isVisible { get; set; }
         public float TravelSpeed { get; set; }
-
+        
         public Bullet(float HealthChange, float TravelSpeed, IImpactEffect Effect, Texture2D Texture) {
             this.HealthChange = HealthChange;
             this.Effect = Effect;

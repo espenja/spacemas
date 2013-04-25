@@ -1,48 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Factories;
+using SpaceMAS.Interfaces;
 using SpaceMAS.Level;
 using SpaceMAS.Models.Components;
-using SpaceMAS.Models.Components.ImpactEffects;
 using SpaceMAS.Models.Players;
-using SpaceMAS.Utils;
 using SpaceMAS.State;
+using SpaceMAS.Utils;
 
 namespace SpaceMAS.Models.Enemy {
     public class Enemy : KillableGameObject {
 
-        private HealthBar HealthBar { get; set; }
+        public String EnemyID { get; set; }
+        public String Name { get; set; }
+        public int Damage { get; set; }
         public int Bounty { get; set; }
-        private bool _isDiffBoosted;
-        public int ImpactDamage { get; set; }
+        public int Speed { get; set; }
+        public bool IsDiffBoosted { get; set; }
+
         public IImpactEffect ImpactEffect { get; set; }
 
-        //public new float Health {
-        //    get { return base.Health; }
-        //    set { base.Health = value; }
-        //}
-
-        public Enemy() {
-            Rotation = 0f;
-            AccelerationRate = 100f;
-            RotationRate = 5f;
-            MaxHealthPoints = 25;
-            HealthPoints = 25;
-            Bounty = 10;
-            ImpactDamage = 1;
-            _isDiffBoosted = false;
-            ImpactEffect = new DisableEffect(1000);
-
-            HealthBar = new HealthBar(this);
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            if (!_isDiffBoosted) {
-            switch (StateProvider.Instance.State)
-                {
+        public override void Update(GameTime gameTime) {
+            if (!IsDiffBoosted) {
+                switch (StateProvider.Instance.State) {
                     case GameState.PLAYING_EASY:
                         break;
                     case GameState.PLAYING_NORMAL:
@@ -57,100 +39,98 @@ namespace SpaceMAS.Models.Enemy {
                         break;
                 }
             }
-            _isDiffBoosted = true;
-            Rotation += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            IsDiffBoosted = true;
+            Rotation += (float) gameTime.ElapsedGameTime.TotalSeconds;
             if (!Disabled && !Dead)
                 Move(gameTime);
-                CheckCollide();
-            HealthBar.Update(gameTime);
+            CheckCollide();
 
-            base.Update(gameTime); 
-        }
-
-        public override void Draw(SpriteBatch spriteBatch) {
-            HealthBar.Draw(spriteBatch);
-
-            base.Draw(spriteBatch);
+            base.Update(gameTime);
         }
 
         private void Move(GameTime gameTime) {
-
             var players = GameServices.GetService<List<Player>>();
             Player closestTarget = null;
             var targetDistance = float.MaxValue;
 
-            foreach (var player in players)
-            {
+            foreach (var player in players) {
                 if (player.Dead) continue;
-                var distance = (float)Math.Sqrt(Math.Pow(player.Position.X - Position.X, 2) 
-                    + Math.Pow((player.Position.Y - player.Position.Y), 2));
-                if (distance < targetDistance || closestTarget == null)
-                {
-                    targetDistance = distance;
-                    closestTarget = player;
-                }
+
+                var distance = (float) Math.Sqrt(Math.Pow(player.Position.X - Position.X, 2)
+                                                 + Math.Pow((player.Position.Y - player.Position.Y), 2));
+
+                if (!(distance < targetDistance) && closestTarget != null) continue;
+
+                targetDistance = distance;
+                closestTarget = player;
             }
 
-            var closestPosDistance = AccelerationRate / 20;
-            if (closestTarget != null) {
-                if (closestTarget.Position.X - Position.X > closestPosDistance)
-                {
-                    Position = new Vector2(Position.X + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
-                        Position.Y);
-                }
-                else if (closestTarget.Position.X - Position.X < -closestPosDistance)
-                {
-                    Position = new Vector2(Position.X - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds,
-                        Position.Y);
-                }
-                if (closestTarget.Position.Y - Position.Y > closestPosDistance)
-                {
-                    Position = new Vector2(Position.X, Position.Y + AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                }
-                else if (closestTarget.Position.Y - Position.Y < -closestPosDistance)
-                {
-                    Position = new Vector2(Position.X, Position.Y - AccelerationRate * (float)gameTime.ElapsedGameTime.TotalSeconds);
-                }
-            } 
+            var closestPosDistance = Speed / 20;
+            if (closestTarget == null) return;
+
+            if (closestTarget.Position.X - Position.X > closestPosDistance) {
+                Position = new Vector2(Position.X + Speed * (float) gameTime.ElapsedGameTime.TotalSeconds,
+                                       Position.Y);
+            }
+            else if (closestTarget.Position.X - Position.X < -closestPosDistance) {
+                Position = new Vector2(Position.X - Speed * (float) gameTime.ElapsedGameTime.TotalSeconds,
+                                       Position.Y);
+            }
+            if (closestTarget.Position.Y - Position.Y > closestPosDistance) {
+                Position = new Vector2(Position.X, Position.Y + Speed * (float) gameTime.ElapsedGameTime.TotalSeconds);
+            }
+            else if (closestTarget.Position.Y - Position.Y < -closestPosDistance) {
+                Position = new Vector2(Position.X, Position.Y - Speed * (float) gameTime.ElapsedGameTime.TotalSeconds);
+            }
         }
 
         private void CheckCollide() {
-            Level.Level level = GameServices.GetService<LevelController>().CurrentLevel;
-            List<GameObject> gameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
+            var level = GameServices.GetService<LevelController>().CurrentLevel;
+            var gameObjectsNearby = level.QuadTree.retrieve(new List<GameObject>(), this);
 
-            foreach (GameObject gameObject in gameObjectsNearby)
-            {
-                if (gameObject is Player && gameObject.IntersectPixels(this)) {
-                    OnImpact(gameObject);
-                }
+            foreach (var gameObject in gameObjectsNearby.OfType<Player>().Where(gameObject => gameObject.IntersectPixels(this))) {
+                OnImpact(gameObject);
             }
         }
 
-        public void OnImpact(GameObject victim)
-        {
-            if (victim is Player)
-            {
-                ((Player)victim).HealthPoints -= ImpactDamage;
-                if (ImpactEffect != null)
-                    ImpactEffect.OnImpact(victim);
-                Die();
-            }
+        public void OnImpact(GameObject victim) {
+            if (!(victim is Player)) return;
+
+            ((Player) victim).HealthPoints -= Damage;
+            if (ImpactEffect != null)
+                ImpactEffect.OnImpact(victim);
+
+            Die();
         }
 
-
-        public override void Disable()
-        {
+        public override void Disable() {
             Disabled = true;
         }
 
-        public override void Enable()
-        {
+        public override void Enable() {
             Disabled = false;
         }
 
-        public override void Die()
-        {
+        public override void Die() {
             Dead = true;
+        }
+
+        public Enemy Clone(Enemy enemy) {
+            Name = enemy.Name;
+            Bounty = enemy.Bounty;
+            Damage = enemy.Damage;
+            MaxHealthPoints = enemy.MaxHealthPoints;
+            HealthPoints = enemy.HealthPoints;
+            Bounty = enemy.Bounty;
+            ImpactEffect = enemy.ImpactEffect;
+            Texture = enemy.Texture;
+            Speed = enemy.Speed;
+            IsDiffBoosted = false;
+            Dead = false;
+            Disabled = false;
+            EnemyID = enemy.EnemyID;
+            Scale = enemy.Scale;
+            return this;
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace SpaceMAS.Models.Components
+﻿using SpaceMAS.Models;
+using SpaceMAS.Models.Components;
+
+namespace SpaceMAS.Interfaces
 {
     public interface IBulletListener
     {
