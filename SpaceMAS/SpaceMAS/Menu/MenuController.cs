@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SpaceMAS.Graphics;
+using SpaceMAS.Models.Players;
 using SpaceMAS.State;
+using SpaceMAS.Utils;
 
 namespace SpaceMAS.Menu {
     public class MenuController {
@@ -20,7 +24,7 @@ namespace SpaceMAS.Menu {
             Menu mainMenu = new Menu(this, 0, -1);
             mainMenu.CreateButton("button", "Play", 0, GameState.LEVEL_INTRO, 3);
             mainMenu.CreateButton("button", "Controls", 1, GameState.CONTROLS, -1);
-            mainMenu.CreateButton("button", "Highscore", 2, GameState.MENU, 2);
+            mainMenu.CreateButton("button", "Highscore", 2, GameState.HIGHSCORE, -1);
             mainMenu.CreateButton("button", "Quit", 3, GameState.QUIT, -1);
 
             Menu shopMenu = new Menu(this, 1, -1);
@@ -30,10 +34,6 @@ namespace SpaceMAS.Menu {
             shopMenu.CreateButton("button", "Bullet speed + 50", 3, GameState.SHOP_BULLETSPEED, -1);
             shopMenu.CreateButton("button", "Full health", 4, GameState.SHOP_HEAL, -1);
             shopMenu.CreateButton("button", "Done", 5, GameState.SHOP_DONE, 3);
-            
-            Menu highscoreMenu = new Menu(this, 2, 0);
-            highscoreMenu.CreateButton("button", "Some stuff", 0, GameState.HIGHSCORE, -1);
-            highscoreMenu.CreateButton("button", "Back", 1, GameState.MENU, 0);
 
             Menu levelChangeMenu = new Menu(this, 3, -1);
             levelChangeMenu.CreateButton("button", "Easy", 0, GameState.PLAYING_EASY, 1);
@@ -42,7 +42,6 @@ namespace SpaceMAS.Menu {
             
 
             Menus.Add(mainMenu);
-            Menus.Add(highscoreMenu);
             Menus.Add(levelChangeMenu);
             Menus.Add(shopMenu);
 
@@ -64,8 +63,29 @@ namespace SpaceMAS.Menu {
             CurrentMenu.Update(gameTime);
         }
 
-        public void Draw(SpriteBatch spriteBatch) {
+        public void Draw(SpriteBatch spriteBatch, SpriteFont TextFont) {
             CurrentMenu.Draw(spriteBatch);
+            if (CurrentMenu.MenuID == 1) {
+                List<Player> players = GameServices.GetService<List<Player>>();
+                Vector2 position = new Vector2(50, 150);
+                foreach (var player in players) {
+                    float scale = 0.5f;
+                    spriteBatch.DrawString(TextFont, player.Name, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    scale = 0.3f;
+                    spriteBatch.DrawString(TextFont, "Max health: " + player.MaxHealthPoints, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    spriteBatch.DrawString(TextFont, "Health: " + player.HealthPoints, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    spriteBatch.DrawString(TextFont, "Damage: " + Math.Abs(player.Weapon.BulletType.HealthChange), position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    spriteBatch.DrawString(TextFont, "Acceleration: " + player.AccelerationRate, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    spriteBatch.DrawString(TextFont, "Bullet speed: " + player.Weapon.BulletType.TravelSpeed, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                    position.Y += TextFont.LineSpacing * scale;
+                    position = new Vector2(750, 150);
+                }    
+            }
         }
     }
 }

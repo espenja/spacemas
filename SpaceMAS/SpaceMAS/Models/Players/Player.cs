@@ -30,7 +30,8 @@ namespace SpaceMAS.Models.Players {
             Scale = 0.5f;
 
             MaxHealthPoints = 1000;
-            HealthPoints = 100000;
+            HealthPoints = MaxHealthPoints;
+
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();

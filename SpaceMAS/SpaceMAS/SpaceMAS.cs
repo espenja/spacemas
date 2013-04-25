@@ -112,6 +112,7 @@ namespace SpaceMAS {
                     Exit();
                     break;
                 case GameState.HIGHSCORE:
+                    if (Keyboard.GetState().IsKeyDown(Controls.Back)) StateProvider.Instance.State = GameState.MENU;
                     break;
                 case GameState.MENU:
                     MenuController.Update(gameTime);
@@ -290,9 +291,10 @@ namespace SpaceMAS {
 
             switch (StateProvider.Instance.State) {
                 case GameState.HIGHSCORE:
+                    DrawHighscore(spriteBatch);
                     break;
                 case GameState.MENU:
-                    MenuController.Draw(spriteBatch);
+                    MenuController.Draw(spriteBatch, TextFont);
                     DrawPlayerMoney(spriteBatch);
                     break;
                 case GameState.CONTROLS:
@@ -340,6 +342,22 @@ namespace SpaceMAS {
                     position, Color.Gold, 0, Vector2.Zero, scale,
                     SpriteEffects.None, GameDrawOrder.BACKGROUND_TOP);
                 position.Y += TextFont.LineSpacing * scale;
+            }
+        }
+
+        protected void DrawHighscore(SpriteBatch spriteBach) {
+            float scale = 0.5f;
+            Vector2 position = new Vector2(GeneralSettings.screenHeight / 10, GeneralSettings.screenWidth / 50);
+            spriteBatch.DrawString(TextFont, "Highscore", position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+            position.Y += TextFont.LineSpacing*scale;
+
+            scale = 0.3f;
+            List<String> highScore = HighscoreProvider.Instance.Highscore;
+            int i = 1;
+            foreach (var score in highScore) {
+                spriteBatch.DrawString(TextFont, i + ": " + score, position, Color.Green, 0, Vector2.Zero, scale, SpriteEffects.None, GameDrawOrder.FOREGROUND_MIDDLE);
+                position.Y += TextFont.LineSpacing * scale;
+                i++;
             }
         }
 

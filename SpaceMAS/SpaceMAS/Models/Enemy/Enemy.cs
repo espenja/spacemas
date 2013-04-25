@@ -29,13 +29,15 @@ namespace SpaceMAS.Models.Enemy {
                         break;
                     case GameState.PLAYING_NORMAL:
                         MaxHealthPoints *= 2;
-                        Bounty *= 2;
+                        Bounty += 5;
                         HealthPoints *= 2;
+                        Damage *= 2;
                         break;
                     case GameState.PLAYING_HARD:
                         MaxHealthPoints *= 4;
-                        Bounty *= 4;
+                        Bounty += 10;
                         HealthPoints *= 4;
+                        Damage *= 4;
                         break;
                 }
             }
