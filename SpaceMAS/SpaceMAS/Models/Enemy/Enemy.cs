@@ -96,9 +96,9 @@ namespace SpaceMAS.Models.Enemy {
         public void OnImpact(GameObject victim) {
             if (!(victim is Player)) return;
 
-            ((Player) victim).HealthPoints -= Damage;
-            if (ImpactEffect != null)
-                ImpactEffect.OnImpact(victim);
+            ((Player)victim).HealthPoints -= Damage;
+            //if (ImpactEffect != null)
+            //    ImpactEffect.OnImpact(victim);
 
             Die();
         }
@@ -131,6 +131,15 @@ namespace SpaceMAS.Models.Enemy {
             EnemyID = enemy.EnemyID;
             Scale = enemy.Scale;
             return this;
+        }
+
+        public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch) {
+
+            spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(BoundingBox.Left, BoundingBox.Top, BoundingBox.Width, 1), Color.White);
+            spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(BoundingBox.Left, BoundingBox.Bottom, BoundingBox.Width, 1), Color.White);
+            spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(BoundingBox.Left, BoundingBox.Top, 1, BoundingBox.Height), Color.White);
+            spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(BoundingBox.Right, BoundingBox.Top, 1, BoundingBox.Height + 1), Color.White);
+            base.Draw(spriteBatch);
         }
     }
 }

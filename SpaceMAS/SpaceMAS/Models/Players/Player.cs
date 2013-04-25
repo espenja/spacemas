@@ -29,8 +29,8 @@ namespace SpaceMAS.Models.Players {
             RotationRate = 8.0f;
             Scale = 0.5f;
 
-            MaxHealthPoints = 100000;
-            HealthPoints = MaxHealthPoints;
+            MaxHealthPoints = 1000;
+            HealthPoints = 100000;
             Money = 0;
 
             ContentManager cm = GameServices.GetService<ContentManager>();
@@ -61,9 +61,9 @@ namespace SpaceMAS.Models.Players {
                 if (state.IsKeyDown(PlayerControls.Shoot)) {
                     Weapon.Shoot(gameTime);
                 }
-                else if (state.IsKeyDown(Keys.S)) {
-                    Velocity = new Vector2(0, 0);
-                }
+                //else if (state.IsKeyDown(Keys.S)) {
+                //    Velocity = new Vector2(0, 0);
+                //}
             }
 
             base.Update(gameTime);

@@ -20,6 +20,11 @@ Content\Buttons\heal.xnb
 Content\Buttons\health.xnb
 Content\Buttons\button.xnb
 Content\Fonts\HandOfSeanMenu.xnb
+Content\Textures\spawner1.xnb
+Content\Textures\spawner2.xnb
+Content\Textures\spawner3.xnb
+Content\Textures\spawner4.xnb
+Content\Textures\spawner5.xnb
 Content\Fonts\HandOfSean.spritefont
 Content\Fonts\HandOfSeanMenu.spritefont
 Content\Levels\level1.txt

@@ -73,6 +73,11 @@ namespace SpaceMAS {
             GameServices.AddService(GraphicsDevice);
             GameServices.AddService(Content);
 
+            players.Add(new Player("Player 1", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
+            players.Add(new Player("Player 2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
+
+            GameServices.AddService(players);
+
             LevelController = new LevelController();
             LevelController.GoToNextLevel();
             GameServices.AddService(LevelController);
@@ -89,12 +94,6 @@ namespace SpaceMAS {
         /// </summary>
         protected override void LoadContent() {
             TextFont = Content.Load<SpriteFont>("Fonts/HandOfSean");
-            players.Add(new Player("Player 1", new Vector2(300, 300), Content.Load<Texture2D>("Textures/player")));
-            players.Add(new Player("Player 2", new Vector2(400, 400), Content.Load<Texture2D>("Textures/player")));
-
-            GameServices.AddService(players);
-            LevelController.InitializeLevels();
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>

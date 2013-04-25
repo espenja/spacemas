@@ -1,4 +1,5 @@
-﻿using SpaceMAS.Models.Players;
+﻿using System.Collections.Generic;
+using SpaceMAS.Models.Players;
 
 namespace SpaceMAS.Settings {
     public static class ControlsController
@@ -10,9 +11,7 @@ namespace SpaceMAS.Settings {
         public static Controls GetControls(Player player) {
             if (_player1 == player) return _player1.PlayerControls;
             if (_player2 == player) return _player2.PlayerControls;
-
-            var c = new Controls();
-
+            Controls c = new Controls();
             if (_player1 == null)
             {
                 _player1 = player;
