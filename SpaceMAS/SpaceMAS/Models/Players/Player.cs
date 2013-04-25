@@ -29,7 +29,7 @@ namespace SpaceMAS.Models.Players {
             RotationRate = 8.0f;
             Scale = 0.5f;
 
-            MaxHealthPoints = 100000;
+            MaxHealthPoints = 10000;
             HealthPoints = MaxHealthPoints;
             Money = 0;
 
