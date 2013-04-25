@@ -82,8 +82,8 @@ namespace SpaceMAS.Factories {
                         enemy.Speed = Convert.ToInt32(value);
                         break;
                     case "health":
-                        enemy.HealthPoints = Convert.ToInt32(value);
-                        enemy.MaxHealthPoints = enemy.HealthPoints;
+                        enemy.MaxHealthPoints = float.Parse(value);
+                        enemy.HealthPoints = float.Parse(value);
                         break;
                     case "bounty":
                         enemy.Bounty = Convert.ToInt32(value);

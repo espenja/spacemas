@@ -173,7 +173,7 @@ namespace SpaceMAS.Utils.Collition {
 
         public void Draw(SpriteBatch spriteBatch) {
 
-            if (Nodes[0] != null)
+           /* if (Nodes[0] != null)
                 foreach (QuadTree quadTree in Nodes)
                     quadTree.Draw(spriteBatch);
 
@@ -182,7 +182,7 @@ namespace SpaceMAS.Utils.Collition {
             spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(Bounds.Left, Bounds.Top, 1, Bounds.Height), Color.White);
             spriteBatch.Draw(Textures.Instance.WhitePixel, new Rectangle(Bounds.Right, Bounds.Top, 1, Bounds.Height + 1), Color.White);
 
-            //spriteBatch.DrawString(s.Font, Level.ToString(), new Vector2(Bounds.Left + 2 * ((Level+1) * 10), Bounds.Top + 2 * ((Level+1) + 10) ), Color.White);
+            //spriteBatch.DrawString(s.Font, Level.ToString(), new Vector2(Bounds.Left + 2 * ((Level+1) * 10), Bounds.Top + 2 * ((Level+1) + 10) ), Color.White);*/
         }
     }
 }
